@@ -79,7 +79,7 @@ Hero → About → Skills → Experience → Projects → Beyond Code → Contac
 - モチーフ: 黄色マーカーハイライト(スイープ演出)、Heroのスポットライトグラデーション、Skillsのアイコンチップ(Py/AI/TS等)
 - セクション 01〜06 番号管理。Experience=ドット+縦線タイムライン(スクロールで点灯)
 - モーション: Hero時間差登場→マーカースイープ(0.95s/1.2s)、スクロールリビール(IntersectionObserver)、カードホバー浮上+アンバー光、全て prefers-reduced-motion 対応
-- モックアップ: `docs/design/portfolio-mockup-v4.html` / Artifact「design-proposal-v4-rounded」
+- モックアップ: `docs/design/portfolio-mockup-v6.html` / Artifact「v6.6-skills-redesign」
 
 ### 参考サイト分析・注意点キャッチアップの反映(2026-07-07)
 出典: ARUTEGA、Tracks、PERSOL の各記事+参考サイト2件(umao.co.jp / effortel.com)

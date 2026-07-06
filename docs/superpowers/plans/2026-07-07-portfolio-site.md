@@ -2,7 +2,7 @@
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
-**Goal:** 設計書(`docs/superpowers/specs/2026-07-07-portfolio-design.md`)と確定モックアップ(`docs/design/portfolio-mockup-v4.html`)どおりの1ページポートフォリオサイトを Next.js で実装し、Vercel で公開できる状態にする。
+**Goal:** 設計書(`docs/superpowers/specs/2026-07-07-portfolio-design.md`)と確定モックアップ(`docs/design/portfolio-mockup-v6.html`)どおりの1ページポートフォリオサイトを Next.js で実装し、Vercel で公開できる状態にする。
 
 **Architecture:** Next.js App Router の単一ページ構成。コンテンツは型付きデータモジュール(`content.ts`)に集約し、各セクションは独立した React コンポーネント。スタイルはモックアップ v4 の CSS(デザイントークン+クラス)を `globals.css` にそのまま移植する(Tailwind は使わない — v4 の CSS が完成品でありそのまま移植が最も忠実・軽量なため。スクロール演出は IntersectionObserver のカスタムフック)。
 
@@ -10,7 +10,7 @@
 
 ## Global Constraints
 
-- コンテンツの文言・色・数値はすべてモックアップ `docs/design/portfolio-mockup-v4.html` と設計書から**そのまま**転記する。勝手に創作・補完しない
+- コンテンツの文言・色・数値はすべてモックアップ `docs/design/portfolio-mockup-v6.html` と設計書から**そのまま**転記する。勝手に創作・補完しない
 - 未確定情報はモックアップどおりプレースホルダー(`【氏名】`、`(記載予定)`、`要確認` バッジ)のまま実装する
 - アクセント色 `#FFC53D` / `#E8A013`、ダーク地 `#101722`、角丸 32/22/16px・ピル 999px(トークン全値は v4 の `<style>` 冒頭 `:root` 群)
 - 全アニメーションは `prefers-reduced-motion: reduce` で無効化
@@ -141,10 +141,10 @@ Co-Authored-By: Claude Fable 5 <noreply@anthropic.com>"
 
 - [ ] **Step 1: globals.css へ CSS を移植**
 
-`docs/design/portfolio-mockup-v4.html` の `<style>...</style>` の中身**全体**を `app/globals.css` にコピーし(既存内容は全削除)、以下だけ修正:
+`docs/design/portfolio-mockup-v6.html` の `<style>...</style>` の中身**全体**を `app/globals.css` にコピーし(既存内容は全削除)、以下だけ修正:
 
 1. `.proposal-bar { ... }` のルールを削除(提案用バーは本番に載せない)
-2. 冒頭に `/* Design tokens & styles — ported from docs/design/portfolio-mockup-v4.html */` のコメントを追加
+2. 冒頭に `/* Design tokens & styles — ported from docs/design/portfolio-mockup-v6.html */` のコメントを追加
 
 それ以外は 1 文字も変えない。
 
@@ -1034,7 +1034,7 @@ npm run build # production build
 
 ## Design
 - 設計書: `docs/superpowers/specs/2026-07-07-portfolio-design.md`
-- モックアップ: `docs/design/portfolio-mockup-v4.html`
+- モックアップ: `docs/design/portfolio-mockup-v6.html`
 - コンセプト: 「夜のステージとスポットライト」— アンバー(#FFC53D)が「笑顔」を照らす
 
 ## Deploy
