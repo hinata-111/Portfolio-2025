@@ -64,19 +64,22 @@ Hero → About → Skills → Experience → Projects → Beyond Code → Contac
 ### Contact
 - GitHub / メール /(Instagram)
 
-## 3.5 デザイン方向(v2 確定)
+## 3.5 デザイン方向(v4 確定)
 
-### コンセプト: 「夜のステージとスポットライト」
-暗幕のダークネイビーに、アンバー(スポットライト)が「笑顔」を照らす。漫才・ラジオ・エンタメ志望との一貫性を持たせる。参考: umao(温かみ・人柄)× Effortel(ダークのプロ感・番号/時系列の情報整理)。
+### コンセプト: 「夜のステージとスポットライト」× ソフト&ラウンド
+暗幕のダークネイビーに、アンバー(スポットライト)が「笑顔」を照らす。漫才・ラジオ・エンタメ志望との一貫性。参考: umao(温かみ・大きな角丸・円形マスク)× Effortel(ダークのプロ感・番号/時系列・ピルUI・セクションパネル構造)。v3で「カクカクして硬い」フィードバック → v4で全面的に角丸・ピル化して解消。
 
-### デザイントークン
+### デザイントークン(v4)
 - アクセント: `--sun: #FFC53D` / `--sun-deep: #E8A013`(アンバー=スポットライト)
-- ダーク(デフォルト): 地 `#0E1626`、面 `#16202F`、文字 `#EDEAE2`、罫線 `#26324A`、muted `#8D97A8`
-- ライト: 地 `#FFFDF7`(温白)、面 `#FFFFFF`、文字 `#1B2A41`、罫線 `#E7E2D6`
+- ダーク(デフォルト): 地 `#101722`、パネル `#18202E`、面 `#202A3B`、文字 `#E8EAF0`、罫線 `#2B3750`、muted `#93A0B4`
+- ライト: 地 `#F4F2EC`、パネル `#FBFAF6`、面 `#FFFFFF`、文字 `#232D3F`、罫線 `#E3DFD3`
+- 角丸: `--radius-xl: 32px`(セクションパネル)/ `--radius-lg: 22px`(カード)/ `--radius-md: 16px` / ボタン・タグ・バッジ=ピル(999px)
 - タイポ: キャッチコピー=明朝(Hiragino Mincho / Yu Mincho)、本文=ゴシック、ラベル・番号=monospace
-- モチーフ: キーワードへの黄色マーカーハイライト、Heroのスポットライトグラデーション
-- セクションは 01〜06 の番号管理。Experience はドット+縦線のタイムライン
-- モックアップ: Artifact「design-proposal-v2-dark」/ scratchpad の portfolio-mockup.html
+- 構造: Heroセンター寄せ巨大タイポ(最大64px)+`⌊ ラベル ⌉`mono飾り。各セクションは角丸32pxの大パネル(panelbox)で包む。上部に浮遊ピルナビ(すりガラス、Contact=黄色CTA)
+- モチーフ: 黄色マーカーハイライト(スイープ演出)、Heroのスポットライトグラデーション、Skillsのアイコンチップ(Py/AI/TS等)
+- セクション 01〜06 番号管理。Experience=ドット+縦線タイムライン(スクロールで点灯)
+- モーション: Hero時間差登場→マーカースイープ(0.95s/1.2s)、スクロールリビール(IntersectionObserver)、カードホバー浮上+アンバー光、全て prefers-reduced-motion 対応
+- モックアップ: `docs/design/portfolio-mockup-v4.html` / Artifact「design-proposal-v4-rounded」
 
 ### 参考サイト分析・注意点キャッチアップの反映(2026-07-07)
 出典: ARUTEGA、Tracks、PERSOL の各記事+参考サイト2件(umao.co.jp / effortel.com)

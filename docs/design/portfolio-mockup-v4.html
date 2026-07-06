@@ -1,0 +1,530 @@
+<title>ポートフォリオ デザイン提案 v4</title>
+<style>
+  /* ---- tokens: dark = default (夜のステージ) ---- */
+  :root {
+    --sun: #FFC53D;
+    --sun-deep: #E8A013;
+    --ink: #E8EAF0;
+    --ink-strong: #FFFFFF;
+    --ground: #101722;
+    --panel: #18202E;
+    --surface: #202A3B;
+    --muted: #93A0B4;
+    --line: #2B3750;
+    --radius-xl: 32px;
+    --radius-lg: 22px;
+    --radius-md: 16px;
+    --card-shadow: 0 2px 6px rgba(0,0,0,.25), 0 16px 40px rgba(0,0,0,.28);
+    --hero-glow: radial-gradient(ellipse 70% 55% at 50% 0%, rgba(255,197,61,.14), transparent 70%),
+                 radial-gradient(ellipse 90% 70% at 50% 110%, rgba(37,52,84,.55), transparent 75%);
+  }
+  @media (prefers-color-scheme: light) {
+    :root {
+      --ink: #232D3F;
+      --ink-strong: #131B29;
+      --ground: #F4F2EC;
+      --panel: #FBFAF6;
+      --surface: #FFFFFF;
+      --muted: #66707F;
+      --line: #E3DFD3;
+      --card-shadow: 0 1px 3px rgba(27,42,65,.06), 0 12px 32px rgba(27,42,65,.08);
+      --hero-glow: radial-gradient(ellipse 70% 55% at 50% 0%, rgba(255,197,61,.22), transparent 70%);
+    }
+  }
+  :root[data-theme="dark"] {
+    --ink: #E8EAF0;
+    --ink-strong: #FFFFFF;
+    --ground: #101722;
+    --panel: #18202E;
+    --surface: #202A3B;
+    --muted: #93A0B4;
+    --line: #2B3750;
+    --card-shadow: 0 2px 6px rgba(0,0,0,.25), 0 16px 40px rgba(0,0,0,.28);
+    --hero-glow: radial-gradient(ellipse 70% 55% at 50% 0%, rgba(255,197,61,.14), transparent 70%),
+                 radial-gradient(ellipse 90% 70% at 50% 110%, rgba(37,52,84,.55), transparent 75%);
+  }
+  :root[data-theme="light"] {
+    --ink: #232D3F;
+    --ink-strong: #131B29;
+    --ground: #F4F2EC;
+    --panel: #FBFAF6;
+    --surface: #FFFFFF;
+    --muted: #66707F;
+    --line: #E3DFD3;
+    --card-shadow: 0 1px 3px rgba(27,42,65,.06), 0 12px 32px rgba(27,42,65,.08);
+    --hero-glow: radial-gradient(ellipse 70% 55% at 50% 0%, rgba(255,197,61,.22), transparent 70%);
+  }
+
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+  body {
+    margin: 0;
+    background: var(--ground);
+    color: var(--ink);
+    font-family: "Hiragino Kaku Gothic ProN", "Hiragino Sans", "Yu Gothic Medium", "Yu Gothic", "Noto Sans JP", sans-serif;
+    line-height: 1.9;
+    font-size: 16px;
+  }
+  .serif { font-family: "Hiragino Mincho ProN", "Yu Mincho", "Noto Serif JP", serif; }
+  .mono  { font-family: ui-monospace, "SF Mono", "Cascadia Code", Consolas, monospace; }
+
+  .proposal-bar {
+    color: var(--muted);
+    font-size: 11.5px;
+    letter-spacing: .12em;
+    padding: 10px 24px;
+    display: flex;
+    justify-content: space-between;
+    gap: 16px;
+  }
+
+  /* ---------- 浮遊ピルナビ ---------- */
+  .nav {
+    position: sticky; top: 14px; z-index: 50;
+    display: flex; justify-content: center;
+    padding: 0 16px;
+  }
+  .nav-pill {
+    display: flex; align-items: center; gap: 2px;
+    background: color-mix(in srgb, var(--panel) 82%, transparent);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    padding: 6px;
+    box-shadow: var(--card-shadow);
+    overflow-x: auto;
+    max-width: 100%;
+  }
+  .nav-pill a {
+    color: var(--muted); text-decoration: none;
+    font-size: 12.5px; letter-spacing: .08em;
+    padding: 7px 15px; border-radius: 999px;
+    white-space: nowrap;
+    transition: color .25s, background .25s;
+  }
+  .nav-pill a:hover { color: var(--ink-strong); background: color-mix(in srgb, var(--sun) 14%, transparent); }
+  .nav-pill a.cta { background: var(--sun); color: #131B29; font-weight: 700; }
+  .nav-pill a.cta:hover { background: var(--sun-deep); }
+
+  .wrap { max-width: 1020px; margin: 0 auto; padding: 0 20px; }
+
+  /* ---------- Hero: センター・巨大タイポ ---------- */
+  .hero {
+    padding: 120px 0 110px;
+    background: var(--hero-glow);
+    text-align: center;
+  }
+  .hero-eyebrow {
+    font-size: 12.5px; letter-spacing: .3em; color: var(--muted);
+    text-transform: uppercase; margin-bottom: 34px;
+  }
+  .hero-eyebrow::before { content: "⌊ "; color: var(--sun); }
+  .hero-eyebrow::after  { content: " ⌉"; color: var(--sun); }
+  .hero h1 {
+    font-size: clamp(34px, 6.4vw, 64px);
+    line-height: 1.5;
+    font-weight: 600;
+    color: var(--ink-strong);
+    margin: 0 auto 34px;
+    text-wrap: balance;
+    max-width: 18em;
+  }
+  .hl {
+    position: relative;
+    padding: 0 .06em;
+    color: var(--ink-strong);
+    z-index: 0;
+  }
+  .hl::after {
+    content: "";
+    position: absolute; left: -.05em; right: -.05em; top: 60%; bottom: 4%;
+    background: var(--sun);
+    border-radius: 6px;
+    z-index: -1;
+    transform-origin: left center;
+  }
+  :root:not([data-theme="light"]) .hl { color: #FFF6DE; }
+  .role-line { font-size: 14px; letter-spacing: .22em; color: var(--sun); font-weight: 600; margin-bottom: 22px; }
+  .hero-sub {
+    color: var(--muted); font-size: 15px;
+    display: flex; flex-wrap: wrap; gap: 6px 20px; justify-content: center; align-items: center;
+  }
+  .hero-sub .name { color: var(--ink-strong); font-weight: 700; font-size: 17px; }
+
+  /* ---------- セクション共通 ---------- */
+  section { padding: 34px 0; }
+  .panelbox {
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-xl);
+    padding: 56px clamp(24px, 5vw, 64px) 60px;
+  }
+  .sec-head { display: flex; align-items: baseline; justify-content: center; gap: 14px; margin-bottom: 14px; }
+  .sec-num { font-size: 13px; letter-spacing: .18em; color: var(--sun); font-weight: 600; }
+  .sec-label { font-size: 12px; letter-spacing: .28em; color: var(--muted); text-transform: uppercase; }
+  h2 { font-size: clamp(24px, 3.4vw, 32px); margin: 0 0 34px; font-weight: 700; color: var(--ink-strong); text-align: center; text-wrap: balance; }
+  p.lede { max-width: 38em; margin: 0 auto 14px; }
+  .center { text-align: center; }
+
+  /* ---------- Skills: アイコンチップ ---------- */
+  .skill-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; }
+  .skill {
+    background: var(--surface); border: 1px solid var(--line);
+    border-radius: var(--radius-lg);
+    padding: 20px 22px;
+    box-shadow: var(--card-shadow);
+    display: flex; gap: 16px; align-items: flex-start;
+  }
+  .skill .chip {
+    flex: 0 0 auto;
+    width: 46px; height: 46px; border-radius: 14px;
+    display: grid; place-items: center;
+    font-size: 13px; font-weight: 800; letter-spacing: .02em;
+    background: color-mix(in srgb, var(--sun) 18%, var(--surface));
+    color: var(--sun);
+    border: 1px solid color-mix(in srgb, var(--sun) 35%, var(--line));
+  }
+  .skill b { display: block; font-size: 15px; margin-bottom: 2px; color: var(--ink-strong); }
+  .skill span { color: var(--muted); font-size: 13.5px; line-height: 1.7; display: block; }
+
+  /* ---------- Timeline ---------- */
+  .timeline { list-style: none; margin: 0 auto; padding: 0; position: relative; max-width: 720px; }
+  .timeline::before {
+    content: ""; position: absolute; left: 146px; top: 8px; bottom: 8px;
+    width: 2px; border-radius: 2px; background: var(--line);
+  }
+  .timeline li { display: grid; grid-template-columns: 120px 52px 1fr; padding: 18px 0; }
+  .timeline .when { color: var(--sun); font-weight: 700; font-size: 14px; letter-spacing: .04em; text-align: right; }
+  .timeline .dot { position: relative; }
+  .timeline .dot::before {
+    content: ""; position: absolute; left: 21px; top: 8px;
+    width: 12px; height: 12px; border-radius: 50%;
+    background: var(--sun); box-shadow: 0 0 0 5px color-mix(in srgb, var(--sun) 16%, transparent);
+  }
+  .timeline .what b { font-size: 15.5px; color: var(--ink-strong); }
+  .timeline .what span { display: block; color: var(--muted); font-size: 14px; }
+  @media (max-width: 620px) {
+    .timeline::before { display: none; }
+    .timeline li { grid-template-columns: 1fr; gap: 2px; }
+    .timeline .when { text-align: left; }
+    .timeline .dot { display: none; }
+  }
+
+  /* ---------- Projects ---------- */
+  .project {
+    background: var(--surface); border: 1px solid var(--line);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--card-shadow);
+    padding: 30px clamp(22px, 3.5vw, 36px);
+    margin-bottom: 20px;
+  }
+  .project h3 { margin: 0 0 4px; font-size: 19px; color: var(--ink-strong); }
+  .project .meta { color: var(--muted); font-size: 13px; letter-spacing: .06em; margin-bottom: 18px; }
+  .prs { display: grid; grid-template-columns: 96px 1fr; gap: 10px 18px; font-size: 14.5px; margin: 0; }
+  .prs dt {
+    color: var(--sun); font-weight: 700; font-size: 12.5px; letter-spacing: .08em;
+    background: color-mix(in srgb, var(--sun) 12%, transparent);
+    border-radius: 999px;
+    padding: 1px 10px;
+    height: fit-content; width: fit-content;
+  }
+  .prs dd { margin: 0; }
+  .tags { margin-top: 18px; display: flex; flex-wrap: wrap; gap: 8px; }
+  .tag {
+    font-size: 12px; letter-spacing: .04em; color: var(--muted);
+    border: 1px solid var(--line); border-radius: 999px; padding: 3px 13px;
+    transition: border-color .25s, color .25s;
+  }
+  .todo {
+    display: inline-block; background: color-mix(in srgb, var(--sun) 20%, transparent);
+    color: var(--sun); font-size: 12px; font-weight: 700;
+    padding: 2px 12px; margin-left: 8px; letter-spacing: .05em;
+    border-radius: 999px;
+  }
+  :root[data-theme="light"] .todo { color: var(--sun-deep); }
+
+  /* ---------- Beyond Code ---------- */
+  .beyond-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 18px; }
+  .beyond {
+    background: var(--surface); border: 1px solid var(--line);
+    border-radius: var(--radius-lg); overflow: hidden;
+    box-shadow: var(--card-shadow);
+  }
+  .ph {
+    aspect-ratio: 16/10; display: grid; place-items: center;
+    color: var(--muted); font-size: 12.5px; letter-spacing: .1em;
+    background:
+      radial-gradient(ellipse 80% 90% at 50% -10%, color-mix(in srgb, var(--sun) 9%, transparent), transparent 70%),
+      repeating-linear-gradient(45deg, transparent, transparent 14px,
+        color-mix(in srgb, var(--line) 40%, transparent) 14px,
+        color-mix(in srgb, var(--line) 40%, transparent) 15px);
+    border-bottom: 1px solid var(--line);
+  }
+  .beyond .body { padding: 18px 20px 22px; }
+  .beyond b { font-size: 15px; color: var(--ink-strong); }
+  .beyond p { margin: 6px 0 0; color: var(--muted); font-size: 13.5px; line-height: 1.75; }
+
+  /* ---------- ボタン: ピル+円形矢印チップ ---------- */
+  .contact-row { display: flex; flex-wrap: wrap; gap: 14px; margin-top: 8px; justify-content: center; }
+  .btn {
+    display: inline-flex; align-items: center; gap: 12px;
+    padding: 9px 10px 9px 26px;
+    border-radius: 999px;
+    font-size: 14px; letter-spacing: .08em; font-weight: 700;
+    text-decoration: none;
+    transition: transform .3s cubic-bezier(.2,.7,.3,1), box-shadow .3s, background .3s, color .3s;
+  }
+  .btn .arr {
+    width: 36px; height: 36px; border-radius: 50%;
+    display: grid; place-items: center;
+    font-size: 15px;
+  }
+  .btn-primary { background: var(--sun); color: #131B29; }
+  .btn-primary .arr { background: #131B29; color: var(--sun); }
+  .btn-primary:hover { transform: translateY(-3px); box-shadow: 0 10px 28px rgba(255,197,61,.35); }
+  .btn-ghost { border: 1.5px solid var(--line); color: var(--ink); background: var(--surface); }
+  .btn-ghost .arr { background: color-mix(in srgb, var(--ink) 10%, transparent); color: var(--ink); }
+  .btn-ghost:hover { transform: translateY(-3px); border-color: var(--sun); }
+
+  footer { padding: 44px 0 52px; color: var(--muted); font-size: 12.5px; letter-spacing: .08em; text-align: center; }
+
+  /* ---------- モーション ---------- */
+  @media (prefers-reduced-motion: no-preference) {
+    .hero > * { animation: rise .9s cubic-bezier(.2,.7,.3,1) both; }
+    .hero > *:nth-child(2) { animation-delay: .15s; }
+    .hero > *:nth-child(3) { animation-delay: .6s; }
+    .hero > *:nth-child(4) { animation-delay: .72s; }
+    @keyframes rise { from { opacity: 0; transform: translateY(18px); } to { opacity: 1; transform: none; } }
+
+    .hl::after { animation: sweep .6s cubic-bezier(.6,.05,.2,1) both; }
+    .hero .hl:nth-of-type(1)::after { animation-delay: .95s; }
+    .hero .hl:nth-of-type(2)::after { animation-delay: 1.2s; }
+    @keyframes sweep { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+
+    .rv { opacity: 0; transform: translateY(30px); transition: opacity .8s cubic-bezier(.2,.7,.3,1), transform .8s cubic-bezier(.2,.7,.3,1); }
+    .rv.in { opacity: 1; transform: none; }
+    .rv-d1 { transition-delay: .09s; }
+    .rv-d2 { transition-delay: .18s; }
+    .rv-d3 { transition-delay: .27s; }
+
+    .timeline .dot::before { transform: scale(0); transition: transform .5s cubic-bezier(.34,1.56,.64,1) .25s; }
+    li.rv.in .dot::before { transform: scale(1); }
+  }
+
+  .project, .skill, .beyond {
+    transition: transform .4s cubic-bezier(.2,.7,.3,1), box-shadow .4s, border-color .4s;
+  }
+  .project:hover, .skill:hover, .beyond:hover {
+    transform: translateY(-5px);
+    border-color: color-mix(in srgb, var(--sun) 40%, var(--line));
+    box-shadow: 0 6px 14px rgba(0,0,0,.22), 0 24px 56px rgba(255,197,61,.08);
+  }
+  .project:hover .tag { border-color: color-mix(in srgb, var(--sun) 40%, var(--line)); color: var(--ink); }
+</style>
+
+<div class="proposal-bar mono"><span>DESIGN PROPOSAL v4 — SOFT &amp; ROUNDED</span><span>2026.07.07</span></div>
+
+<nav class="nav">
+  <div class="nav-pill mono">
+    <a href="#about">About</a>
+    <a href="#skills">Skills</a>
+    <a href="#experience">Experience</a>
+    <a href="#projects">Projects</a>
+    <a href="#beyond">Beyond</a>
+    <a href="#contact" class="cta">Contact</a>
+  </div>
+</nav>
+
+<!-- Hero -->
+<header class="hero">
+  <div class="hero-eyebrow mono">Portfolio — 2028卒</div>
+  <h1 class="serif">人を<span class="hl">笑顔</span>にし、<br><span class="hl">心を動かす</span>ものを生み出す。</h1>
+  <div class="role-line mono">PdM × ENGINEER × CREATOR</div>
+  <div class="hero-sub">
+    <span class="name">【氏名】</span>
+    <span>慶應義塾大学 環境情報学部</span>
+    <span>42Tokyo</span>
+  </div>
+</header>
+
+<div class="wrap">
+
+  <!-- 01 About -->
+  <section id="about">
+    <div class="panelbox">
+      <div class="sec-head"><span class="sec-num mono">01</span><span class="sec-label mono">About</span></div>
+      <h2>ものづくりの原点は、目の前の人の反応。</h2>
+      <p class="lede center">慶應義塾大学 環境情報学部(2023年9月入学)。古谷知之研究室にて自然言語処理における感情分析を研究。2024年8月、42Tokyo Piscineに合格し入学。</p>
+      <p class="lede center">ラジオ、漫才、旅、そしてソフトウェア。手段は違っても、つくる理由はいつも同じ——目の前の人を笑顔にすること。</p>
+    </div>
+  </section>
+
+  <!-- 02 Skills -->
+  <section id="skills">
+    <div class="panelbox">
+      <div class="sec-head"><span class="sec-num mono">02</span><span class="sec-label mono">Skills</span></div>
+      <h2>技術スタック</h2>
+      <div class="skill-grid">
+        <div class="skill"><span class="chip mono">Py</span><div><b>Python — LLM / NLP</b><span>PyTorch・MeCab・GiNZA。インターン・研究で使用</span></div></div>
+        <div class="skill"><span class="chip mono">AI</span><div><b>LLM応用</b><span>RAG・ベクトルDB・AIエージェント開発</span></div></div>
+        <div class="skill"><span class="chip mono">TS</span><div><b>TypeScript</b><span>React・Node.js によるWebアプリ開発</span></div></div>
+        <div class="skill"><span class="chip mono">DB</span><div><b>Database</b><span>PostgreSQL</span></div></div>
+        <div class="skill"><span class="chip mono">Ops</span><div><b>Infra / Tools</b><span>Docker・Git / GitHub</span></div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 03 Experience -->
+  <section id="experience">
+    <div class="panelbox">
+      <div class="sec-head"><span class="sec-num mono">03</span><span class="sec-label mono">Experience</span></div>
+      <h2>経歴</h2>
+      <ul class="timeline">
+        <li>
+          <div class="when mono">2023.09</div><div class="dot"></div>
+          <div class="what"><b>慶應義塾大学 環境情報学部 入学</b><span>古谷知之研究室 — 自然言語処理・感情分析</span></div>
+        </li>
+        <li>
+          <div class="when mono">2024.08</div><div class="dot"></div>
+          <div class="what"><b>42Tokyo Piscine 合格・入学</b><span>4週間の選抜課程を経てエンジニア教育機関へ</span></div>
+        </li>
+        <li>
+          <div class="when mono">2025.07 –</div><div class="dot"></div>
+          <div class="what"><b>長期インターン | エンジニア・ITコンサルタント</b><span>AIエージェントR&amp;D、Webアプリ開発(現在も継続中)</span></div>
+        </li>
+        <li>
+          <div class="when mono">2025.08 –<br>2026.03</div><div class="dot"></div>
+          <div class="what"><b>福島県復興地プロジェクト</b><span>県内高校にてAIワークショップを実施(古谷研究室)</span></div>
+        </li>
+        <li>
+          <div class="when mono">要確認<span class="todo">期間</span></div><div class="dot"></div>
+          <div class="what"><b>学生FMラジオ局「レディオ湘南」マネージャー</b><span>役割配置・スキル育成・知識継承の仕組みづくり</span></div>
+        </li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- 04 Projects -->
+  <section id="projects">
+    <div class="panelbox">
+      <div class="sec-head"><span class="sec-num mono">04</span><span class="sec-label mono">Projects</span></div>
+      <h2>プロジェクト</h2>
+
+      <article class="project">
+        <h3>履歴書解析AIエージェント R&amp;D <span class="todo">公開可否 要確認</span></h3>
+        <div class="meta mono">長期インターン / 2025.07 – 2025.10</div>
+        <dl class="prs">
+          <dt>課題</dt><dd>(会社確認後に記載 — 抽象化の可能性あり)</dd>
+          <dt>役割</dt><dd>R&amp;D担当エンジニア</dd>
+          <dt>技術選定</dt><dd>なぜLLM/このアプローチか(記載予定)</dd>
+          <dt>工夫</dt><dd>LLMによるスキル抽出・構造化のアプローチ設計</dd>
+          <dt>成果と学び</dt><dd>(数値・導入状況・得た学びを確認後に記載)</dd>
+        </dl>
+        <div class="tags"><span class="tag">Python</span><span class="tag">LLM</span><span class="tag">NLP</span></div>
+      </article>
+
+      <article class="project">
+        <h3>Webアプリ開発 <span class="todo">公開可否 要確認</span></h3>
+        <div class="meta mono">長期インターン / 2025.11 – 現在</div>
+        <dl class="prs">
+          <dt>課題</dt><dd>(会社確認後に記載)</dd>
+          <dt>役割</dt><dd>開発エンジニア</dd>
+          <dt>技術選定</dt><dd>React / Node.js / PostgreSQL の選定理由(記載予定)</dd>
+          <dt>工夫</dt><dd>(記載予定)</dd>
+          <dt>成果と学び</dt><dd>(記載予定)</dd>
+        </dl>
+        <div class="tags"><span class="tag">TypeScript</span><span class="tag">React</span><span class="tag">Node.js</span><span class="tag">PostgreSQL</span></div>
+      </article>
+
+      <article class="project">
+        <h3>Discord Bot(個人開発)</h3>
+        <div class="meta mono">個人開発 / GitHub公開</div>
+        <dl class="prs">
+          <dt>課題</dt><dd>コミュニティ内の知識散逸 — 過去ログから答えられる仕組みがない</dd>
+          <dt>役割</dt><dd>企画・設計・実装すべて</dd>
+          <dt>技術選定</dt><dd>RAG+ベクトルDBを選んだ理由(記載予定)</dd>
+          <dt>工夫</dt><dd>文脈を保った検索・応答パイプラインの設計</dd>
+          <dt>成果と学び</dt><dd>(利用数など数値を追記予定)</dd>
+        </dl>
+        <div class="tags"><span class="tag">RAG</span><span class="tag">ベクトルDB</span><span class="tag">Python</span></div>
+      </article>
+
+      <p class="lede center" style="color:var(--muted); font-size:14px;">その他の制作物は GitHub を参照 →</p>
+    </div>
+  </section>
+
+  <!-- 05 Beyond Code -->
+  <section id="beyond">
+    <div class="panelbox">
+      <div class="sec-head"><span class="sec-num mono">05</span><span class="sec-label mono">Beyond Code</span></div>
+      <h2>コードの外側でも、人を笑顔に。</h2>
+      <div class="beyond-grid">
+        <div class="beyond">
+          <div class="ph mono">素材待ち:旅の写真</div>
+          <div class="body">
+            <b>海外一人旅 2ヶ月</b>
+            <p>陸路での国境越え。現地住民へのインタビュー。Instagram動画は1万いいねを超えた。</p>
+          </div>
+        </div>
+        <div class="beyond">
+          <div class="ph mono">素材待ち:ステージ写真</div>
+          <div class="body">
+            <b>漫才ステージ</b>
+            <p>脚本から立ち姿まで、自分でつくって舞台に立つ。笑いは最速で人を笑顔にする手段。</p>
+          </div>
+        </div>
+        <div class="beyond">
+          <div class="ph mono">素材待ち:ワークショップ写真</div>
+          <div class="body">
+            <b>福島 AIワークショップ</b>
+            <p>復興地の高校生へAIの面白さを届ける。テクノロジーを「体験」として手渡す試み。</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 06 Contact -->
+  <section id="contact">
+    <div class="panelbox">
+      <div class="sec-head"><span class="sec-num mono">06</span><span class="sec-label mono">Contact</span></div>
+      <h2>お気軽にどうぞ</h2>
+      <div class="contact-row">
+        <a class="btn btn-primary" href="#">GitHub <span class="arr">→</span></a>
+        <a class="btn btn-ghost" href="#">Email <span class="arr">→</span></a>
+      </div>
+    </div>
+  </section>
+
+  <footer class="mono">© 2026 【氏名】 — built with Next.js / このページはデザイン提案用モックアップ</footer>
+</div>
+
+<script>
+(function () {
+  if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+  document.querySelectorAll('section').forEach(function (sec) {
+    sec.querySelectorAll('.sec-head, h2, p.lede, .contact-row').forEach(function (el) {
+      el.classList.add('rv');
+    });
+    sec.querySelectorAll('.skill, .beyond').forEach(function (el, i) {
+      var d = i % 4;
+      el.classList.add('rv');
+      if (d > 0) el.classList.add('rv-d' + Math.min(d, 3));
+    });
+    sec.querySelectorAll('.project, .timeline li').forEach(function (el) {
+      el.classList.add('rv');
+    });
+  });
+
+  var io = new IntersectionObserver(function (entries) {
+    entries.forEach(function (e) {
+      if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); }
+    });
+  }, { threshold: 0.12, rootMargin: '0px 0px -8% 0px' });
+
+  document.querySelectorAll('.rv').forEach(function (el) { io.observe(el); });
+})();
+</script>
