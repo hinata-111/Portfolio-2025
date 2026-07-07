@@ -79,7 +79,17 @@ Hero → About → Skills → Experience → Projects → Beyond Code → Contac
 - モチーフ: 黄色マーカーハイライト(スイープ演出)、Heroのスポットライトグラデーション、Skillsのアイコンチップ(Py/AI/TS等)
 - セクション 01〜06 番号管理。Experience=ドット+縦線タイムライン(スクロールで点灯)
 - モーション: Hero時間差登場→マーカースイープ(0.95s/1.2s)、スクロールリビール(IntersectionObserver)、カードホバー浮上+アンバー光、全て prefers-reduced-motion 対応
-- モックアップ: `docs/design/portfolio-mockup-v6.html` / Artifact「v6.6-skills-redesign」
+- モックアップ: `docs/design/portfolio-mockup-v7.html` / Artifact「v7-hero-stage」
+
+### v6〜v7 での確定変更(2026-07-07)
+- **レイアウト**: セクションの大パネル箱を撤去 → 余白+中央フェード区切り線の開放レイアウト。本文最大幅880px
+- **ナビ**: 上部ナビ削除 → 右下固定「Contact →」ピル(contact-fab)のみ
+- **About**: 2カラム(左=正方形写真200px+基本情報リスト[名前/所属/研究/趣味]、右=ストーリー2段落)+末尾に座右の銘ブロック
+- **座右の銘(論語・雍也)**: 「之を知る者は之を好む者に如かず、之を好む者は之を楽しむ者に如かず」→「楽しむ者」宣言。Contact見出しは「一緒に楽しみましょう」で呼応
+- **Skills**: カテゴリ行(chip+カテゴリ名+使用文脈)+技術名ピルの一覧形式
+- **Hero演出(v7)**: ①開幕スポットライト点灯(brightness 3→1)②Canvas粒子55個(舞台の埃、マウスパララックス)③ステージLED風ティッカー「MAKE THEM SMILE/笑顔/MOVE THEIR HEART/心」(アウトライン+塗り交互)④カーソル追従スポットライト(pointer:fineのみ)
+- **遊び心**: console隠しメッセージ(スポットライトASCII+論語+「楽しむ者」宣言+連絡呼びかけ)
+- **実装時の品質要件**: `:focus-visible`スタイル必須 / Canvasは画面外でrAF停止(IntersectionObserver)/ mousemoveはrAFスロットリング / resizeはdebounce
 
 ### 参考サイト分析・注意点キャッチアップの反映(2026-07-07)
 出典: ARUTEGA、Tracks、PERSOL の各記事+参考サイト2件(umao.co.jp / effortel.com)

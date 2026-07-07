@@ -1,25 +1,26 @@
-# 就活ポートフォリオサイト Implementation Plan
+# 就活ポートフォリオサイト Implementation Plan(v7対応)
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
-**Goal:** 設計書(`docs/superpowers/specs/2026-07-07-portfolio-design.md`)と確定モックアップ(`docs/design/portfolio-mockup-v6.html`)どおりの1ページポートフォリオサイトを Next.js で実装し、Vercel で公開できる状態にする。
+**Goal:** 確定モックアップ `docs/design/portfolio-mockup-v7.html` どおりの1ページポートフォリオサイトを Next.js で実装し、Vercel で公開できる状態にする。
 
-**Architecture:** Next.js App Router の単一ページ構成。コンテンツは型付きデータモジュール(`content.ts`)に集約し、各セクションは独立した React コンポーネント。スタイルはモックアップ v4 の CSS(デザイントークン+クラス)を `globals.css` にそのまま移植する(Tailwind は使わない — v4 の CSS が完成品でありそのまま移植が最も忠実・軽量なため。スクロール演出は IntersectionObserver のカスタムフック)。
+**Architecture:** Next.js App Router の単一ページ構成。全コンテンツは型付きデータモジュール(`app/content.ts`)に集約し、各セクションは配列を map する独立コンポーネント(プロジェクト・経歴の追加=データ1要素の追加で完結)。スタイルは v7 モックアップの CSS を `app/globals.css` にそのまま移植(Tailwind 不使用 — 完成済み CSS の忠実移植が最軽量)。動きはスクロールリビール(IntersectionObserver フック)+ Hero 演出(Canvas 粒子・カーソルライト・ティッカー)。クライアント処理は `Reveal` / `HeroEffects` / `CursorLight` / `ConsoleEgg` の4コンポーネントに隔離し、それ以外はサーバーコンポーネント。
 
 **Tech Stack:** Next.js 15+(App Router, TypeScript)/ 素の CSS(デザイントークン)/ Vitest + React Testing Library / Vercel
 
 ## Global Constraints
 
-- コンテンツの文言・色・数値はすべてモックアップ `docs/design/portfolio-mockup-v6.html` と設計書から**そのまま**転記する。勝手に創作・補完しない
-- 未確定情報はモックアップどおりプレースホルダー(`【氏名】`、`(記載予定)`、`要確認` バッジ)のまま実装する
-- アクセント色 `#FFC53D` / `#E8A013`、ダーク地 `#101722`、角丸 32/22/16px・ピル 999px(トークン全値は v4 の `<style>` 冒頭 `:root` 群)
-- 全アニメーションは `prefers-reduced-motion: reduce` で無効化
+- 文言・色・数値はすべて `docs/design/portfolio-mockup-v7.html` から**そのまま**転記。勝手に創作・補完しない
+- 未確定情報はプレースホルダーのまま(`【氏名】`、`【趣味・特技 要記入】`、`(記載予定)`、`要確認`バッジ、`素材待ち`写真枠)
+- アクセント `#FFC53D` / `#E8A013`、ダーク地 `#0F1522`(トークン全値は v7 の `:root` 群)
+- 全アニメーションは `prefers-reduced-motion: reduce` で無効化(コンテンツは即表示)
+- **品質要件(コードレビュー対策)**: ①`:focus-visible` スタイル必須 ②Canvas は画面外で rAF 停止 ③mousemove は rAF スロットリング ④resize は debounce
 - 外部ライブラリ追加は本計画記載分のみ(YAGNI)
 - コミットメッセージ末尾: `Co-Authored-By: Claude Fable 5 <noreply@anthropic.com>`
 
 ---
 
-### Task 1: Next.js プロジェクト scaffold + テスト基盤
+### Task 1: Next.js scaffold + テスト基盤
 
 **Files:**
 - Create: `package.json`, `tsconfig.json`, `next.config.ts`, `app/layout.tsx`, `app/page.tsx`(create-next-app 生成)
@@ -27,23 +28,23 @@
 - Test: `tests/smoke.test.tsx`
 
 **Interfaces:**
-- Consumes: なし(最初のタスク)
-- Produces: `npm run dev` / `npm run build` / `npm test` が動く土台。後続タスクは `app/` 配下と `tests/` 配下に追加していく
+- Consumes: なし
+- Produces: `npm run dev` / `npm run build` / `npm test` が動く土台
 
 - [ ] **Step 1: create-next-app 実行**
 
-リポジトリ直下(`C:\Users\yos57\home\myApp\Portfolio-2025`)で:
+リポジトリ直下で:
 
 ```bash
-npx create-next-app@latest . --ts --app --no-tailwind --no-eslint --no-src-dir --import-alias "@/*" --use-npm --skip-install=false
+npx create-next-app@latest . --ts --app --no-tailwind --no-eslint --no-src-dir --import-alias "@/*" --use-npm
 ```
 
-対話プロンプトが出たら: Turbopack → Yes。既存 `docs/` `.gitignore` は上書きされない(された場合は `git checkout -- .gitignore docs` で復元し、create-next-app が生成した `.gitignore` の内容を既存に追記)。
+プロンプト: Turbopack → Yes。既存 `docs/` `.gitignore` が上書きされたら `git checkout -- docs` で復元し、.gitignore は両方の内容をマージ。
 
-- [ ] **Step 2: 動作確認**
+- [ ] **Step 2: ビルド確認**
 
 Run: `npm run build`
-Expected: `✓ Compiled successfully` で終了コード 0
+Expected: 終了コード 0
 
 - [ ] **Step 3: テスト基盤インストール**
 
@@ -51,7 +52,7 @@ Expected: `✓ Compiled successfully` で終了コード 0
 npm install -D vitest @vitejs/plugin-react jsdom @testing-library/react @testing-library/jest-dom
 ```
 
-- [ ] **Step 4: Vitest 設定ファイル作成**
+- [ ] **Step 4: Vitest 設定**
 
 `vitest.config.mts`:
 
@@ -78,13 +79,9 @@ export default defineConfig({
 import "@testing-library/jest-dom/vitest";
 ```
 
-`package.json` の scripts に追加:
+`package.json` scripts に `"test": "vitest run"` を追加。
 
-```json
-"test": "vitest run"
-```
-
-- [ ] **Step 5: 失敗するスモークテストを書く**
+- [ ] **Step 5: スモークテスト**
 
 `tests/smoke.test.tsx`:
 
@@ -101,12 +98,7 @@ describe("Home", () => {
 });
 ```
 
-Run: `npm test`
-Expected: FAIL(create-next-app デフォルトの page.tsx に `<main>` はあるので PASS する場合もある。PASS したらそのまま次へ — 基盤動作確認が目的)
-
-- [ ] **Step 6: page.tsx を最小シェルに置換**
-
-`app/page.tsx`:
+`app/page.tsx` を最小シェルに置換:
 
 ```tsx
 export default function Home() {
@@ -117,7 +109,7 @@ export default function Home() {
 Run: `npm test`
 Expected: PASS (1 passed)
 
-- [ ] **Step 7: コミット**
+- [ ] **Step 6: コミット**
 
 ```bash
 git add -A ':!.playwright-mcp'
@@ -128,27 +120,36 @@ Co-Authored-By: Claude Fable 5 <noreply@anthropic.com>"
 
 ---
 
-### Task 2: デザイントークンとグローバル CSS の移植
+### Task 2: グローバル CSS 移植+品質強化
 
 **Files:**
 - Modify: `app/globals.css`(全置換)
 - Modify: `app/layout.tsx`(全置換)
-- Test: `npm run build` + 目視(このタスクは CSS のためユニットテストなし)
 
 **Interfaces:**
-- Consumes: Task 1 の scaffold
-- Produces: v4 モックアップと同一のクラス群(`.hero` `.panelbox` `.sec-head` `.sec-num` `.sec-label` `.skill` `.chip` `.timeline` `.when` `.dot` `.what` `.project` `.prs` `.tags` `.tag` `.todo` `.beyond-grid` `.beyond` `.ph` `.body` `.contact-row` `.btn` `.btn-primary` `.btn-ghost` `.arr` `.nav` `.nav-pill` `.cta` `.hl` `.hero-eyebrow` `.role-line` `.hero-sub` `.name` `.wrap` `.serif` `.mono` `.center` `.lede` `.rv` `.rv-d1..3` `.in`)。後続の全コンポーネントはこのクラスを className で使う
+- Consumes: Task 1
+- Produces: v7 モックアップと同一のクラス群(`.hero` `.hero-canvas` `.cursor-light` `.ticker` `.ticker-track` `.glow` `.glow-a` `.glow-b` `.hero-inner` `.hero-eyebrow` `.hl` `.role-line` `.hero-sub` `.name` `.scroll-cue` `.sec-head` `.sec-num` `.sec-label` `.about-grid` `.about-photo` `.about-info` `.motto` `.vow` `.stack` `.stack-row` `.cat` `.chip` `.stack-pills` `.timeline` `.when` `.dot` `.what` `.project` `.prs` `.tags` `.tag` `.todo` `.beyond-grid` `.beyond` `.ph` `.body` `.contact-row` `.btn` `.btn-primary` `.btn-ghost` `.arr` `.contact-fab` `.wrap` `.serif` `.mono` `.center` `.lede` `.rv` `.rv-d1..3` `.in`)
 
-- [ ] **Step 1: globals.css へ CSS を移植**
+- [ ] **Step 1: CSS 移植**
 
-`docs/design/portfolio-mockup-v6.html` の `<style>...</style>` の中身**全体**を `app/globals.css` にコピーし(既存内容は全削除)、以下だけ修正:
+`docs/design/portfolio-mockup-v7.html` の `<style>...</style>` の中身全体を `app/globals.css` にコピー(既存内容は全削除)し、以下だけ修正:
 
-1. `.proposal-bar { ... }` のルールを削除(提案用バーは本番に載せない)
-2. 冒頭に `/* Design tokens & styles — ported from docs/design/portfolio-mockup-v6.html */` のコメントを追加
+1. `.proposal-bar { ... }` ルールを削除
+2. 冒頭にコメント `/* Design tokens & styles — ported from docs/design/portfolio-mockup-v7.html */`
+3. 末尾に品質要件①のフォーカススタイルを追加:
 
-それ以外は 1 文字も変えない。
+```css
+/* keyboard focus */
+a:focus-visible, button:focus-visible {
+  outline: 2px solid var(--sun);
+  outline-offset: 3px;
+  border-radius: 6px;
+}
+```
 
-- [ ] **Step 2: layout.tsx を作成**
+それ以外は1文字も変えない。
+
+- [ ] **Step 2: layout.tsx**
 
 `app/layout.tsx`:
 
@@ -173,18 +174,16 @@ export default function RootLayout({
 }
 ```
 
-create-next-app が生成したフォント読み込み(`next/font` の Geist 等)は削除(システムフォントスタックを使うため)。
+create-next-app 生成のフォント読み込み(next/font の Geist 等)は削除。
 
-- [ ] **Step 3: ビルド確認**
+- [ ] **Step 3: 確認+コミット**
 
 Run: `npm run build && npm test`
-Expected: 両方成功
-
-- [ ] **Step 4: コミット**
+Expected: 成功
 
 ```bash
 git add app/globals.css app/layout.tsx
-git commit -m "feat: v4モックアップのデザイントークンとスタイルを移植
+git commit -m "feat: v7モックアップのデザイントークンとスタイルを移植、focus-visible追加
 
 Co-Authored-By: Claude Fable 5 <noreply@anthropic.com>"
 ```
@@ -199,53 +198,53 @@ Co-Authored-By: Claude Fable 5 <noreply@anthropic.com>"
 
 **Interfaces:**
 - Consumes: なし
-- Produces: 後続コンポーネントが import する型と定数。`profile`(name, grad, catchTop, catchBottom, roleLine, affiliations: string[]), `aboutParagraphs: string[]`, `skills: Skill[]`(chip, title, desc), `timeline: TimelineItem[]`(when, title, desc, todo?), `projects: Project[]`(title, todoBadge?, meta, rows: {label, value}[], tags: string[]), `beyond: BeyondItem[]`(phLabel, title, desc), `contact`(github, email), `navItems: {href, label, cta?}[]`
+- Produces: 全コンポーネントが import する型と定数(下記コードが正)
 
-- [ ] **Step 1: 失敗するテストを書く**
+- [ ] **Step 1: 失敗するテスト**
 
 `tests/content.test.ts`:
 
 ```ts
 import { describe, it, expect } from "vitest";
 import {
-  profile, aboutParagraphs, skills, timeline, projects, beyond, navItems,
+  profile, aboutInfo, aboutParagraphs, motto, stack, timeline, projects, beyond, tickerWords,
 } from "@/app/content";
 
 describe("content", () => {
-  it("has the value phrase split for marker highlight", () => {
+  it("has the catch phrase parts", () => {
     expect(profile.catchTop).toBe("笑顔");
     expect(profile.catchBottom).toBe("心を動かす");
   });
-  it("has 5 skills, 5 timeline items, 3 projects, 3 beyond items", () => {
-    expect(skills).toHaveLength(5);
+  it("has expected collection sizes", () => {
+    expect(aboutInfo).toHaveLength(4);
+    expect(aboutParagraphs).toHaveLength(2);
+    expect(stack).toHaveLength(5);
     expect(timeline).toHaveLength(5);
     expect(projects).toHaveLength(3);
     expect(beyond).toHaveLength(3);
+    expect(tickerWords).toHaveLength(4);
   });
-  it("has 6 nav items ending with Contact CTA", () => {
-    expect(navItems).toHaveLength(6);
-    expect(navItems[5]).toMatchObject({ label: "Contact", cta: true });
-  });
-  it("about has 2 paragraphs", () => {
-    expect(aboutParagraphs).toHaveLength(2);
+  it("has the Confucius motto", () => {
+    expect(motto.quote).toContain("之を楽しむ者に如かず");
+    expect(motto.cite).toBe("— 論語・雍也");
   });
 });
 ```
 
-Run: `npm test`
-Expected: FAIL — `Cannot find module '@/app/content'`
+Run: `npm test` → Expected: FAIL(module not found)
 
-- [ ] **Step 2: content.ts を実装**
+- [ ] **Step 2: content.ts 実装**
 
-`app/content.ts`(文言はモックアップ v4 から転記):
+`app/content.ts`(文言は v7 モックアップから転記):
 
 ```ts
-export type Skill = { chip: string; title: string; desc: string };
+export type InfoItem = { k: string; v: string };
+export type StackRow = { chip: string; cat: string; note?: string; pills: string[] };
 export type TimelineItem = { when: string; title: string; desc: string; todo?: string };
 export type ProjectRow = { label: string; value: string };
 export type Project = { title: string; todoBadge?: string; meta: string; rows: ProjectRow[]; tags: string[] };
 export type BeyondItem = { phLabel: string; title: string; desc: string };
-export type NavItem = { href: string; label: string; cta?: boolean };
+export type TickerWord = { text: string; fill?: boolean };
 
 export const profile = {
   name: "【氏名】",
@@ -256,17 +255,32 @@ export const profile = {
   affiliations: ["慶應義塾大学 環境情報学部", "42Tokyo"],
 };
 
-export const aboutParagraphs = [
-  "慶應義塾大学 環境情報学部(2023年9月入学)。古谷知之研究室にて自然言語処理における感情分析を研究。2024年8月、42Tokyo Piscineに合格し入学。",
-  "ラジオ、漫才、旅、そしてソフトウェア。手段は違っても、つくる理由はいつも同じ——目の前の人を笑顔にすること。",
+export const aboutInfo: InfoItem[] = [
+  { k: "名前", v: "【氏名】" },
+  { k: "所属", v: "慶應義塾大学 環境情報学部" },
+  { k: "研究", v: "古谷知之研究室 — NLP・感情分析" },
+  { k: "趣味", v: "【趣味・特技 要記入】" },
 ];
 
-export const skills: Skill[] = [
-  { chip: "Py", title: "Python — LLM / NLP", desc: "PyTorch・MeCab・GiNZA。インターン・研究で使用" },
-  { chip: "AI", title: "LLM応用", desc: "RAG・ベクトルDB・AIエージェント開発" },
-  { chip: "TS", title: "TypeScript", desc: "React・Node.js によるWebアプリ開発" },
-  { chip: "DB", title: "Database", desc: "PostgreSQL" },
-  { chip: "Ops", title: "Infra / Tools", desc: "Docker・Git / GitHub" },
+export const aboutParagraphs = [
+  "慶應義塾大学 環境情報学部(2023年9月入学)。古谷知之研究室にて自然言語処理における感情分析を研究。2024年8月、42Tokyo Piscineに合格し入学。現在は長期インターンでAIエージェントのR&DとWebアプリ開発に携わる。",
+  "ラジオ、漫才、旅、そしてソフトウェア。手段は違っても、つくる理由はいつも同じ——目の前の人を笑顔にすること。お金のためではなく、クリエイターとして価値を生むことを大切にしている。",
+];
+
+export const motto = {
+  quote: "之を知る者は之を好む者に如かず、之を好む者は之を楽しむ者に如かず",
+  cite: "— 論語・雍也",
+  vowBefore: "知る者より、好む者。好む者より、楽しむ者。だから私は、誰よりも",
+  vowStrong: "「楽しむ者」",
+  vowAfter: "としてつくる。",
+};
+
+export const stack: StackRow[] = [
+  { chip: "Py", cat: "Python / NLP", note: "インターン・研究で使用", pills: ["Python", "PyTorch", "MeCab", "GiNZA"] },
+  { chip: "AI", cat: "LLM応用", note: "個人開発・R&D", pills: ["RAG", "ベクトルDB", "AIエージェント"] },
+  { chip: "TS", cat: "Web開発", note: "インターンで使用", pills: ["TypeScript", "React", "Node.js"] },
+  { chip: "DB", cat: "Database", pills: ["PostgreSQL"] },
+  { chip: "Ops", cat: "Infra / Tools", pills: ["Docker", "Git / GitHub"] },
 ];
 
 export const timeline: TimelineItem[] = [
@@ -324,48 +338,43 @@ export const beyond: BeyondItem[] = [
   { phLabel: "素材待ち:ワークショップ写真", title: "福島 AIワークショップ", desc: "復興地の高校生へAIの面白さを届ける。テクノロジーを「体験」として手渡す試み。" },
 ];
 
-export const contact = {
-  github: "#", // TODO: GitHubプロフィールURLに差し替え
-  email: "#", // TODO: mailto: に差し替え
-};
-
-export const navItems: NavItem[] = [
-  { href: "#about", label: "About" },
-  { href: "#skills", label: "Skills" },
-  { href: "#experience", label: "Experience" },
-  { href: "#projects", label: "Projects" },
-  { href: "#beyond", label: "Beyond" },
-  { href: "#contact", label: "Contact", cta: true },
+export const tickerWords: TickerWord[] = [
+  { text: "MAKE THEM SMILE" },
+  { text: "笑顔", fill: true },
+  { text: "MOVE THEIR HEART" },
+  { text: "心", fill: true },
 ];
+
+export const contact = {
+  github: "#", // TODO: GitHubプロフィールURL
+  email: "#", // TODO: mailto:
+};
 ```
 
-- [ ] **Step 3: テスト実行**
+- [ ] **Step 3: テスト実行+コミット**
 
-Run: `npm test`
-Expected: PASS (content の4テスト+スモーク)
-
-- [ ] **Step 4: コミット**
+Run: `npm test` → Expected: PASS
 
 ```bash
 git add app/content.ts tests/content.test.ts
-git commit -m "feat: サイト全文言を型付きコンテンツモジュールに集約
+git commit -m "feat: 全文言を型付きコンテンツモジュールに集約
 
 Co-Authored-By: Claude Fable 5 <noreply@anthropic.com>"
 ```
 
 ---
 
-### Task 4: リビールフック(スクロール演出)
+### Task 4: Reveal フック+セクション見出し
 
 **Files:**
-- Create: `app/components/Reveal.tsx`
+- Create: `app/components/Reveal.tsx`, `app/components/SectionHead.tsx`
 - Test: `tests/reveal.test.tsx`
 
 **Interfaces:**
-- Consumes: globals.css の `.rv` `.in` `.rv-d1..3` クラス
-- Produces: `<Reveal as="div" className="..." delay={0..3}>{children}</Reveal>` — クライアントコンポーネント。`as` は任意のタグ名(デフォルト `div`)、`delay` は `.rv-dN` 付与。IntersectionObserver 交差時に `.in` を付与。reduced-motion または IO 非対応環境では `.rv` を付けない(即表示)
+- Consumes: globals.css の `.rv` `.in` `.rv-dN` `.sec-head` クラス
+- Produces: `<Reveal as="li" delay={2} className="...">{children}</Reveal>`(クライアント)、`<SectionHead num="01" label="About" />`(サーバー)
 
-- [ ] **Step 1: 失敗するテストを書く**
+- [ ] **Step 1: 失敗するテスト**
 
 `tests/reveal.test.tsx`:
 
@@ -373,26 +382,33 @@ Co-Authored-By: Claude Fable 5 <noreply@anthropic.com>"
 import { render, screen } from "@testing-library/react";
 import { describe, it, expect } from "vitest";
 import Reveal from "@/app/components/Reveal";
+import SectionHead from "@/app/components/SectionHead";
 
 describe("Reveal", () => {
   it("renders children with given tag and className", () => {
     render(
-      <Reveal as="section" className="panelbox" data-testid="rv">
+      <Reveal as="section" className="foo" data-testid="rv">
         <p>hello</p>
       </Reveal>
     );
     const el = screen.getByTestId("rv");
     expect(el.tagName).toBe("SECTION");
-    expect(el).toHaveClass("panelbox");
-    expect(screen.getByText("hello")).toBeInTheDocument();
+    expect(el).toHaveClass("foo");
+  });
+});
+
+describe("SectionHead", () => {
+  it("renders number and label", () => {
+    render(<SectionHead num="01" label="About" />);
+    expect(screen.getByText("01")).toBeInTheDocument();
+    expect(screen.getByText("About")).toBeInTheDocument();
   });
 });
 ```
 
-Run: `npm test`
-Expected: FAIL — `Cannot find module '@/app/components/Reveal'`
+Run: `npm test` → FAIL
 
-- [ ] **Step 2: Reveal.tsx を実装**
+- [ ] **Step 2: Reveal.tsx**
 
 `app/components/Reveal.tsx`:
 
@@ -415,7 +431,7 @@ export default function Reveal<T extends ElementType = "div">({
 }: RevealProps<T>) {
   const Tag = (as ?? "div") as ElementType;
   const ref = useRef<HTMLElement | null>(null);
-  const [active, setActive] = useState(false); // .rv を付けるか(マウント後に判定)
+  const [active, setActive] = useState(false);
   const [inView, setInView] = useState(false);
 
   useEffect(() => {
@@ -423,7 +439,7 @@ export default function Reveal<T extends ElementType = "div">({
       typeof IntersectionObserver === "undefined" ||
       matchMedia("(prefers-reduced-motion: reduce)").matches
     ) {
-      return; // 即表示のまま
+      return; // 即表示
     }
     setActive(true);
     const el = ref.current;
@@ -460,52 +476,54 @@ export default function Reveal<T extends ElementType = "div">({
 }
 ```
 
-- [ ] **Step 3: テスト実行**
+- [ ] **Step 3: SectionHead.tsx**
 
-Run: `npm test`
-Expected: PASS(jsdom は IO 未定義 → `.rv` 付かず即表示分岐が動く)
+`app/components/SectionHead.tsx`:
 
-- [ ] **Step 4: コミット**
+```tsx
+export default function SectionHead({ num, label }: { num: string; label: string }) {
+  return (
+    <div className="sec-head">
+      <span className="sec-num mono">{num}</span>
+      <span className="sec-label mono">{label}</span>
+    </div>
+  );
+}
+```
+
+- [ ] **Step 4: テスト+コミット**
+
+Run: `npm test` → PASS
 
 ```bash
-git add app/components/Reveal.tsx tests/reveal.test.tsx
-git commit -m "feat: IntersectionObserverによるスクロールリビールを追加
+git add app/components/Reveal.tsx app/components/SectionHead.tsx tests/reveal.test.tsx
+git commit -m "feat: スクロールリビールとセクション見出しコンポーネント
 
 Co-Authored-By: Claude Fable 5 <noreply@anthropic.com>"
 ```
 
 ---
 
-### Task 5: Nav・Hero・セクション枠コンポーネント
+### Task 5: Hero(演出込み)
 
 **Files:**
-- Create: `app/components/Nav.tsx`, `app/components/Hero.tsx`, `app/components/Panel.tsx`
-- Test: `tests/nav-hero.test.tsx`
+- Create: `app/components/Hero.tsx`(サーバー), `app/components/HeroEffects.tsx`(クライアント), `app/components/CursorLight.tsx`(クライアント)
+- Test: `tests/hero.test.tsx`
 
 **Interfaces:**
-- Consumes: `content.ts` の `navItems` `profile`、globals.css クラス
-- Produces: `<Nav />`(浮遊ピルナビ)、`<Hero />`、`<Panel id num label heading>{children}</Panel>` — `num` は `"01"` 等の文字列、`label` はセクション英名、`heading` は h2 文言。Panel は `<section id><div class="panelbox"><Reveal(sec-head)><Reveal(h2)>` を内包
+- Consumes: `content.ts` の `profile` `tickerWords`
+- Produces: `<Hero />`(内部で HeroEffects を配置)、`<CursorLight />`(page.tsx が body 直下相当に配置)
 
-- [ ] **Step 1: 失敗するテストを書く**
+**品質要件②③④をここで実装**: Canvas は IntersectionObserver で画面外時に rAF 停止 / mousemove は rAF スロットリング / resize は 150ms debounce。
 
-`tests/nav-hero.test.tsx`:
+- [ ] **Step 1: 失敗するテスト**
+
+`tests/hero.test.tsx`:
 
 ```tsx
 import { render, screen } from "@testing-library/react";
 import { describe, it, expect } from "vitest";
-import Nav from "@/app/components/Nav";
 import Hero from "@/app/components/Hero";
-import Panel from "@/app/components/Panel";
-
-describe("Nav", () => {
-  it("renders 6 links with Contact as CTA", () => {
-    render(<Nav />);
-    const links = screen.getAllByRole("link");
-    expect(links).toHaveLength(6);
-    expect(links[5]).toHaveTextContent("Contact");
-    expect(links[5]).toHaveClass("cta");
-  });
-});
 
 describe("Hero", () => {
   it("renders catch phrase with two highlighted words", () => {
@@ -513,206 +531,438 @@ describe("Hero", () => {
     expect(screen.getByText("笑顔")).toHaveClass("hl");
     expect(screen.getByText("心を動かす")).toHaveClass("hl");
     expect(screen.getByText("【氏名】")).toBeInTheDocument();
+    expect(screen.getByRole("heading", { level: 1 })).toBeInTheDocument();
   });
-});
-
-describe("Panel", () => {
-  it("renders section with id, number, label and heading", () => {
-    render(
-      <Panel id="about" num="01" label="About" heading="テスト見出し">
-        <p>中身</p>
-      </Panel>
-    );
-    expect(document.getElementById("about")).not.toBeNull();
-    expect(screen.getByText("01")).toBeInTheDocument();
-    expect(screen.getByRole("heading", { level: 2 })).toHaveTextContent("テスト見出し");
-    expect(screen.getByText("中身")).toBeInTheDocument();
+  it("renders ticker words", () => {
+    render(<Hero />);
+    expect(screen.getAllByText("MAKE THEM SMILE").length).toBeGreaterThanOrEqual(4);
   });
 });
 ```
 
-Run: `npm test`
-Expected: FAIL — モジュール未定義
+Run: `npm test` → FAIL
 
-- [ ] **Step 2: Nav.tsx 実装**
-
-`app/components/Nav.tsx`:
-
-```tsx
-import { navItems } from "@/app/content";
-
-export default function Nav() {
-  return (
-    <nav className="nav">
-      <div className="nav-pill mono">
-        {navItems.map((item) => (
-          <a key={item.href} href={item.href} className={item.cta ? "cta" : undefined}>
-            {item.label}
-          </a>
-        ))}
-      </div>
-    </nav>
-  );
-}
-```
-
-- [ ] **Step 3: Hero.tsx 実装**
+- [ ] **Step 2: Hero.tsx**
 
 `app/components/Hero.tsx`:
 
 ```tsx
-import { profile } from "@/app/content";
+import { profile, tickerWords } from "@/app/content";
+import HeroEffects from "@/app/components/HeroEffects";
 
 export default function Hero() {
+  const repeats = 4; // シームレスループ用に4回繰り返し(トラックを-50%移動)
   return (
     <header className="hero">
-      <div className="hero-eyebrow mono">{profile.grad}</div>
-      <h1 className="serif">
-        人を<span className="hl">{profile.catchTop}</span>にし、
-        <br />
-        <span className="hl">{profile.catchBottom}</span>ものを生み出す。
-      </h1>
-      <div className="role-line mono">{profile.roleLine}</div>
-      <div className="hero-sub">
-        <span className="name">{profile.name}</span>
-        {profile.affiliations.map((a) => (
-          <span key={a}>{a}</span>
-        ))}
+      <div className="glow glow-a" />
+      <div className="glow glow-b" />
+      <HeroEffects />
+      <div className="hero-inner">
+        <div className="hero-eyebrow mono">{profile.grad}</div>
+        <h1 className="serif">
+          人を<span className="hl">{profile.catchTop}</span>にし、
+          <br />
+          <span className="hl">{profile.catchBottom}</span>ものを生み出す。
+        </h1>
+        <div className="role-line mono">{profile.roleLine}</div>
+        <div className="hero-sub">
+          <span className="name">{profile.name}</span>
+          {profile.affiliations.map((a) => (
+            <span key={a}>{a}</span>
+          ))}
+        </div>
+      </div>
+      <div className="scroll-cue" aria-hidden="true" />
+      <div className="ticker" aria-hidden="true">
+        <div className="ticker-track">
+          {Array.from({ length: repeats }).flatMap((_, r) =>
+            tickerWords.map((w, i) => (
+              <span key={`${r}-${i}`} className={w.fill ? "fill" : undefined}>
+                {w.text}
+              </span>
+            ))
+          )}
+        </div>
       </div>
     </header>
   );
 }
 ```
 
-- [ ] **Step 4: Panel.tsx 実装**
+- [ ] **Step 3: HeroEffects.tsx(Canvas 粒子)**
 
-`app/components/Panel.tsx`:
+`app/components/HeroEffects.tsx`:
 
 ```tsx
-import Reveal from "@/app/components/Reveal";
+"use client";
 
-type PanelProps = {
-  id: string;
-  num: string;
-  label: string;
-  heading: string;
-  children: React.ReactNode;
+import { useEffect, useRef } from "react";
+
+type Particle = {
+  x: number; y: number; r: number;
+  vx: number; vy: number;
+  tw: number; tws: number; depth: number;
 };
 
-export default function Panel({ id, num, label, heading, children }: PanelProps) {
-  return (
-    <section id={id}>
-      <div className="panelbox">
-        <Reveal className="sec-head">
-          <span className="sec-num mono">{num}</span>
-          <span className="sec-label mono">{label}</span>
-        </Reveal>
-        <Reveal as="h2">{heading}</Reveal>
-        {children}
-      </div>
-    </section>
-  );
+export default function HeroEffects() {
+  const canvasRef = useRef<HTMLCanvasElement | null>(null);
+
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    if (matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return;
+
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    let W = 0, H = 0;
+    let mx = 0.5, my = 0.5;
+    let raf = 0;
+    let visible = true;
+
+    const resize = () => {
+      W = canvas.offsetWidth;
+      H = canvas.offsetHeight;
+      canvas.width = W * dpr;
+      canvas.height = H * dpr;
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    };
+    resize();
+
+    let resizeTimer: ReturnType<typeof setTimeout>;
+    const onResize = () => {
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(resize, 150); // 品質要件④ debounce
+    };
+    window.addEventListener("resize", onResize);
+
+    const parts: Particle[] = Array.from({ length: 55 }, () => ({
+      x: Math.random(), y: Math.random(),
+      r: Math.random() * 2.2 + 0.6,
+      vy: -(Math.random() * 0.012 + 0.004),
+      vx: (Math.random() - 0.5) * 0.008,
+      tw: Math.random() * Math.PI * 2,
+      tws: Math.random() * 0.03 + 0.01,
+      depth: Math.random() * 0.7 + 0.3,
+    }));
+
+    let mouseQueued = false;
+    const onMouse = (e: MouseEvent) => {
+      if (mouseQueued) return; // 品質要件③ rAFスロットリング
+      mouseQueued = true;
+      requestAnimationFrame(() => {
+        mx = e.clientX / window.innerWidth;
+        my = e.clientY / window.innerHeight;
+        mouseQueued = false;
+      });
+    };
+    document.addEventListener("mousemove", onMouse);
+
+    const tick = () => {
+      ctx.clearRect(0, 0, W, H);
+      for (const p of parts) {
+        p.y += p.vy * p.depth;
+        p.x += p.vx * p.depth;
+        p.tw += p.tws;
+        if (p.y < -0.05) { p.y = 1.05; p.x = Math.random(); }
+        if (p.x < -0.05) p.x = 1.05;
+        if (p.x > 1.05) p.x = -0.05;
+        const px = (p.x + (mx - 0.5) * 0.04 * p.depth) * W;
+        const py = (p.y + (my - 0.5) * 0.04 * p.depth) * H;
+        const a = (0.25 + Math.sin(p.tw) * 0.2) * p.depth;
+        ctx.beginPath();
+        ctx.arc(px, py, p.r * p.depth, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(255,197,61,${a.toFixed(3)})`;
+        ctx.fill();
+      }
+      raf = requestAnimationFrame(tick);
+    };
+
+    // 品質要件② 画面外では rAF 停止
+    const io = new IntersectionObserver(
+      ([entry]) => {
+        visible = entry.isIntersecting;
+        cancelAnimationFrame(raf);
+        if (visible) raf = requestAnimationFrame(tick);
+      },
+      { threshold: 0 }
+    );
+    io.observe(canvas);
+
+    return () => {
+      cancelAnimationFrame(raf);
+      io.disconnect();
+      window.removeEventListener("resize", onResize);
+      document.removeEventListener("mousemove", onMouse);
+      clearTimeout(resizeTimer);
+    };
+  }, []);
+
+  return <canvas ref={canvasRef} className="hero-canvas" aria-hidden="true" />;
 }
 ```
 
-- [ ] **Step 5: テスト実行**
+- [ ] **Step 4: CursorLight.tsx**
 
-Run: `npm test`
-Expected: PASS(全ファイル)
+`app/components/CursorLight.tsx`:
 
-- [ ] **Step 6: コミット**
+```tsx
+"use client";
+
+import { useEffect, useRef } from "react";
+
+export default function CursorLight() {
+  const ref = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    if (matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    if (!matchMedia("(pointer: fine)").matches) return;
+
+    let queued = false;
+    const onMouse = (e: MouseEvent) => {
+      if (queued) return; // rAFスロットリング
+      queued = true;
+      requestAnimationFrame(() => {
+        el.classList.add("on");
+        el.style.background = `radial-gradient(circle 260px at ${e.clientX}px ${e.clientY}px, rgba(255,197,61,.07), transparent 70%)`;
+        queued = false;
+      });
+    };
+    document.addEventListener("mousemove", onMouse);
+    return () => document.removeEventListener("mousemove", onMouse);
+  }, []);
+
+  return <div ref={ref} className="cursor-light" aria-hidden="true" />;
+}
+```
+
+- [ ] **Step 5: テスト+コミット**
+
+Run: `npm test` → PASS
 
 ```bash
-git add app/components/Nav.tsx app/components/Hero.tsx app/components/Panel.tsx tests/nav-hero.test.tsx
-git commit -m "feat: ナビ・ヒーロー・セクションパネルのコンポーネントを実装
+git add app/components/Hero.tsx app/components/HeroEffects.tsx app/components/CursorLight.tsx tests/hero.test.tsx
+git commit -m "feat: Hero(粒子・ティッカー・カーソルライト演出込み)を実装
 
 Co-Authored-By: Claude Fable 5 <noreply@anthropic.com>"
 ```
 
 ---
 
-### Task 6: Skills・Experience セクション
+### Task 6: About(座右の銘込み)+ Skills
 
 **Files:**
-- Create: `app/components/Skills.tsx`, `app/components/Experience.tsx`
+- Create: `app/components/About.tsx`, `app/components/Skills.tsx`
+- Test: `tests/about-skills.test.tsx`
+
+**Interfaces:**
+- Consumes: `content.ts` の `aboutInfo` `aboutParagraphs` `motto` `stack`、`SectionHead`、`Reveal`
+- Produces: `<About />`(section#about)、`<Skills />`(section#skills)
+
+- [ ] **Step 1: 失敗するテスト**
+
+`tests/about-skills.test.tsx`:
+
+```tsx
+import { render, screen } from "@testing-library/react";
+import { describe, it, expect } from "vitest";
+import About from "@/app/components/About";
+import Skills from "@/app/components/Skills";
+
+describe("About", () => {
+  it("renders info list, story and motto", () => {
+    render(<About />);
+    expect(document.getElementById("about")).not.toBeNull();
+    expect(document.querySelectorAll(".about-info li")).toHaveLength(4);
+    expect(screen.getByText(/之を楽しむ者に如かず/)).toBeInTheDocument();
+    expect(screen.getByText("「楽しむ者」")).toBeInTheDocument();
+    expect(screen.getByText("素材待ち:プロフィール写真")).toBeInTheDocument();
+  });
+});
+
+describe("Skills", () => {
+  it("renders 5 stack rows with pills", () => {
+    render(<Skills />);
+    expect(document.getElementById("skills")).not.toBeNull();
+    expect(document.querySelectorAll(".stack-row")).toHaveLength(5);
+    expect(screen.getByText("PyTorch")).toBeInTheDocument();
+    expect(screen.getByText("PostgreSQL")).toBeInTheDocument();
+  });
+});
+```
+
+Run: `npm test` → FAIL
+
+- [ ] **Step 2: About.tsx**
+
+`app/components/About.tsx`:
+
+```tsx
+import { aboutInfo, aboutParagraphs, motto } from "@/app/content";
+import SectionHead from "@/app/components/SectionHead";
+import Reveal from "@/app/components/Reveal";
+
+export default function About() {
+  return (
+    <section id="about" style={{ padding: "72px 0 64px" }}>
+      <Reveal>
+        <SectionHead num="01" label="About" />
+      </Reveal>
+      <Reveal as="h2">ものづくりの原点は、目の前の人の反応。</Reveal>
+      <Reveal className="about-grid">
+        <div>
+          <div className="about-photo mono">素材待ち:プロフィール写真</div>
+          <ul className="about-info">
+            {aboutInfo.map((item) => (
+              <li key={item.k}>
+                <span className="k mono">{item.k}</span>
+                <span className="v">{item.v}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+        <div className="about-story">
+          {aboutParagraphs.map((p) => (
+            <p key={p}>{p}</p>
+          ))}
+        </div>
+      </Reveal>
+      <Reveal className="motto">
+        <blockquote className="serif">
+          {motto.quote.split("、")[0]}、<br />
+          {motto.quote.split("、")[1]}
+        </blockquote>
+        <cite className="mono">{motto.cite}</cite>
+        <p className="vow">
+          {motto.vowBefore}
+          <b>{motto.vowStrong}</b>
+          {motto.vowAfter}
+        </p>
+      </Reveal>
+    </section>
+  );
+}
+```
+
+- [ ] **Step 3: Skills.tsx**
+
+`app/components/Skills.tsx`:
+
+```tsx
+import { stack } from "@/app/content";
+import SectionHead from "@/app/components/SectionHead";
+import Reveal from "@/app/components/Reveal";
+
+export default function Skills() {
+  return (
+    <section id="skills">
+      <Reveal>
+        <SectionHead num="02" label="Skills" />
+      </Reveal>
+      <Reveal as="h2">技術スタック</Reveal>
+      <div className="stack">
+        {stack.map((row, i) => (
+          <Reveal key={row.cat} className="stack-row" delay={(i % 4) as 0 | 1 | 2 | 3}>
+            <div className="cat">
+              <span className="chip mono">{row.chip}</span>
+              <span>
+                <b>{row.cat}</b>
+                {row.note && <i>{row.note}</i>}
+              </span>
+            </div>
+            <div className="stack-pills">
+              {row.pills.map((p) => (
+                <span key={p}>{p}</span>
+              ))}
+            </div>
+          </Reveal>
+        ))}
+      </div>
+    </section>
+  );
+}
+```
+
+- [ ] **Step 4: テスト+コミット**
+
+Run: `npm test` → PASS
+
+```bash
+git add app/components/About.tsx app/components/Skills.tsx tests/about-skills.test.tsx
+git commit -m "feat: About(座右の銘込み)とSkillsセクションを実装
+
+Co-Authored-By: Claude Fable 5 <noreply@anthropic.com>"
+```
+
+---
+
+### Task 7: Experience + Projects + Beyond
+
+**Files:**
+- Create: `app/components/Experience.tsx`, `app/components/Projects.tsx`, `app/components/Beyond.tsx`
 - Test: `tests/sections.test.tsx`
 
 **Interfaces:**
-- Consumes: `content.ts` の `skills` `timeline`、`Panel`、`Reveal`
-- Produces: `<Skills />`(Panel 02 内にチップ付きカード)、`<Experience />`(Panel 03 内にタイムライン)
+- Consumes: `content.ts` の `timeline` `projects` `beyond`、`SectionHead`、`Reveal`
+- Produces: `<Experience />`(#experience)、`<Projects />`(#projects)、`<Beyond />`(#beyond)
 
-- [ ] **Step 1: 失敗するテストを書く**
+- [ ] **Step 1: 失敗するテスト**
 
 `tests/sections.test.tsx`:
 
 ```tsx
 import { render, screen } from "@testing-library/react";
 import { describe, it, expect } from "vitest";
-import Skills from "@/app/components/Skills";
 import Experience from "@/app/components/Experience";
-
-describe("Skills", () => {
-  it("renders 5 skill cards with chips", () => {
-    render(<Skills />);
-    expect(screen.getByText("Python — LLM / NLP")).toBeInTheDocument();
-    expect(screen.getByText("Py")).toHaveClass("chip");
-    expect(document.querySelectorAll(".skill")).toHaveLength(5);
-  });
-});
+import Projects from "@/app/components/Projects";
+import Beyond from "@/app/components/Beyond";
 
 describe("Experience", () => {
-  it("renders 5 timeline items with todo badge on the last", () => {
+  it("renders 5 timeline items with todo badge on radio", () => {
     render(<Experience />);
     expect(document.querySelectorAll(".timeline li")).toHaveLength(5);
     expect(screen.getByText("期間")).toHaveClass("todo");
-    expect(screen.getByText(/レディオ湘南/)).toBeInTheDocument();
+  });
+});
+
+describe("Projects", () => {
+  it("renders 3 projects with rows and tags", () => {
+    render(<Projects />);
+    expect(document.querySelectorAll(".project")).toHaveLength(3);
+    expect(screen.getAllByText("公開可否 要確認")).toHaveLength(2);
+    expect(screen.getAllByText("課題")).toHaveLength(3);
+  });
+});
+
+describe("Beyond", () => {
+  it("renders 3 cards with photo placeholders", () => {
+    render(<Beyond />);
+    expect(document.querySelectorAll(".beyond")).toHaveLength(3);
+    expect(screen.getByText("素材待ち:旅の写真")).toBeInTheDocument();
   });
 });
 ```
 
-Run: `npm test`
-Expected: FAIL
+Run: `npm test` → FAIL
 
-- [ ] **Step 2: Skills.tsx 実装**
-
-`app/components/Skills.tsx`:
-
-```tsx
-import { skills } from "@/app/content";
-import Panel from "@/app/components/Panel";
-import Reveal from "@/app/components/Reveal";
-
-export default function Skills() {
-  return (
-    <Panel id="skills" num="02" label="Skills" heading="技術スタック">
-      <div className="skill-grid">
-        {skills.map((s, i) => (
-          <Reveal key={s.title} className="skill" delay={(i % 4) as 0 | 1 | 2 | 3}>
-            <span className="chip mono">{s.chip}</span>
-            <div>
-              <b>{s.title}</b>
-              <span>{s.desc}</span>
-            </div>
-          </Reveal>
-        ))}
-      </div>
-    </Panel>
-  );
-}
-```
-
-- [ ] **Step 3: Experience.tsx 実装**
+- [ ] **Step 2: Experience.tsx**
 
 `app/components/Experience.tsx`:
 
 ```tsx
 import { timeline } from "@/app/content";
-import Panel from "@/app/components/Panel";
+import SectionHead from "@/app/components/SectionHead";
 import Reveal from "@/app/components/Reveal";
 
 export default function Experience() {
   return (
-    <Panel id="experience" num="03" label="Experience" heading="経歴">
+    <section id="experience">
+      <Reveal>
+        <SectionHead num="03" label="Experience" />
+      </Reveal>
+      <Reveal as="h2">経歴</Reveal>
       <ul className="timeline">
         {timeline.map((t) => (
           <Reveal as="li" key={t.title}>
@@ -728,82 +978,27 @@ export default function Experience() {
           </Reveal>
         ))}
       </ul>
-    </Panel>
+    </section>
   );
 }
 ```
 
-- [ ] **Step 4: テスト実行**
-
-Run: `npm test`
-Expected: PASS
-
-- [ ] **Step 5: コミット**
-
-```bash
-git add app/components/Skills.tsx app/components/Experience.tsx tests/sections.test.tsx
-git commit -m "feat: SkillsとExperienceセクションを実装
-
-Co-Authored-By: Claude Fable 5 <noreply@anthropic.com>"
-```
-
----
-
-### Task 7: Projects・Beyond Code セクション
-
-**Files:**
-- Create: `app/components/Projects.tsx`, `app/components/Beyond.tsx`
-- Test: `tests/projects-beyond.test.tsx`
-
-**Interfaces:**
-- Consumes: `content.ts` の `projects` `beyond`、`Panel`、`Reveal`
-- Produces: `<Projects />`(Panel 04)、`<Beyond />`(Panel 05)
-
-- [ ] **Step 1: 失敗するテストを書く**
-
-`tests/projects-beyond.test.tsx`:
-
-```tsx
-import { render, screen } from "@testing-library/react";
-import { describe, it, expect } from "vitest";
-import Projects from "@/app/components/Projects";
-import Beyond from "@/app/components/Beyond";
-
-describe("Projects", () => {
-  it("renders 3 project cards with rows and tags", () => {
-    render(<Projects />);
-    expect(document.querySelectorAll(".project")).toHaveLength(3);
-    expect(screen.getAllByText("公開可否 要確認")).toHaveLength(2);
-    expect(screen.getByText("Discord Bot(個人開発)")).toBeInTheDocument();
-    expect(screen.getAllByText("課題")).toHaveLength(3);
-  });
-});
-
-describe("Beyond", () => {
-  it("renders 3 beyond cards with photo placeholders", () => {
-    render(<Beyond />);
-    expect(document.querySelectorAll(".beyond")).toHaveLength(3);
-    expect(screen.getByText("素材待ち:旅の写真")).toBeInTheDocument();
-    expect(screen.getByText("漫才ステージ")).toBeInTheDocument();
-  });
-});
-```
-
-Run: `npm test`
-Expected: FAIL
-
-- [ ] **Step 2: Projects.tsx 実装**
+- [ ] **Step 3: Projects.tsx**
 
 `app/components/Projects.tsx`:
 
 ```tsx
 import { projects } from "@/app/content";
-import Panel from "@/app/components/Panel";
+import SectionHead from "@/app/components/SectionHead";
 import Reveal from "@/app/components/Reveal";
 
 export default function Projects() {
   return (
-    <Panel id="projects" num="04" label="Projects" heading="プロジェクト">
+    <section id="projects">
+      <Reveal>
+        <SectionHead num="04" label="Projects" />
+      </Reveal>
+      <Reveal as="h2">プロジェクト</Reveal>
       {projects.map((p) => (
         <Reveal as="article" key={p.title} className="project">
           <h3>
@@ -828,26 +1023,34 @@ export default function Projects() {
           </div>
         </Reveal>
       ))}
-      <Reveal as="p" className="lede center" style={{ color: "var(--muted)", fontSize: 14 }}>
+      <Reveal
+        as="p"
+        className="lede center"
+        style={{ color: "var(--muted)", fontSize: 14, marginTop: 28 }}
+      >
         その他の制作物は GitHub を参照 →
       </Reveal>
-    </Panel>
+    </section>
   );
 }
 ```
 
-- [ ] **Step 3: Beyond.tsx 実装**
+- [ ] **Step 4: Beyond.tsx**
 
 `app/components/Beyond.tsx`:
 
 ```tsx
 import { beyond } from "@/app/content";
-import Panel from "@/app/components/Panel";
+import SectionHead from "@/app/components/SectionHead";
 import Reveal from "@/app/components/Reveal";
 
 export default function Beyond() {
   return (
-    <Panel id="beyond" num="05" label="Beyond Code" heading="コードの外側でも、人を笑顔に。">
+    <section id="beyond">
+      <Reveal>
+        <SectionHead num="05" label="Beyond Code" />
+      </Reveal>
+      <Reveal as="h2">コードの外側でも、人を笑顔に。</Reveal>
       <div className="beyond-grid">
         {beyond.map((b, i) => (
           <Reveal key={b.title} className="beyond" delay={(i % 4) as 0 | 1 | 2 | 3}>
@@ -859,73 +1062,83 @@ export default function Beyond() {
           </Reveal>
         ))}
       </div>
-    </Panel>
+    </section>
   );
 }
 ```
 
-- [ ] **Step 4: テスト実行**
+- [ ] **Step 5: テスト+コミット**
 
-Run: `npm test`
-Expected: PASS
-
-- [ ] **Step 5: コミット**
+Run: `npm test` → PASS
 
 ```bash
-git add app/components/Projects.tsx app/components/Beyond.tsx tests/projects-beyond.test.tsx
-git commit -m "feat: ProjectsとBeyond Codeセクションを実装
+git add app/components/Experience.tsx app/components/Projects.tsx app/components/Beyond.tsx tests/sections.test.tsx
+git commit -m "feat: Experience・Projects・Beyond Codeセクションを実装
 
 Co-Authored-By: Claude Fable 5 <noreply@anthropic.com>"
 ```
 
 ---
 
-### Task 8: Contact・ページ組み立て・メタ情報
+### Task 8: Contact・ConsoleEgg・ページ組み立て
 
 **Files:**
-- Create: `app/components/Contact.tsx`
+- Create: `app/components/Contact.tsx`, `app/components/ContactFab.tsx`, `app/components/ConsoleEgg.tsx`
 - Modify: `app/page.tsx`(全置換)
 - Test: `tests/page.test.tsx`
 
 **Interfaces:**
-- Consumes: 全コンポーネント、`content.ts` の `contact` `profile`
-- Produces: 完成した 1 ページ(`/`)
+- Consumes: 全コンポーネント、`content.ts` の `contact` `profile` `motto`
+- Produces: 完成した 1 ページ
 
-- [ ] **Step 1: 失敗するテストを書く**
+- [ ] **Step 1: 失敗するテスト**
 
 `tests/page.test.tsx`:
 
 ```tsx
 import { render, screen } from "@testing-library/react";
-import { describe, it, expect } from "vitest";
+import { describe, it, expect, vi } from "vitest";
 import Home from "@/app/page";
 
 describe("Home page", () => {
-  it("renders all 6 sections in order", () => {
+  it("renders all sections, fab and footer", () => {
     render(<Home />);
-    const ids = ["about", "skills", "experience", "projects", "beyond", "contact"];
-    ids.forEach((id) => expect(document.getElementById(id)).not.toBeNull());
+    ["about", "skills", "experience", "projects", "beyond", "contact"].forEach((id) =>
+      expect(document.getElementById(id)).not.toBeNull()
+    );
     expect(screen.getByRole("heading", { level: 1 })).toHaveTextContent("笑顔");
-    expect(screen.getByRole("contentinfo")).toBeInTheDocument(); // footer
+    expect(screen.getByText("一緒に楽しみましょう")).toBeInTheDocument();
+    expect(document.querySelector(".contact-fab")).toHaveAttribute("href", "#contact");
+    expect(screen.getByRole("contentinfo")).toBeInTheDocument();
+  });
+  it("logs the console easter egg on mount", () => {
+    const spy = vi.spyOn(console, "log").mockImplementation(() => {});
+    render(<Home />);
+    const logged = spy.mock.calls.map((c) => String(c[0])).join("\n");
+    expect(logged).toContain("SPOTLIGHT ON");
+    spy.mockRestore();
   });
 });
 ```
 
-Run: `npm test`
-Expected: FAIL
+Run: `npm test` → FAIL
 
-- [ ] **Step 2: Contact.tsx 実装**
+- [ ] **Step 2: Contact.tsx / ContactFab.tsx**
 
 `app/components/Contact.tsx`:
 
 ```tsx
 import { contact } from "@/app/content";
-import Panel from "@/app/components/Panel";
+import SectionHead from "@/app/components/SectionHead";
 import Reveal from "@/app/components/Reveal";
 
 export default function Contact() {
   return (
-    <Panel id="contact" num="06" label="Contact" heading="お気軽にどうぞ">
+    <section id="contact">
+      <Reveal>
+        <SectionHead num="06" label="Contact" />
+      </Reveal>
+      <Reveal as="h2">一緒に楽しみましょう</Reveal>
       <Reveal className="contact-row">
         <a className="btn btn-primary" href={contact.github}>
           GitHub <span className="arr">→</span>
@@ -934,40 +1147,79 @@ export default function Contact() {
           Email <span className="arr">→</span>
         </a>
       </Reveal>
-    </Panel>
+    </section>
   );
 }
 ```
 
-- [ ] **Step 3: page.tsx を組み立て**
+`app/components/ContactFab.tsx`:
+
+```tsx
+export default function ContactFab() {
+  return (
+    <a className="contact-fab mono" href="#contact">
+      Contact <span className="arr">→</span>
+    </a>
+  );
+}
+```
+
+- [ ] **Step 3: ConsoleEgg.tsx**
+
+`app/components/ConsoleEgg.tsx`:
+
+```tsx
+"use client";
+
+import { useEffect } from "react";
+
+export default function ConsoleEgg() {
+  useEffect(() => {
+    const amber = "color:#FFC53D; font-weight:bold;";
+    const dim = "color:#93A0B4;";
+    const strong = "color:#FFFFFF; font-weight:bold;";
+    console.log(
+      "%c\n   \\ | /\n  ─ ◯ ─   %cSPOTLIGHT ON.%c\n   / | \\\n",
+      amber, strong, ""
+    );
+    console.log(
+      "%c「之を知る者は之を好む者に如かず、\n 之を好む者は之を楽しむ者に如かず」 %c— 論語\n",
+      amber, dim
+    );
+    console.log(
+      "%c知っているだけの人より、好きな人。好きな人より、楽しんでいる人にはかなわない。\n私は「楽しむ者」としてコードを書き、モノをつくる。\nそしてつくったもので、目の前の人を笑顔にする。\n",
+      "color:#E8EAF0;"
+    );
+    console.log("%cこのソースを読みに来たあなたへ — 話しましょう。→ #contact", dim);
+  }, []);
+
+  return null;
+}
+```
+
+- [ ] **Step 4: page.tsx 組み立て**
 
 `app/page.tsx`:
 
 ```tsx
-import Nav from "@/app/components/Nav";
 import Hero from "@/app/components/Hero";
+import About from "@/app/components/About";
 import Skills from "@/app/components/Skills";
 import Experience from "@/app/components/Experience";
 import Projects from "@/app/components/Projects";
 import Beyond from "@/app/components/Beyond";
 import Contact from "@/app/components/Contact";
-import Panel from "@/app/components/Panel";
-import Reveal from "@/app/components/Reveal";
-import { aboutParagraphs, profile } from "@/app/content";
+import ContactFab from "@/app/components/ContactFab";
+import CursorLight from "@/app/components/CursorLight";
+import ConsoleEgg from "@/app/components/ConsoleEgg";
+import { profile } from "@/app/content";
 
 export default function Home() {
   return (
     <main>
-      <Nav />
       <Hero />
       <div className="wrap">
-        <Panel id="about" num="01" label="About" heading="ものづくりの原点は、目の前の人の反応。">
-          {aboutParagraphs.map((p) => (
-            <Reveal as="p" key={p} className="lede center">
-              {p}
-            </Reveal>
-          ))}
-        </Panel>
+        <About />
         <Skills />
         <Experience />
         <Projects />
@@ -975,44 +1227,44 @@ export default function Home() {
         <Contact />
         <footer className="mono">© 2026 {profile.name} — built with Next.js</footer>
       </div>
+      <ContactFab />
+      <CursorLight />
+      <ConsoleEgg />
     </main>
   );
 }
 ```
 
-- [ ] **Step 4: テスト+ビルド確認**
+- [ ] **Step 5: テスト+ビルド+目視**
 
 Run: `npm test && npm run build`
-Expected: 全テスト PASS、ビルド成功
+Expected: 全 PASS・ビルド成功
 
-- [ ] **Step 5: 開発サーバで目視確認**
-
-Run: `npm run dev`(バックグラウンド)→ ブラウザで `http://localhost:3000`
-確認: モックアップ v4 と見た目一致、Hero マーカースイープ動作、スクロールリビール動作、ナビアンカー動作、モバイル幅(375px)で崩れなし、ライト/ダーク両テーマ
+Run: `npm run dev`(バックグラウンド)→ `http://localhost:3000` をブラウザで確認:
+- モックアップ v7 と見た目一致(開幕点灯・粒子・ティッカー・カーソルライト・マーカースイープ)
+- F12 コンソールに隠しメッセージ
+- モバイル幅(375px)崩れなし、ライト/ダーク両テーマ
+- Tab キーでフォーカスリング表示
 
 - [ ] **Step 6: コミット**
 
 ```bash
-git add app/components/Contact.tsx app/page.tsx tests/page.test.tsx
-git commit -m "feat: 全セクションを組み立てて1ページ完成
+git add app/components/Contact.tsx app/components/ContactFab.tsx app/components/ConsoleEgg.tsx app/page.tsx tests/page.test.tsx
+git commit -m "feat: Contact・console隠しメッセージ・ページ組み立てで1ページ完成
 
 Co-Authored-By: Claude Fable 5 <noreply@anthropic.com>"
 ```
 
 ---
 
-### Task 9: README とデプロイ準備
+### Task 9: README+デプロイ準備
 
 **Files:**
 - Modify: `README.md`(全置換)
 
-**Interfaces:**
-- Consumes: 完成したサイト
-- Produces: リポジトリ説明とデプロイ手順
+- [ ] **Step 1: README.md**
 
-- [ ] **Step 1: README.md 作成**
-
-`README.md`:
+内容(コードフェンスは通常のバッククォート3つ):
 
 ```markdown
 # Portfolio 2025
@@ -1021,34 +1273,26 @@ Co-Authored-By: Claude Fable 5 <noreply@anthropic.com>"
 
 ## Tech Stack
 - Next.js (App Router) + TypeScript
-- CSS custom properties によるデザイントークン(ダーク/ライト対応)
+- 素の CSS(デザイントークン、ダーク/ライト対応)— 外部 UI ライブラリなし
+- Canvas API による Hero 演出(画面外では rAF 停止、reduced-motion 対応)
 - Vitest + React Testing Library
 
 ## Development
-​```bash
-npm install
-npm run dev   # http://localhost:3000
-npm test      # unit tests
-npm run build # production build
-​```
+npm install / npm run dev / npm test / npm run build
 
-## Design
+## Architecture
+- `app/content.ts` — 全コンテンツを型付きデータで集約。プロジェクト・経歴の追加はデータ1要素の追加のみ
+- `app/components/` — セクション単位の独立コンポーネント。クライアント処理は Reveal / HeroEffects / CursorLight / ConsoleEgg に隔離
 - 設計書: `docs/superpowers/specs/2026-07-07-portfolio-design.md`
-- モックアップ: `docs/design/portfolio-mockup-v6.html`
-- コンセプト: 「夜のステージとスポットライト」— アンバー(#FFC53D)が「笑顔」を照らす
+- モックアップ: `docs/design/portfolio-mockup-v7.html`
 
 ## Deploy
 Vercel にインポートしてデフォルト設定でデプロイ。
 ```
 
-(README 内のコードフェンスは通常のバッククォート3つで記載すること)
+- [ ] **Step 2: 最終確認+コミット**
 
-- [ ] **Step 2: 最終確認**
-
-Run: `npm test && npm run build`
-Expected: 成功
-
-- [ ] **Step 3: コミット**
+Run: `npm test && npm run build` → 成功
 
 ```bash
 git add README.md
@@ -1057,21 +1301,21 @@ git commit -m "docs: READMEを追加
 Co-Authored-By: Claude Fable 5 <noreply@anthropic.com>"
 ```
 
-- [ ] **Step 4: デプロイ(ユーザー作業)**
+- [ ] **Step 3: デプロイ(ユーザー作業)**
 
-Vercel アカウント作成・GitHub リポジトリ連携・インポートは**ユーザー本人が実施**(アカウント作成・認証は代行不可)。手順を案内:
-1. GitHub にリポジトリを push(`gh repo create` またはブラウザで作成)
-2. vercel.com → Add New Project → リポジトリ選択 → Deploy(設定変更不要)
-3. 発行された URL を確認
+GitHub push・Vercel 連携は本人が実施(アカウント認証は代行不可):
+1. `gh repo create` または GitHub 上で作成して push
+2. vercel.com → Add New Project → リポジトリ選択 → Deploy
+3. 発行 URL 確認
 
 ---
 
-## 残タスク(実装後・コンテンツ差し替え)
+## 残タスク(素材が届き次第 content.ts を差し替え)
 
-コード完成後、ユーザーから素材が届き次第 `content.ts` と `layout.tsx` の値を差し替える(コード変更はほぼ不要):
-- `【氏名】` → 本名
-- `contact.github` / `contact.email` → 実 URL / mailto
-- インターン2案件の 課題/技術選定/工夫/成果(公開可否確認後)
+- `【氏名】`(content.ts と layout.tsx の title)
+- `【趣味・特技 要記入】`
+- `contact.github` / `contact.email`
+- インターン2案件の課題/技術選定/工夫/成果(公開可否確認後)
 - レディオ湘南の期間
-- Beyond Code の写真3枚(`.ph` プレースホルダーを `next/image` に置換)
-- OGP 画像(`app/opengraph-image.png` を置くだけで Next.js が配信)
+- 写真4枚(プロフィール・旅・漫才・福島)→ `.ph`/`.about-photo` を `next/image` に置換
+- OGP 画像(`app/opengraph-image.png` 配置のみ)
