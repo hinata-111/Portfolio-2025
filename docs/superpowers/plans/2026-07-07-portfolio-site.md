@@ -31,7 +31,7 @@
 - Consumes: なし
 - Produces: `npm run dev` / `npm run build` / `npm test` が動く土台
 
-- [ ] **Step 1: create-next-app 実行**
+- [x] **Step 1: create-next-app 実行**
 
 リポジトリ直下で:
 
@@ -41,18 +41,18 @@ npx create-next-app@latest . --ts --app --no-tailwind --no-eslint --no-src-dir -
 
 プロンプト: Turbopack → Yes。既存 `docs/` `.gitignore` が上書きされたら `git checkout -- docs` で復元し、.gitignore は両方の内容をマージ。
 
-- [ ] **Step 2: ビルド確認**
+- [x] **Step 2: ビルド確認**
 
 Run: `npm run build`
 Expected: 終了コード 0
 
-- [ ] **Step 3: テスト基盤インストール**
+- [x] **Step 3: テスト基盤インストール**
 
 ```bash
 npm install -D vitest @vitejs/plugin-react jsdom @testing-library/react @testing-library/jest-dom
 ```
 
-- [ ] **Step 4: Vitest 設定**
+- [x] **Step 4: Vitest 設定**
 
 `vitest.config.mts`:
 
@@ -81,7 +81,7 @@ import "@testing-library/jest-dom/vitest";
 
 `package.json` scripts に `"test": "vitest run"` を追加。
 
-- [ ] **Step 5: スモークテスト**
+- [x] **Step 5: スモークテスト**
 
 `tests/smoke.test.tsx`:
 
@@ -109,7 +109,7 @@ export default function Home() {
 Run: `npm test`
 Expected: PASS (1 passed)
 
-- [ ] **Step 6: コミット**
+- [x] **Step 6: コミット**
 
 ```bash
 git add -A ':!.playwright-mcp'
@@ -130,7 +130,7 @@ Co-Authored-By: Claude Fable 5 <noreply@anthropic.com>"
 - Consumes: Task 1
 - Produces: v7 モックアップと同一のクラス群(`.hero` `.hero-canvas` `.cursor-light` `.ticker` `.ticker-track` `.glow` `.glow-a` `.glow-b` `.hero-inner` `.hero-eyebrow` `.hl` `.role-line` `.hero-sub` `.name` `.scroll-cue` `.sec-head` `.sec-num` `.sec-label` `.about-grid` `.about-photo` `.about-info` `.motto` `.vow` `.stack` `.stack-row` `.cat` `.chip` `.stack-pills` `.timeline` `.when` `.dot` `.what` `.project` `.prs` `.tags` `.tag` `.todo` `.beyond-grid` `.beyond` `.ph` `.body` `.contact-row` `.btn` `.btn-primary` `.btn-ghost` `.arr` `.contact-fab` `.wrap` `.serif` `.mono` `.center` `.lede` `.rv` `.rv-d1..3` `.in`)
 
-- [ ] **Step 1: CSS 移植**
+- [x] **Step 1: CSS 移植**
 
 `docs/design/portfolio-mockup-v7.html` の `<style>...</style>` の中身全体を `app/globals.css` にコピー(既存内容は全削除)し、以下だけ修正:
 
@@ -149,7 +149,7 @@ a:focus-visible, button:focus-visible {
 
 それ以外は1文字も変えない。
 
-- [ ] **Step 2: layout.tsx**
+- [x] **Step 2: layout.tsx**
 
 `app/layout.tsx`:
 
@@ -176,7 +176,7 @@ export default function RootLayout({
 
 create-next-app 生成のフォント読み込み(next/font の Geist 等)は削除。
 
-- [ ] **Step 3: 確認+コミット**
+- [x] **Step 3: 確認+コミット**
 
 Run: `npm run build && npm test`
 Expected: 成功
@@ -200,7 +200,7 @@ Co-Authored-By: Claude Fable 5 <noreply@anthropic.com>"
 - Consumes: なし
 - Produces: 全コンポーネントが import する型と定数(下記コードが正)
 
-- [ ] **Step 1: 失敗するテスト**
+- [x] **Step 1: 失敗するテスト**
 
 `tests/content.test.ts`:
 
@@ -233,7 +233,7 @@ describe("content", () => {
 
 Run: `npm test` → Expected: FAIL(module not found)
 
-- [ ] **Step 2: content.ts 実装**
+- [x] **Step 2: content.ts 実装**
 
 `app/content.ts`(文言は v7 モックアップから転記):
 
@@ -258,13 +258,13 @@ export const profile = {
 export const aboutInfo: InfoItem[] = [
   { k: "名前", v: "【氏名】" },
   { k: "所属", v: "慶應義塾大学 環境情報学部" },
-  { k: "研究", v: "古谷知之研究室 — NLP・感情分析" },
+  { k: "研究", v: "古谷知之研究室 — 大規模言語モデル-LLM" },
   { k: "趣味", v: "【趣味・特技 要記入】" },
 ];
 
 export const aboutParagraphs = [
   "慶應義塾大学 環境情報学部(2023年9月入学)。古谷知之研究室にて自然言語処理における感情分析を研究。2024年8月、42Tokyo Piscineに合格し入学。現在は長期インターンでAIエージェントのR&DとWebアプリ開発に携わる。",
-  "ラジオ、漫才、旅、そしてソフトウェア。手段は違っても、つくる理由はいつも同じ——目の前の人を笑顔にすること。お金のためではなく、クリエイターとして価値を生むことを大切にしている。",
+  "ラジオ、漫才、旅、そしてソフトウェア。手段は違っても、つくる理由はいつも同じ——目の前の人を笑顔にすること。クリエイターとして価値を生むことを大切にしている。",
 ];
 
 export const motto = {
@@ -279,7 +279,6 @@ export const stack: StackRow[] = [
   { chip: "Py", cat: "Python / NLP", note: "インターン・研究で使用", pills: ["Python", "PyTorch", "MeCab", "GiNZA"] },
   { chip: "AI", cat: "LLM応用", note: "個人開発・R&D", pills: ["RAG", "ベクトルDB", "AIエージェント"] },
   { chip: "TS", cat: "Web開発", note: "インターンで使用", pills: ["TypeScript", "React", "Node.js"] },
-  { chip: "DB", cat: "Database", pills: ["PostgreSQL"] },
   { chip: "Ops", cat: "Infra / Tools", pills: ["Docker", "Git / GitHub"] },
 ];
 
@@ -335,7 +334,7 @@ export const projects: Project[] = [
 export const beyond: BeyondItem[] = [
   { phLabel: "素材待ち:旅の写真", title: "海外一人旅 2ヶ月", desc: "陸路での国境越え。現地住民へのインタビュー。Instagram動画は1万いいねを超えた。" },
   { phLabel: "素材待ち:ステージ写真", title: "漫才ステージ", desc: "脚本から立ち姿まで、自分でつくって舞台に立つ。笑いは最速で人を笑顔にする手段。" },
-  { phLabel: "素材待ち:ワークショップ写真", title: "福島 AIワークショップ", desc: "復興地の高校生へAIの面白さを届ける。テクノロジーを「体験」として手渡す試み。" },
+  { phLabel: "素材待ち:ワークショップ写真", title: "福島 AIワークショップ", desc: "福島の高校生へAIの面白さを届ける。テクノロジーを「体験」してもらう試み。" },
 ];
 
 export const tickerWords: TickerWord[] = [
@@ -346,12 +345,12 @@ export const tickerWords: TickerWord[] = [
 ];
 
 export const contact = {
-  github: "#", // TODO: GitHubプロフィールURL
-  email: "#", // TODO: mailto:
+  github: "hinata-111", // TODO: GitHubプロフィールURL
+  email: "yos570038@gmail.com", // TODO: mailto:
 };
 ```
 
-- [ ] **Step 3: テスト実行+コミット**
+- [x] **Step 3: テスト実行+コミット**
 
 Run: `npm test` → Expected: PASS
 
@@ -374,7 +373,7 @@ Co-Authored-By: Claude Fable 5 <noreply@anthropic.com>"
 - Consumes: globals.css の `.rv` `.in` `.rv-dN` `.sec-head` クラス
 - Produces: `<Reveal as="li" delay={2} className="...">{children}</Reveal>`(クライアント)、`<SectionHead num="01" label="About" />`(サーバー)
 
-- [ ] **Step 1: 失敗するテスト**
+- [x] **Step 1: 失敗するテスト**
 
 `tests/reveal.test.tsx`:
 
@@ -408,7 +407,7 @@ describe("SectionHead", () => {
 
 Run: `npm test` → FAIL
 
-- [ ] **Step 2: Reveal.tsx**
+- [x] **Step 2: Reveal.tsx**
 
 `app/components/Reveal.tsx`:
 
@@ -476,7 +475,7 @@ export default function Reveal<T extends ElementType = "div">({
 }
 ```
 
-- [ ] **Step 3: SectionHead.tsx**
+- [x] **Step 3: SectionHead.tsx**
 
 `app/components/SectionHead.tsx`:
 
@@ -491,7 +490,7 @@ export default function SectionHead({ num, label }: { num: string; label: string
 }
 ```
 
-- [ ] **Step 4: テスト+コミット**
+- [x] **Step 4: テスト+コミット**
 
 Run: `npm test` → PASS
 
@@ -516,7 +515,7 @@ Co-Authored-By: Claude Fable 5 <noreply@anthropic.com>"
 
 **品質要件②③④をここで実装**: Canvas は IntersectionObserver で画面外時に rAF 停止 / mousemove は rAF スロットリング / resize は 150ms debounce。
 
-- [ ] **Step 1: 失敗するテスト**
+- [x] **Step 1: 失敗するテスト**
 
 `tests/hero.test.tsx`:
 
@@ -542,7 +541,7 @@ describe("Hero", () => {
 
 Run: `npm test` → FAIL
 
-- [ ] **Step 2: Hero.tsx**
+- [x] **Step 2: Hero.tsx**
 
 `app/components/Hero.tsx`:
 
@@ -589,7 +588,7 @@ export default function Hero() {
 }
 ```
 
-- [ ] **Step 3: HeroEffects.tsx(Canvas 粒子)**
+- [x] **Step 3: HeroEffects.tsx(Canvas 粒子)**
 
 `app/components/HeroEffects.tsx`:
 
@@ -702,7 +701,7 @@ export default function HeroEffects() {
 }
 ```
 
-- [ ] **Step 4: CursorLight.tsx**
+- [x] **Step 4: CursorLight.tsx**
 
 `app/components/CursorLight.tsx`:
 
@@ -738,7 +737,7 @@ export default function CursorLight() {
 }
 ```
 
-- [ ] **Step 5: テスト+コミット**
+- [x] **Step 5: テスト+コミット**
 
 Run: `npm test` → PASS
 
@@ -761,7 +760,7 @@ Co-Authored-By: Claude Fable 5 <noreply@anthropic.com>"
 - Consumes: `content.ts` の `aboutInfo` `aboutParagraphs` `motto` `stack`、`SectionHead`、`Reveal`
 - Produces: `<About />`(section#about)、`<Skills />`(section#skills)
 
-- [ ] **Step 1: 失敗するテスト**
+- [x] **Step 1: 失敗するテスト**
 
 `tests/about-skills.test.tsx`:
 
@@ -795,7 +794,7 @@ describe("Skills", () => {
 
 Run: `npm test` → FAIL
 
-- [ ] **Step 2: About.tsx**
+- [x] **Step 2: About.tsx**
 
 `app/components/About.tsx`:
 
@@ -846,7 +845,7 @@ export default function About() {
 }
 ```
 
-- [ ] **Step 3: Skills.tsx**
+- [x] **Step 3: Skills.tsx**
 
 `app/components/Skills.tsx`:
 
@@ -885,7 +884,7 @@ export default function Skills() {
 }
 ```
 
-- [ ] **Step 4: テスト+コミット**
+- [x] **Step 4: テスト+コミット**
 
 Run: `npm test` → PASS
 
@@ -908,7 +907,7 @@ Co-Authored-By: Claude Fable 5 <noreply@anthropic.com>"
 - Consumes: `content.ts` の `timeline` `projects` `beyond`、`SectionHead`、`Reveal`
 - Produces: `<Experience />`(#experience)、`<Projects />`(#projects)、`<Beyond />`(#beyond)
 
-- [ ] **Step 1: 失敗するテスト**
+- [x] **Step 1: 失敗するテスト**
 
 `tests/sections.test.tsx`:
 
@@ -947,7 +946,7 @@ describe("Beyond", () => {
 
 Run: `npm test` → FAIL
 
-- [ ] **Step 2: Experience.tsx**
+- [x] **Step 2: Experience.tsx**
 
 `app/components/Experience.tsx`:
 
@@ -983,7 +982,7 @@ export default function Experience() {
 }
 ```
 
-- [ ] **Step 3: Projects.tsx**
+- [x] **Step 3: Projects.tsx**
 
 `app/components/Projects.tsx`:
 
@@ -1035,7 +1034,7 @@ export default function Projects() {
 }
 ```
 
-- [ ] **Step 4: Beyond.tsx**
+- [x] **Step 4: Beyond.tsx**
 
 `app/components/Beyond.tsx`:
 
@@ -1067,7 +1066,7 @@ export default function Beyond() {
 }
 ```
 
-- [ ] **Step 5: テスト+コミット**
+- [x] **Step 5: テスト+コミット**
 
 Run: `npm test` → PASS
 
@@ -1091,7 +1090,7 @@ Co-Authored-By: Claude Fable 5 <noreply@anthropic.com>"
 - Consumes: 全コンポーネント、`content.ts` の `contact` `profile` `motto`
 - Produces: 完成した 1 ページ
 
-- [ ] **Step 1: 失敗するテスト**
+- [x] **Step 1: 失敗するテスト**
 
 `tests/page.test.tsx`:
 
@@ -1123,7 +1122,7 @@ describe("Home page", () => {
 
 Run: `npm test` → FAIL
 
-- [ ] **Step 2: Contact.tsx / ContactFab.tsx**
+- [x] **Step 2: Contact.tsx / ContactFab.tsx**
 
 `app/components/Contact.tsx`:
 
@@ -1164,7 +1163,7 @@ export default function ContactFab() {
 }
 ```
 
-- [ ] **Step 3: ConsoleEgg.tsx**
+- [x] **Step 3: ConsoleEgg.tsx**
 
 `app/components/ConsoleEgg.tsx`:
 
@@ -1197,7 +1196,7 @@ export default function ConsoleEgg() {
 }
 ```
 
-- [ ] **Step 4: page.tsx 組み立て**
+- [x] **Step 4: page.tsx 組み立て**
 
 `app/page.tsx`:
 
@@ -1235,7 +1234,7 @@ export default function Home() {
 }
 ```
 
-- [ ] **Step 5: テスト+ビルド+目視**
+- [x] **Step 5: テスト+ビルド+目視**
 
 Run: `npm test && npm run build`
 Expected: 全 PASS・ビルド成功
@@ -1246,7 +1245,7 @@ Run: `npm run dev`(バックグラウンド)→ `http://localhost:3000` をブ�
 - モバイル幅(375px)崩れなし、ライト/ダーク両テーマ
 - Tab キーでフォーカスリング表示
 
-- [ ] **Step 6: コミット**
+- [x] **Step 6: コミット**
 
 ```bash
 git add app/components/Contact.tsx app/components/ContactFab.tsx app/components/ConsoleEgg.tsx app/page.tsx tests/page.test.tsx
