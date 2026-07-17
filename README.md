@@ -1,36 +1,21 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Portfolio 2025
 
-## Getting Started
+就活用ポートフォリオサイト。「人を笑顔にし、心を動かすものを生み出す」。
 
-First, run the development server:
+## Tech Stack
+- Next.js (App Router) + TypeScript
+- 素の CSS(デザイントークン、ダーク/ライト対応)— 外部 UI ライブラリなし
+- Canvas API による Hero 演出(画面外では rAF 停止、reduced-motion 対応)
+- Vitest + React Testing Library
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+## Development
+npm install / npm run dev / npm test / npm run build
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Architecture
+- `app/content.ts` — 全コンテンツを型付きデータで集約。プロジェクト・経歴の追加はデータ1要素の追加のみ
+- `app/components/` — セクション単位の独立コンポーネント。クライアント処理は Reveal / HeroEffects / CursorLight / ConsoleEgg に隔離
+- 設計書: `docs/superpowers/specs/2026-07-07-portfolio-design.md`
+- モックアップ: `docs/design/portfolio-mockup-v7.html`
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
-
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Deploy
+Vercel にインポートしてデフォルト設定でデプロイ。
