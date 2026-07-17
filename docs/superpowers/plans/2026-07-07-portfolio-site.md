@@ -1261,7 +1261,7 @@ Co-Authored-By: Claude Fable 5 <noreply@anthropic.com>"
 **Files:**
 - Modify: `README.md`(全置換)
 
-- [ ] **Step 1: README.md**
+- [x] **Step 1: README.md**
 
 内容(コードフェンスは通常のバッククォート3つ):
 
@@ -1289,7 +1289,7 @@ npm install / npm run dev / npm test / npm run build
 Vercel にインポートしてデフォルト設定でデプロイ。
 ```
 
-- [ ] **Step 2: 最終確認+コミット**
+- [x] **Step 2: 最終確認+コミット**
 
 Run: `npm test && npm run build` → 成功
 
