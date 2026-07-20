@@ -173,18 +173,6 @@ p.lede { max-width: 36em; margin: 0 auto 16px; }
   max-width: 720px; margin: 0 auto; align-items: start;
   text-align: left;
 }
-.about-photo {
-  aspect-ratio: 1/1; border-radius: var(--radius-lg);
-  display: grid; place-items: center;
-  color: var(--muted); font-size: 12.5px; letter-spacing: .1em;
-  background:
-    radial-gradient(ellipse 80% 90% at 50% -10%, color-mix(in srgb, var(--sun) 10%, transparent), transparent 70%),
-    repeating-linear-gradient(45deg, transparent, transparent 14px,
-      color-mix(in srgb, var(--line) 40%, transparent) 14px,
-      color-mix(in srgb, var(--line) 40%, transparent) 15px);
-  border: 1px solid var(--line);
-  box-shadow: var(--card-shadow);
-}
 .about-info { list-style: none; margin: 14px 0 0; padding: 0; }
 .about-info li {
   display: grid; grid-template-columns: 52px 1fr; gap: 10px;
@@ -196,7 +184,6 @@ p.lede { max-width: 36em; margin: 0 auto 16px; }
 .about-story p { margin: 0 0 14px; font-size: 15px; line-height: 1.9; }
 @media (max-width: 640px) {
   .about-grid { grid-template-columns: 1fr; gap: 26px; }
-  .about-photo { max-width: 200px; margin: 0 auto; }
 }
 
 /* ---------- 座右の銘(論語) ---------- */

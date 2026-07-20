@@ -11,7 +11,6 @@ export default function About() {
       <Reveal as="h2">ものづくりの原点は、目の前の人の反応。</Reveal>
       <Reveal className="about-grid">
         <div>
-          <div className="about-photo mono">素材待ち:プロフィール写真</div>
           <ul className="about-info">
             {aboutInfo.map((item) => (
               <li key={item.k}>

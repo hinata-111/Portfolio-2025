@@ -10,7 +10,6 @@ describe("About", () => {
     expect(document.querySelectorAll(".about-info li")).toHaveLength(4);
     expect(screen.getByText(/之を楽しむ者に如かず/)).toBeInTheDocument();
     expect(screen.getByText("「楽しむ者」")).toBeInTheDocument();
-    expect(screen.getByText("素材待ち:プロフィール写真")).toBeInTheDocument();
   });
 });
 

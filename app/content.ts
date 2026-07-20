@@ -7,19 +7,19 @@ export type BeyondItem = { phLabel: string; title: string; desc: string };
 export type TickerWord = { text: string; fill?: boolean };
 
 export const profile = {
-  name: "【氏名】",
+  name: "鈴木日向",
   grad: "Portfolio — 2028卒",
   catchTop: "笑顔",
   catchBottom: "心を動かす",
   roleLine: "PdM × ENGINEER × CREATOR",
-  affiliations: ["慶應義塾大学 環境情報学部", "42Tokyo"],
+  affiliations: ["慶應義塾大学 環境情報学部"],
 };
 
 export const aboutInfo: InfoItem[] = [
-  { k: "名前", v: "【氏名】" },
+  { k: "名前", v: "鈴木日向/Hinata Suzuki" },
   { k: "所属", v: "慶應義塾大学 環境情報学部" },
   { k: "研究", v: "古谷知之研究室 — NLP・感情分析" },
-  { k: "趣味", v: "【趣味・特技 要記入】" },
+  { k: "趣味", v: "旅行・将棋" },
 ];
 
 export const aboutParagraphs = [
@@ -44,11 +44,11 @@ export const stack: StackRow[] = [
 ];
 
 export const timeline: TimelineItem[] = [
-  { when: "2023.09", title: "慶應義塾大学 環境情報学部 入学", desc: "古谷知之研究室 — 自然言語処理・感情分析" },
+  { when: "2023.09", title: "慶應義塾大学 環境情報学部 入学", desc: "専攻: コンピューターサイエンス/データサイエンス" },
+  { when: "要確認", todo: "期間", title: "FM83.1HZレディオ湘南の University Studio運営", desc: "台本/ナビゲーター/ミキサー番組全体の業務に携わる" },
   { when: "2024.08", title: "42Tokyo Piscine 合格・入学", desc: "4週間の選抜課程を経てエンジニア教育機関へ" },
   { when: "2025.07 –", title: "長期インターン | エンジニア・ITコンサルタント", desc: "AIエージェントR&D、Webアプリ開発(現在も継続中)" },
-  { when: "2025.08 – 2026.03", title: "福島県復興地プロジェクト", desc: "県内高校にてAIワークショップを実施(古谷研究室)" },
-  { when: "要確認", todo: "期間", title: "学生FMラジオ局「レディオ湘南」マネージャー", desc: "役割配置・スキル育成・知識継承の仕組みづくり" },
+  { when: "2025.08 –", title: "福島県復興地プロジェクト", desc: "県内高校にてAIワークショップを実施(古谷研究室)" },
 ];
 
 export const projects: Project[] = [
@@ -106,6 +106,6 @@ export const tickerWords: TickerWord[] = [
 ];
 
 export const contact = {
-  github: "#", // TODO: GitHubプロフィールURL
-  email: "#", // TODO: mailto:
+  github: "https://github.com/hinata-111", // TODO: GitHubプロフィールURL
+  email: "yos570038@gmail.com", // TODO: mailto:
 };
