@@ -1311,10 +1311,10 @@ GitHub push・Vercel 連携は本人が実施(アカウント認証は代行不�
 
 ## 残タスク(素材が届き次第 content.ts を差し替え)
 
-- `【氏名】`(content.ts と layout.tsx の title)
-- `【趣味・特技 要記入】`
-- `contact.github` / `contact.email`
+- ~~`【氏名】`(content.ts と layout.tsx の title)~~ 反映済み(鈴木日向)
+- ~~`【趣味・特技 要記入】`~~ 反映済み(旅行・将棋)
+- ~~`contact.github` / `contact.email`~~ 反映済み
 - インターン2案件の課題/技術選定/工夫/成果(公開可否確認後)
-- レディオ湘南の期間
-- 写真4枚(プロフィール・旅・漫才・福島)→ `.ph`/`.about-photo` を `next/image` に置換
+- レディオ湘南の期間(`要確認` のまま)
+- 写真4枚(プロフィール・旅・漫才・福島)→ `.ph` を `next/image` に置換(`.about-photo` はプレースホルダー領域ごと削除済み、写真確定時に再追加)
 - OGP 画像(`app/opengraph-image.png` 配置のみ)
