@@ -2,7 +2,6 @@ import { profile, tickerWords } from "@/app/content";
 import HeroEffects from "@/app/components/HeroEffects";
 
 export default function Hero() {
-  const repeats = 4; // シームレスループ用に4回繰り返し(トラックを-50%移動)
   return (
     <header className="hero">
       <div className="glow glow-a" />
@@ -24,16 +23,16 @@ export default function Hero() {
         </div>
       </div>
       <div className="scroll-cue" aria-hidden="true" />
-      <div className="ticker" aria-hidden="true">
-        <div className="ticker-track">
-          {Array.from({ length: repeats }).flatMap((_, r) =>
-            tickerWords.map((w, i) => (
-              <span key={`${r}-${i}`} className={w.fill ? "fill" : undefined}>
-                {w.text}
-              </span>
-            ))
-          )}
-        </div>
+      <div className="ticker ticker-cross" aria-hidden="true">
+        {tickerWords.map((w, i) => (
+          <span
+            key={i}
+            className={w.fill ? "fill" : undefined}
+            style={{ animationDelay: `${i * 3}s` }}
+          >
+            {w.text}
+          </span>
+        ))}
       </div>
     </header>
   );

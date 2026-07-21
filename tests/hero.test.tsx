@@ -1,7 +1,7 @@
 import { render, screen, within } from "@testing-library/react";
 import { describe, it, expect } from "vitest";
 import Hero from "@/app/components/Hero";
-import { profile } from "@/app/content";
+import { profile, tickerWords } from "@/app/content";
 
 describe("Hero", () => {
   it("renders catch phrase with two highlighted words", () => {
@@ -14,6 +14,8 @@ describe("Hero", () => {
   });
   it("renders ticker words", () => {
     render(<Hero />);
-    expect(screen.getAllByText("MAKE THEM SMILE").length).toBeGreaterThanOrEqual(4);
+    for (const w of tickerWords) {
+      expect(screen.getByText(w.text)).toBeInTheDocument();
+    }
   });
 });

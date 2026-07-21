@@ -15,7 +15,7 @@ describe("content", () => {
     expect(timeline).toHaveLength(5);
     expect(projects).toHaveLength(3);
     expect(beyond).toHaveLength(3);
-    expect(tickerWords).toHaveLength(4);
+    expect(tickerWords).toHaveLength(6);
   });
   it("has the Confucius motto", () => {
     expect(motto.quote).toContain("之を楽しむ者に如かず");

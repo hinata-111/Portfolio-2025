@@ -99,10 +99,12 @@ export const beyond: BeyondItem[] = [
 ];
 
 export const tickerWords: TickerWord[] = [
-  { text: "MAKE THEM SMILE" },
-  { text: "笑顔", fill: true },
-  { text: "MOVE THEIR HEART" },
-  { text: "心", fill: true },
+  { text: "MAKE" },
+  { text: "作る", fill: true },
+  { text: "MOVE" },
+  { text: "動かす", fill: true },
+  { text: "BUILD" },
+  { text: "届ける", fill: true },
 ];
 
 export const contact = {
