@@ -131,11 +131,13 @@ body {
 
 /* ---------- セクション: 箱なし・余白と区切り線 ---------- */
 section { padding: 96px 0; position: relative; }
-section + section::before {
+section + section::after {
   content: "";
   position: absolute; top: 0; left: 50%; transform: translateX(-50%);
   width: min(560px, 70%); height: 1px;
   background: linear-gradient(90deg, transparent, var(--line) 25%, var(--line) 75%, transparent);
+  pointer-events: none;
+  z-index: 2;
 }
 .sec-head { display: flex; align-items: baseline; justify-content: center; gap: 14px; margin-bottom: 14px; }
 .sec-num { font-size: 13px; letter-spacing: .18em; color: var(--sun); font-weight: 600; }
@@ -372,4 +374,96 @@ a:focus-visible, button:focus-visible {
   outline: 2px solid var(--sun);
   outline-offset: 3px;
   border-radius: 6px;
+}
+
+/* ---------- Path rail: fixed lantern minimap ---------- */
+.path-rail {
+  position: fixed;
+  left: 26px;
+  top: 50%;
+  z-index: 40;
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+  transform: translateY(-50%);
+}
+.path-rail a {
+  display: block;
+  width: 10px;
+  height: 14px;
+  border: 1px solid var(--line);
+  border-radius: 3px 3px 5px 5px;
+  background: var(--surface);
+  transition: all .6s ease;
+}
+.path-rail a.lit {
+  border-color: var(--sun);
+  background: linear-gradient(to bottom, #FFE9C4, var(--sun));
+  box-shadow: 0 0 10px 2px rgba(255,197,61,.5);
+}
+.path-rail a:focus-visible {
+  outline: 2px solid var(--sun);
+  outline-offset: 3px;
+  border-radius: 3px 3px 5px 5px;
+}
+@media (max-width: 860px) {
+  .path-rail { display: none; }
+}
+
+/* ---------- Stage ambience: 知 -> 好 -> 楽 ---------- */
+.stage-chi::before,
+.stage-ko::before,
+.stage-raku::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+}
+.stage-chi::before {
+  background: radial-gradient(ellipse 70% 50% at 50% 0%, rgba(255,197,61,.04), transparent 70%);
+}
+.stage-ko::before {
+  background: radial-gradient(ellipse 70% 50% at 50% 0%, rgba(255,197,61,.08), transparent 70%);
+}
+.stage-raku::before {
+  background: radial-gradient(ellipse 70% 50% at 50% 0%, rgba(255,197,61,.14), transparent 70%);
+}
+.stage-chi > *,
+.stage-ko > *,
+.stage-raku > * {
+  position: relative;
+  z-index: 1;
+}
+@media (prefers-color-scheme: light) {
+  .stage-chi::before {
+    background: radial-gradient(ellipse 70% 50% at 50% 0%, rgba(255,197,61,.02), transparent 70%);
+  }
+  .stage-ko::before {
+    background: radial-gradient(ellipse 70% 50% at 50% 0%, rgba(255,197,61,.04), transparent 70%);
+  }
+  .stage-raku::before {
+    background: radial-gradient(ellipse 70% 50% at 50% 0%, rgba(255,197,61,.07), transparent 70%);
+  }
+}
+:root[data-theme="light"] .stage-chi::before {
+  background: radial-gradient(ellipse 70% 50% at 50% 0%, rgba(255,197,61,.02), transparent 70%);
+}
+:root[data-theme="light"] .stage-ko::before {
+  background: radial-gradient(ellipse 70% 50% at 50% 0%, rgba(255,197,61,.04), transparent 70%);
+}
+:root[data-theme="light"] .stage-raku::before {
+  background: radial-gradient(ellipse 70% 50% at 50% 0%, rgba(255,197,61,.07), transparent 70%);
+}
+:root[data-theme="dark"] .stage-chi::before {
+  background: radial-gradient(ellipse 70% 50% at 50% 0%, rgba(255,197,61,.04), transparent 70%);
+}
+:root[data-theme="dark"] .stage-ko::before {
+  background: radial-gradient(ellipse 70% 50% at 50% 0%, rgba(255,197,61,.08), transparent 70%);
+}
+:root[data-theme="dark"] .stage-raku::before {
+  background: radial-gradient(ellipse 70% 50% at 50% 0%, rgba(255,197,61,.14), transparent 70%);
+}
+@media (prefers-reduced-motion: reduce) {
+  .path-rail a { transition: none; }
 }

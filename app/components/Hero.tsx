@@ -3,7 +3,7 @@ import HeroEffects from "@/app/components/HeroEffects";
 
 export default function Hero() {
   return (
-    <header className="hero">
+    <header className="hero" id="hero">
       <div className="glow glow-a" />
       <div className="glow glow-b" />
       <HeroEffects />

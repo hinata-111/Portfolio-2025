@@ -4,7 +4,7 @@ import Reveal from "@/app/components/Reveal";
 
 export default function Experience() {
   return (
-    <section id="experience">
+    <section id="experience" className="stage-ko">
       <Reveal>
         <SectionHead num="03" label="Experience" />
       </Reveal>

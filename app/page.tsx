@@ -8,12 +8,14 @@ import Contact from "@/app/components/Contact";
 import ContactFab from "@/app/components/ContactFab";
 import CursorLight from "@/app/components/CursorLight";
 import ConsoleEgg from "@/app/components/ConsoleEgg";
+import PathRail from "@/app/components/PathRail";
 import { profile } from "@/app/content";
 
 export default function Home() {
   return (
     <main>
       <Hero />
+      <PathRail />
       <div className="wrap">
         <About />
         <Skills />

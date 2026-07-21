@@ -13,7 +13,7 @@
 - Next.js 16.2.10(App Router, TypeScript)+ **素の CSS**(Tailwind 不使用 — 確定済み決定、変更禁止)
 - テスト: Vitest + React Testing Library(`npm test`)。デプロイ先: Vercel
 - 全コンテンツは `app/content.ts` に集約。セクション追加=データ 1 要素の追加で完結させる
-- クライアント処理は `Reveal` / `HeroEffects` / `CursorLight` / `ConsoleEgg` の 4 コンポーネントに隔離。他はサーバーコンポーネント
+- クライアント処理は `Reveal` / `HeroEffects` / `CursorLight` / `ConsoleEgg` / `PathRail` の 5 コンポーネントに隔離。他はサーバーコンポーネント
 - 品質要件: `:focus-visible` 必須 / Canvas は画面外で rAF 停止 / mousemove は rAF スロットリング / resize は debounce / `prefers-reduced-motion: reduce` で全アニメ無効化
 - 外部ライブラリ追加は実装計画記載分のみ(YAGNI)
 - 未確定情報はプレースホルダーのまま(`【氏名】`、`要確認` バッジ等)。勝手に埋めない

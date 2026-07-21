@@ -4,7 +4,7 @@ import Reveal from "@/app/components/Reveal";
 
 export default function About() {
   return (
-    <section id="about" style={{ padding: "72px 0 64px" }}>
+    <section id="about" className="stage-chi" style={{ padding: "72px 0 64px" }}>
       <Reveal>
         <SectionHead num="01" label="About" />
       </Reveal>
