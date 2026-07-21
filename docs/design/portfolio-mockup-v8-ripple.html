@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>鈴木日向 | Portfolio — v8案「水面の輪」</title>
+<!--
+  デザイン候補 v8-B「水面の輪」
+  コンセプト: 論語「知る→好む→楽しむ」を、一滴(知る)が水面に落ち、
+  波紋(好む・楽しむ)が幾重にも広がっていく様子として表現。
+  座右の銘=最初の一滴。ページを下るほど輪が重なり、密度が増す。
+  月夜の水面に振り切った単一テーマ(意図的)。採用時はライトテーマを別途設計。
+-->
+<style>
+  :root {
+    --water: #0A141E;         /* 夜の水面 */
+    --water-2: #0E1D2A;       /* 深み */
+    --moon: #D8C88C;          /* 月光の金 */
+    --moon-soft: #EFE6C4;     /* 月光の芯 */
+    --moon-deep: #A8975E;     /* 沈んだ金 */
+    --ink: #E5EEF0;
+    --ink-strong: #F6FAF9;
+    --muted: #7A929B;
+    --line: #1B303C;
+    --serif: "Hiragino Mincho ProN", "Yu Mincho", "Noto Serif JP", serif;
+    --sans: "Hiragino Kaku Gothic ProN", "Hiragino Sans", "Yu Gothic Medium", "Noto Sans JP", sans-serif;
+    --mono: ui-monospace, "SF Mono", "Cascadia Code", Consolas, monospace;
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+  body {
+    margin: 0; background: var(--water); color: var(--ink);
+    font-family: var(--sans); line-height: 1.8;
+    -webkit-font-smoothing: antialiased; overflow-x: hidden;
+  }
+
+  .wrap { max-width: 880px; margin: 0 auto; padding: 0 24px; }
+  section { position: relative; padding: 110px 0; }
+
+  /* 深度ごとの背景波紋(下へ行くほど輪が増える) */
+  .depth-1::before, .depth-2::before, .depth-3::before {
+    content: ""; position: absolute; inset: 0; pointer-events: none; opacity: .5; z-index: 0;
+  }
+  .depth-1::before {
+    background: radial-gradient(circle 340px at 85% 12%, transparent 338px, rgba(216,200,140,.07) 339px, transparent 341px);
+  }
+  .depth-2::before {
+    background:
+      radial-gradient(circle 300px at 12% 20%, transparent 298px, rgba(216,200,140,.07) 299px, transparent 301px),
+      radial-gradient(circle 420px at 12% 20%, transparent 418px, rgba(216,200,140,.05) 419px, transparent 421px);
+  }
+  .depth-3::before {
+    background:
+      radial-gradient(circle 260px at 88% 30%, transparent 258px, rgba(216,200,140,.08) 259px, transparent 261px),
+      radial-gradient(circle 380px at 88% 30%, transparent 378px, rgba(216,200,140,.06) 379px, transparent 381px),
+      radial-gradient(circle 300px at 8% 75%, transparent 298px, rgba(216,200,140,.07) 299px, transparent 301px),
+      radial-gradient(circle 440px at 8% 75%, transparent 438px, rgba(216,200,140,.05) 439px, transparent 441px);
+  }
+  section > .wrap { position: relative; z-index: 1; }
+
+  /* セクション見出し: 同心円マーカー */
+  .sec-head { display: flex; align-items: center; gap: 16px; margin-bottom: 14px; }
+  .ring-mark {
+    width: 40px; height: 40px; border-radius: 50%; flex: none;
+    display: grid; place-items: center; position: relative;
+    border: 1px solid var(--line);
+    font-family: var(--mono); font-size: 12px; color: var(--muted);
+    transition: all .8s ease;
+  }
+  .ring-mark::before {
+    content: ""; position: absolute; inset: -7px; border-radius: 50%;
+    border: 1px solid transparent; transition: all .8s ease;
+  }
+  .in .ring-mark, .ring-mark.in {
+    color: var(--moon); border-color: var(--moon-deep);
+  }
+  .in .ring-mark::before, .ring-mark.in::before {
+    border-color: rgba(216,200,140,.3);
+  }
+  .sec-label { font-family: var(--mono); font-size: 12px; letter-spacing: .24em; color: var(--muted); text-transform: uppercase; }
+  .sec-label b { color: var(--moon); font-weight: 400; font-family: var(--serif); letter-spacing: .1em; margin-right: 6px; }
+  h2 {
+    font-family: var(--serif); font-weight: 500; font-size: clamp(24px, 3.4vw, 34px);
+    line-height: 1.7; letter-spacing: .04em; color: var(--ink-strong);
+    margin: 0 0 36px; text-wrap: balance;
+  }
+
+  /* リビール: 波紋のように中心から円形に現れる */
+  .rv { opacity: 0; clip-path: circle(12% at 50% 50%); transition: opacity 1s ease, clip-path 1.1s cubic-bezier(.3,.6,.3,1); }
+  .rv.in { opacity: 1; clip-path: circle(120% at 50% 50%); }
+  @media (prefers-reduced-motion: reduce) { .rv { opacity: 1 !important; clip-path: none !important; transition: none; } }
+
+  /* ========== Hero: 一滴が落ちる ========== */
+  .hero {
+    min-height: 92vh; display: grid; place-items: center; text-align: center;
+    position: relative; padding: 80px 24px 70px; overflow: hidden;
+  }
+  .drop-point { position: relative; width: 10px; height: 10px; margin: 0 auto 46px; }
+  .drop-point .core {
+    position: absolute; inset: 2px; border-radius: 50%;
+    background: var(--moon-soft); box-shadow: 0 0 14px 3px rgba(216,200,140,.5);
+  }
+  .drop-point .ring {
+    position: absolute; left: 50%; top: 50%; width: 10px; height: 10px;
+    border-radius: 50%; border: 1px solid var(--moon);
+    transform: translate(-50%,-50%); opacity: 0;
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    .drop-point .ring { animation: expand 5.5s cubic-bezier(.2,.5,.4,1) infinite; }
+    .drop-point .ring:nth-child(3) { animation-delay: 1.8s; }
+    .drop-point .ring:nth-child(4) { animation-delay: 3.6s; }
+    @keyframes expand {
+      0% { width: 10px; height: 10px; opacity: .7; }
+      100% { width: 340px; height: 340px; opacity: 0; }
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .drop-point .ring { opacity: .25; width: 120px; height: 120px; }
+    .drop-point .ring:nth-child(3) { width: 220px; height: 220px; opacity: .15; }
+    .drop-point .ring:nth-child(4) { display: none; }
+  }
+  .hero-eyebrow { font-family: var(--mono); font-size: 12px; letter-spacing: .34em; color: var(--muted); margin-bottom: 34px; }
+  h1 {
+    font-family: var(--serif); font-weight: 500; margin: 0 0 32px;
+    font-size: clamp(32px, 6vw, 58px); line-height: 1.65; letter-spacing: .06em;
+    color: var(--ink-strong); text-wrap: balance;
+  }
+  h1 .hl { color: var(--moon); }
+  .role-line { font-family: var(--mono); font-size: 13px; letter-spacing: .26em; color: var(--moon); margin-bottom: 20px; }
+  .hero-sub { font-size: 14px; color: var(--muted); letter-spacing: .04em; }
+  .hero-sub .name { color: var(--ink-strong); font-weight: 600; margin-right: 12px; }
+  .waterline {
+    position: absolute; left: 8%; right: 8%; bottom: 70px; height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(216,200,140,.35) 30%, rgba(216,200,140,.35) 70%, transparent);
+  }
+  .scroll-cue {
+    position: absolute; bottom: 26px; left: 50%; transform: translateX(-50%);
+    font-family: var(--mono); font-size: 11px; letter-spacing: .3em; color: var(--muted);
+  }
+
+  /* ========== 座右の銘: 最初の一滴 ========== */
+  .origin { text-align: center; padding: 140px 0; overflow: hidden; }
+  .origin-rings { position: absolute; inset: 0; display: grid; place-items: center; pointer-events: none; }
+  .origin-rings span {
+    position: absolute; border-radius: 50%; border: 1px solid rgba(216,200,140,.35); opacity: 0;
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    .origin-rings span { animation: origin-expand 8s cubic-bezier(.2,.5,.4,1) infinite; }
+    .origin-rings span:nth-child(2) { animation-delay: 2s; }
+    .origin-rings span:nth-child(3) { animation-delay: 4s; }
+    .origin-rings span:nth-child(4) { animation-delay: 6s; }
+    @keyframes origin-expand {
+      0% { width: 60px; height: 60px; opacity: .5; }
+      100% { width: 640px; height: 640px; opacity: 0; }
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .origin-rings span:nth-child(1) { opacity: .18; width: 260px; height: 260px; }
+    .origin-rings span:nth-child(2) { opacity: .12; width: 420px; height: 420px; }
+  }
+  .origin blockquote {
+    font-family: var(--serif); font-size: clamp(19px, 2.8vw, 26px); line-height: 2.1;
+    letter-spacing: .06em; color: var(--ink-strong); margin: 0 0 16px; font-weight: 500;
+  }
+  .origin .cite { font-family: var(--mono); font-size: 12px; color: var(--muted); margin-bottom: 42px; }
+  .origin .vow { font-family: var(--serif); font-size: clamp(16px, 2vw, 19px); line-height: 2.2; letter-spacing: .04em; max-width: 46ch; margin: 0 auto; }
+  .origin .vow b { color: var(--moon); font-weight: 700; }
+  .origin .drop-label {
+    font-family: var(--mono); font-size: 11px; letter-spacing: .3em; color: var(--muted);
+    margin-bottom: 40px; text-transform: uppercase;
+  }
+
+  /* ========== About ========== */
+  .about-grid { display: grid; grid-template-columns: 300px 1fr; gap: 44px; align-items: start; }
+  @media (max-width: 720px) { .about-grid { grid-template-columns: 1fr; gap: 28px; } }
+  .about-info { list-style: none; margin: 0; padding: 0; }
+  .about-info li {
+    display: grid; grid-template-columns: 56px 1fr; gap: 12px;
+    padding: 11px 0; border-bottom: 1px solid var(--line); font-size: 14px;
+  }
+  .about-info .k { color: var(--moon); font-family: var(--mono); font-size: 12px; padding-top: 2px; }
+  .about-story p { margin: 0 0 16px; font-size: 15px; line-height: 2.05; }
+
+  /* ========== Skills ========== */
+  .stack-rows { display: flex; flex-direction: column; }
+  .stack-row {
+    display: grid; grid-template-columns: 44px 190px 1fr; gap: 16px; align-items: center;
+    padding: 18px 6px; border-bottom: 1px solid var(--line);
+  }
+  .stack-row:last-child { border-bottom: 0; }
+  @media (max-width: 720px) { .stack-row { grid-template-columns: 44px 1fr; } .stack-row .pills { grid-column: 1 / -1; } }
+  .chip {
+    width: 44px; height: 44px; border-radius: 50%; display: grid; place-items: center;
+    font-family: var(--mono); font-size: 13px; font-weight: 700;
+    color: var(--moon); border: 1px solid var(--line); position: relative;
+    transition: all .4s ease;
+  }
+  .stack-row:hover .chip { border-color: var(--moon-deep); box-shadow: 0 0 0 5px rgba(216,200,140,.09); }
+  .cat { font-size: 14.5px; font-weight: 600; color: var(--ink-strong); }
+  .cat small { display: block; font-weight: 400; font-size: 12px; color: var(--muted); }
+  .pills { display: flex; gap: 8px; flex-wrap: wrap; }
+  .pill {
+    font-family: var(--mono); font-size: 12.5px; padding: 6px 14px; border-radius: 999px;
+    border: 1px solid var(--line); color: var(--ink); transition: all .35s ease;
+  }
+  .pill:hover { border-color: var(--moon-deep); box-shadow: 0 0 0 4px rgba(216,200,140,.08); }
+
+  /* ========== Experience: 波紋タイムライン ========== */
+  .timeline { list-style: none; margin: 0; padding: 0 0 0 30px; border-left: 1px solid var(--line); }
+  .timeline li { position: relative; padding: 0 0 34px 28px; }
+  .timeline li:last-child { padding-bottom: 0; }
+  .t-ring {
+    position: absolute; left: -38px; top: 5px; width: 15px; height: 15px;
+    border-radius: 50%; border: 1px solid var(--line); transition: all .8s ease;
+  }
+  .t-ring::before {
+    content: ""; position: absolute; inset: -6px; border-radius: 50%;
+    border: 1px solid transparent; transition: all .8s ease .15s;
+  }
+  .in .t-ring { border-color: var(--moon); background: rgba(216,200,140,.12); }
+  .in .t-ring::before { border-color: rgba(216,200,140,.25); }
+  .t-when { font-family: var(--mono); font-size: 12px; color: var(--moon); letter-spacing: .08em; }
+  .t-title { font-size: 15.5px; font-weight: 600; color: var(--ink-strong); margin: 4px 0 2px; }
+  .t-desc { font-size: 13.5px; color: var(--muted); }
+  .todo {
+    display: inline-block; font-family: var(--mono); font-size: 10.5px; padding: 2px 9px;
+    border-radius: 999px; border: 1px dashed var(--moon-deep); color: var(--moon); margin-left: 8px;
+  }
+
+  /* ========== Projects ========== */
+  .proj { padding: 34px 0; border-top: 1px solid var(--line); }
+  .proj:first-of-type { border-top: 0; padding-top: 10px; }
+  .proj h3 { font-family: var(--serif); font-weight: 600; font-size: 20px; letter-spacing: .03em; color: var(--ink-strong); margin: 0 0 4px; }
+  .proj-meta { font-family: var(--mono); font-size: 12px; color: var(--muted); margin-bottom: 18px; }
+  .proj-rows { display: grid; grid-template-columns: 96px 1fr; gap: 10px 18px; margin-bottom: 18px; }
+  @media (max-width: 600px) { .proj-rows { grid-template-columns: 1fr; gap: 4px; } }
+  .proj-rows dt {
+    font-family: var(--mono); font-size: 11.5px; color: var(--moon); letter-spacing: .04em;
+    border: 1px solid var(--moon-deep); border-radius: 999px; padding: 3px 10px;
+    height: fit-content; text-align: center;
+  }
+  .proj-rows dd { margin: 0; font-size: 14px; align-self: center; }
+  .tags { display: flex; gap: 8px; flex-wrap: wrap; }
+
+  /* ========== Beyond ========== */
+  .beyond-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px; }
+  @media (max-width: 720px) { .beyond-grid { grid-template-columns: 1fr; } }
+  .b-card {
+    border: 1px solid var(--line); border-radius: 16px; overflow: hidden;
+    background: var(--water-2); transition: all .5s ease;
+  }
+  .b-card:hover { border-color: var(--moon-deep); box-shadow: 0 0 0 5px rgba(216,200,140,.07); }
+  .ph {
+    aspect-ratio: 4/3; display: grid; place-items: center;
+    font-family: var(--mono); font-size: 11.5px; color: var(--muted); letter-spacing: .1em;
+    background: radial-gradient(circle 90px at 50% 50%, transparent 88px, rgba(216,200,140,.1) 89px, transparent 91px);
+    border-bottom: 1px solid var(--line);
+  }
+  .b-body { padding: 18px; }
+  .b-body h3 { font-size: 15.5px; margin: 0 0 8px; color: var(--ink-strong); }
+  .b-body p { margin: 0; font-size: 13px; color: var(--muted); line-height: 1.8; }
+
+  /* ========== Contact ========== */
+  .contact { text-align: center; padding: 140px 0 100px; overflow: hidden; }
+  .contact h2 { margin-bottom: 18px; }
+  .contact p { color: var(--muted); font-size: 14.5px; margin: 0 0 42px; }
+  .btn-row { display: flex; justify-content: center; gap: 16px; flex-wrap: wrap; }
+  .btn {
+    display: inline-flex; align-items: center; gap: 10px;
+    font-family: var(--mono); font-size: 14px; text-decoration: none;
+    padding: 14px 30px; border-radius: 999px; transition: all .4s ease; position: relative;
+  }
+  .btn-primary { color: #17120A; font-weight: 700; background: linear-gradient(to bottom, var(--moon-soft), var(--moon)); }
+  .btn-primary:hover { box-shadow: 0 0 0 6px rgba(216,200,140,.14), 0 0 0 12px rgba(216,200,140,.06); }
+  .btn-ghost { color: var(--ink); border: 1px solid var(--line); }
+  .btn-ghost:hover { border-color: var(--moon-deep); box-shadow: 0 0 0 5px rgba(216,200,140,.08); }
+  .btn:focus-visible { outline: 2px solid var(--moon); outline-offset: 3px; }
+  footer {
+    text-align: center; font-family: var(--mono); font-size: 11.5px; color: var(--muted);
+    letter-spacing: .1em; padding: 40px 0 46px; border-top: 1px solid var(--line);
+  }
+
+  /* カーソル波紋(pointer: fine のみ) */
+  #cursor-ripple {
+    position: fixed; left: 0; top: 0; width: 30px; height: 30px; border-radius: 50%;
+    border: 1px solid var(--moon); pointer-events: none; z-index: 90;
+    transform: translate(-50%,-50%); opacity: 0; display: none;
+  }
+  @media (pointer: fine) { #cursor-ripple.active { display: block; } }
+  @media (prefers-reduced-motion: no-preference) {
+    #cursor-ripple.active { animation: cursor-pulse 2.8s cubic-bezier(.2,.5,.4,1) infinite; }
+    @keyframes cursor-pulse {
+      0% { transform: translate(-50%,-50%) scale(.4); opacity: .55; }
+      100% { transform: translate(-50%,-50%) scale(2.4); opacity: 0; }
+    }
+  }
+</style>
+</head>
+<body>
+
+<div id="cursor-ripple" aria-hidden="true"></div>
+
+<header class="hero" id="hero">
+  <div>
+    <div class="drop-point" aria-hidden="true">
+      <span class="core"></span><span class="ring"></span><span class="ring"></span><span class="ring"></span>
+    </div>
+    <div class="hero-eyebrow">PORTFOLIO — 2028卒</div>
+    <h1>人を<span class="hl">笑顔</span>にし、<br><span class="hl">心を動かす</span>ものを生み出す。</h1>
+    <div class="role-line">PdM × ENGINEER × CREATOR</div>
+    <div class="hero-sub"><span class="name">鈴木日向</span>慶應義塾大学 環境情報学部</div>
+  </div>
+  <div class="waterline" aria-hidden="true"></div>
+  <div class="scroll-cue">SCROLL</div>
+</header>
+
+<section class="origin" data-sec>
+  <div class="origin-rings" aria-hidden="true"><span></span><span></span><span></span><span></span></div>
+  <div class="wrap">
+    <div class="drop-label rv">— 最初の一滴 —</div>
+    <blockquote class="rv">「之を知る者は之を好む者に如かず、<br>之を好む者は之を楽しむ者に如かず」</blockquote>
+    <div class="cite rv">— 論語・雍也</div>
+    <p class="vow rv">知るより、好む。好むより、楽しむ。<br>だから私は誰よりも<b>「楽しむ者」</b>として、つくる。</p>
+  </div>
+</section>
+
+<section class="depth-1" id="about" data-sec>
+  <div class="wrap">
+    <div class="sec-head rv"><span class="ring-mark in">01</span><span class="sec-label"><b>知</b>About — 知る</span></div>
+    <h2 class="rv">ものづくりの原点は、目の前の人の反応。</h2>
+    <div class="about-grid rv">
+      <ul class="about-info">
+        <li><span class="k">名前</span><span>鈴木日向/Hinata Suzuki</span></li>
+        <li><span class="k">所属</span><span>慶應義塾大学 環境情報学部</span></li>
+        <li><span class="k">研究</span><span>古谷知之研究室 — NLP・感情分析</span></li>
+        <li><span class="k">趣味</span><span>旅行・将棋</span></li>
+      </ul>
+      <div class="about-story">
+        <p>慶應義塾大学 環境情報学部(2023年9月入学)。古谷知之研究室にて自然言語処理における感情分析を研究。2024年8月、42Tokyo Piscineに合格し入学。現在は長期インターンでAIエージェントのR&amp;DとWebアプリ開発に携わる。</p>
+        <p>ラジオ、漫才、旅、そしてソフトウェア。手段は違っても、つくる理由はいつも同じ——目の前の人を笑顔にすること。お金のためではなく、クリエイターとして価値を生むことを大切にしている。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="depth-1" id="skills" data-sec>
+  <div class="wrap">
+    <div class="sec-head rv"><span class="ring-mark in">02</span><span class="sec-label"><b>好</b>Skills — 好む</span></div>
+    <h2 class="rv">手を動かすほど、好きになっていった技術。</h2>
+    <div class="stack-rows rv">
+      <div class="stack-row"><span class="chip">Py</span><span class="cat">Python / NLP<small>インターン・研究で使用</small></span><span class="pills"><span class="pill">Python</span><span class="pill">PyTorch</span><span class="pill">MeCab</span><span class="pill">GiNZA</span></span></div>
+      <div class="stack-row"><span class="chip">AI</span><span class="cat">LLM応用<small>個人開発・R&amp;D</small></span><span class="pills"><span class="pill">RAG</span><span class="pill">ベクトルDB</span><span class="pill">AIエージェント</span></span></div>
+      <div class="stack-row"><span class="chip">TS</span><span class="cat">Web開発<small>インターンで使用</small></span><span class="pills"><span class="pill">TypeScript</span><span class="pill">React</span><span class="pill">Node.js</span></span></div>
+      <div class="stack-row"><span class="chip">DB</span><span class="cat">Database</span><span class="pills"><span class="pill">PostgreSQL</span></span></div>
+      <div class="stack-row"><span class="chip">Ops</span><span class="cat">Infra / Tools</span><span class="pills"><span class="pill">Docker</span><span class="pill">Git / GitHub</span></span></div>
+    </div>
+  </div>
+</section>
+
+<section class="depth-2" id="experience" data-sec>
+  <div class="wrap">
+    <div class="sec-head rv"><span class="ring-mark in">03</span><span class="sec-label"><b>好</b>Experience — 広がる輪</span></div>
+    <h2 class="rv">一つの輪が、次の輪を呼んだ。</h2>
+    <ul class="timeline">
+      <li class="rv"><span class="t-ring"></span><div class="t-when">2023.09</div><div class="t-title">慶應義塾大学 環境情報学部 入学</div><div class="t-desc">専攻: コンピューターサイエンス/データサイエンス</div></li>
+      <li class="rv"><span class="t-ring"></span><div class="t-when">要確認<span class="todo">期間</span></div><div class="t-title">FM83.1HZレディオ湘南の University Studio運営</div><div class="t-desc">台本/ナビゲーター/ミキサー番組全体の業務に携わる</div></li>
+      <li class="rv"><span class="t-ring"></span><div class="t-when">2024.08</div><div class="t-title">42Tokyo Piscine 合格・入学</div><div class="t-desc">4週間の選抜課程を経てエンジニア教育機関へ</div></li>
+      <li class="rv"><span class="t-ring"></span><div class="t-when">2025.07 –</div><div class="t-title">長期インターン | エンジニア・ITコンサルタント</div><div class="t-desc">AIエージェントR&amp;D、Webアプリ開発(現在も継続中)</div></li>
+      <li class="rv"><span class="t-ring"></span><div class="t-when">2025.08 –</div><div class="t-title">福島県復興地プロジェクト</div><div class="t-desc">県内高校にてAIワークショップを実施(古谷研究室)</div></li>
+    </ul>
+  </div>
+</section>
+
+<section class="depth-2" id="projects" data-sec>
+  <div class="wrap">
+    <div class="sec-head rv"><span class="ring-mark in">04</span><span class="sec-label"><b>楽</b>Projects — 楽しんでつくる</span></div>
+    <h2 class="rv">楽しんだ分だけ、かたちになった。</h2>
+    <article class="proj rv">
+      <h3>履歴書解析AIエージェント R&amp;D <span class="todo">公開可否 要確認</span></h3>
+      <div class="proj-meta">長期インターン / 2025.07 – 2025.10</div>
+      <dl class="proj-rows">
+        <dt>課題</dt><dd>(会社確認後に記載 — 抽象化の可能性あり)</dd>
+        <dt>役割</dt><dd>R&amp;D担当エンジニア</dd>
+        <dt>技術選定</dt><dd>なぜLLM/このアプローチか(記載予定)</dd>
+        <dt>工夫</dt><dd>LLMによるスキル抽出・構造化のアプローチ設計</dd>
+        <dt>成果と学び</dt><dd>(数値・導入状況・得た学びを確認後に記載)</dd>
+      </dl>
+      <div class="tags"><span class="pill">Python</span><span class="pill">LLM</span><span class="pill">NLP</span></div>
+    </article>
+    <article class="proj rv">
+      <h3>Webアプリ開発 <span class="todo">公開可否 要確認</span></h3>
+      <div class="proj-meta">長期インターン / 2025.11 – 現在</div>
+      <dl class="proj-rows">
+        <dt>課題</dt><dd>(会社確認後に記載)</dd>
+        <dt>役割</dt><dd>開発エンジニア</dd>
+        <dt>技術選定</dt><dd>React / Node.js / PostgreSQL の選定理由(記載予定)</dd>
+        <dt>工夫</dt><dd>(記載予定)</dd>
+        <dt>成果と学び</dt><dd>(記載予定)</dd>
+      </dl>
+      <div class="tags"><span class="pill">TypeScript</span><span class="pill">React</span><span class="pill">Node.js</span><span class="pill">PostgreSQL</span></div>
+    </article>
+    <article class="proj rv">
+      <h3>Discord Bot(個人開発)</h3>
+      <div class="proj-meta">個人開発 / GitHub公開</div>
+      <dl class="proj-rows">
+        <dt>課題</dt><dd>コミュニティ内の知識散逸 — 過去ログから答えられる仕組みがない</dd>
+        <dt>役割</dt><dd>企画・設計・実装すべて</dd>
+        <dt>技術選定</dt><dd>RAG+ベクトルDBを選んだ理由(記載予定)</dd>
+        <dt>工夫</dt><dd>文脈を保った検索・応答パイプラインの設計</dd>
+        <dt>成果と学び</dt><dd>(利用数など数値を追記予定)</dd>
+      </dl>
+      <div class="tags"><span class="pill">RAG</span><span class="pill">ベクトルDB</span><span class="pill">Python</span></div>
+    </article>
+  </div>
+</section>
+
+<section class="depth-3" id="beyond" data-sec>
+  <div class="wrap">
+    <div class="sec-head rv"><span class="ring-mark in">05</span><span class="sec-label"><b>楽</b>Beyond Code — 輪は水の外へ</span></div>
+    <h2 class="rv">コードの外でも、人を笑顔に。</h2>
+    <div class="beyond-grid">
+      <div class="b-card rv"><div class="ph">素材待ち:旅の写真</div><div class="b-body"><h3>海外一人旅 2ヶ月</h3><p>陸路での国境越え。現地住民へのインタビュー。Instagram動画は1万いいねを超えた。</p></div></div>
+      <div class="b-card rv"><div class="ph">素材待ち:ステージ写真</div><div class="b-body"><h3>漫才ステージ</h3><p>脚本から立ち姿まで、自分でつくって舞台に立つ。笑いは最速で人を笑顔にする手段。</p></div></div>
+      <div class="b-card rv"><div class="ph">素材待ち:ワークショップ写真</div><div class="b-body"><h3>福島 AIワークショップ</h3><p>復興地の高校生へAIの面白さを届ける。テクノロジーを「体験」として手渡す試み。</p></div></div>
+    </div>
+  </div>
+</section>
+
+<section class="contact depth-3" id="contact" data-sec>
+  <div class="wrap">
+    <div class="sec-head rv" style="justify-content:center;"><span class="ring-mark in">06</span><span class="sec-label"><b>楽</b>Contact — 次の波紋へ</span></div>
+    <h2 class="rv">一緒に楽しみましょう</h2>
+    <p class="rv">あなたに届いたなら、この波紋はもう私だけのものではありません。</p>
+    <div class="btn-row rv">
+      <a class="btn btn-primary" href="https://github.com/hinata-111">GitHub →</a>
+      <a class="btn btn-ghost" href="mailto:yos570038@gmail.com">Email →</a>
+    </div>
+  </div>
+</section>
+
+<footer>© 2026 鈴木日向 — 波紋は、まだ広がっていく。</footer>
+
+<script>
+  (function () {
+    var reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    var rv = document.querySelectorAll('.rv');
+    if (reduced) { rv.forEach(function (el) { el.classList.add('in'); }); }
+    else {
+      var io = new IntersectionObserver(function (es) {
+        es.forEach(function (e) {
+          if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); }
+        });
+      }, { threshold: 0.2 });
+      rv.forEach(function (el) { io.observe(el); });
+    }
+
+    // タイムラインの輪も個別点灯
+    document.querySelectorAll('.timeline li').forEach(function (li) {
+      new IntersectionObserver(function (es) {
+        es.forEach(function (e) { if (e.isIntersecting) e.target.classList.add('in'); });
+      }, { threshold: 0.6 }).observe(li);
+    });
+
+    // カーソル波紋(pointer: fine のみ、rAFスロットリング)
+    if (matchMedia('(pointer: fine)').matches) {
+      var ripple = document.getElementById('cursor-ripple');
+      var x = 0, y = 0, ticking = false;
+      window.addEventListener('mousemove', function (e) {
+        x = e.clientX; y = e.clientY;
+        ripple.classList.add('active');
+        if (!ticking) {
+          ticking = true;
+          requestAnimationFrame(function () {
+            ripple.style.left = x + 'px'; ripple.style.top = y + 'px';
+            ticking = false;
+          });
+        }
+      });
+    }
+  })();
+</script>
+</body>
+</html>

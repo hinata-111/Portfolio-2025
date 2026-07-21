@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>鈴木日向 | Portfolio — v8案「灯籠の夜道」</title>
+<!--
+  デザイン候補 v8-A「灯籠の夜道」
+  コンセプト: 論語「知る→好む→楽しむ」を、参道の灯籠が一つずつ灯っていく夜道として表現。
+  ページを下るほど灯りが増え、暖かくなる。締めの誓い(座右の銘)で全ての灯りが揃い、Contactが道の先。
+  夜に振り切った単一テーマ(意図的)。採用時はライトテーマを別途設計。
+-->
+<style>
+  :root {
+    --night: #0B0E15;          /* 夜の地 */
+    --night-2: #10141F;        /* わずかに明るい夜 */
+    --lantern: #FFA85C;        /* 灯籠の火 */
+    --lantern-core: #FFD9A8;   /* 火の芯 */
+    --lantern-deep: #C96F1E;   /* 火の底 */
+    --washi: #EFE9DD;          /* 和紙色の文字 */
+    --washi-strong: #FBF7EE;
+    --muted: #79808F;
+    --line: #222839;
+    --serif: "Hiragino Mincho ProN", "Yu Mincho", "Noto Serif JP", serif;
+    --sans: "Hiragino Kaku Gothic ProN", "Hiragino Sans", "Yu Gothic Medium", "Noto Sans JP", sans-serif;
+    --mono: ui-monospace, "SF Mono", "Cascadia Code", Consolas, monospace;
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+  body {
+    margin: 0; background: var(--night); color: var(--washi);
+    font-family: var(--sans); line-height: 1.8;
+    -webkit-font-smoothing: antialiased; overflow-x: hidden;
+  }
+
+  /* ========== 参道レール(左固定): 7つの灯籠ミニマップ ========== */
+  .path-rail {
+    position: fixed; left: 26px; top: 50%; transform: translateY(-50%);
+    display: flex; flex-direction: column; gap: 22px; z-index: 40;
+  }
+  .path-rail a {
+    width: 10px; height: 14px; border-radius: 3px 3px 5px 5px;
+    background: var(--night-2); border: 1px solid var(--line);
+    display: block; transition: all .6s ease; position: relative;
+  }
+  .path-rail a.lit {
+    background: linear-gradient(to bottom, var(--lantern-core), var(--lantern));
+    border-color: var(--lantern);
+    box-shadow: 0 0 10px 2px rgba(255,168,92,.5);
+  }
+  .path-rail a:focus-visible { outline: 2px solid var(--lantern); outline-offset: 3px; }
+  @media (max-width: 860px) { .path-rail { display: none; } }
+
+  /* ========== 共通 ========== */
+  .wrap { max-width: 880px; margin: 0 auto; padding: 0 24px; }
+  section { position: relative; padding: 110px 0; }
+
+  /* 各段階の環境光: 知(かすか)→好(ほのか)→楽(あかるい) */
+  .stage-chi::before, .stage-ko::before, .stage-raku::before {
+    content: ""; position: absolute; inset: 0; pointer-events: none; z-index: 0;
+  }
+  .stage-chi::before  { background: radial-gradient(ellipse 70% 50% at 50% 0%, rgba(255,168,92,.04), transparent 70%); }
+  .stage-ko::before   { background: radial-gradient(ellipse 80% 55% at 50% 0%, rgba(255,168,92,.08), transparent 70%); }
+  .stage-raku::before { background: radial-gradient(ellipse 90% 60% at 50% 0%, rgba(255,168,92,.14), transparent 72%); }
+  section > .wrap { position: relative; z-index: 1; }
+
+  /* セクション見出し: 行灯マーカー+段階の漢字 */
+  .sec-head { display: flex; align-items: center; gap: 14px; margin-bottom: 14px; }
+  .andon {
+    width: 34px; height: 42px; border-radius: 7px 7px 10px 10px;
+    border: 1px solid var(--line); background: var(--night-2);
+    display: grid; place-items: center;
+    font-family: var(--serif); font-size: 17px; color: var(--muted);
+    transition: all .8s ease; flex: none;
+  }
+  .andon::after { content: ""; position: absolute; } /* reserved */
+  .lit .andon {
+    color: #2A1503; border-color: var(--lantern);
+    background: linear-gradient(to bottom, var(--lantern-core) 0%, var(--lantern) 70%, var(--lantern-deep) 100%);
+    box-shadow: 0 0 16px 3px rgba(255,168,92,.45), 0 0 44px 12px rgba(255,168,92,.16);
+  }
+  .sec-num { font-family: var(--mono); font-size: 12px; letter-spacing: .22em; color: var(--lantern); }
+  .sec-label { font-family: var(--mono); font-size: 12px; letter-spacing: .22em; color: var(--muted); text-transform: uppercase; }
+  h2 {
+    font-family: var(--serif); font-weight: 500; font-size: clamp(24px, 3.4vw, 34px);
+    line-height: 1.6; color: var(--washi-strong); margin: 0 0 34px; text-wrap: balance;
+  }
+
+  /* リビール(灯りが差すように下からではなく"点灯"する) */
+  .rv { opacity: 0; filter: brightness(1.8) blur(4px); transition: opacity .9s ease, filter .9s ease; }
+  .rv.in { opacity: 1; filter: brightness(1) blur(0); }
+  @media (prefers-reduced-motion: reduce) { .rv { opacity: 1 !important; filter: none !important; transition: none; } }
+
+  /* ========== Hero: 夜の入口、最初の一灯 ========== */
+  .hero {
+    min-height: 92vh; display: grid; place-items: center; text-align: center;
+    position: relative; padding: 80px 24px 60px; overflow: hidden;
+  }
+  .first-light {
+    position: absolute; top: 6%; left: 50%; transform: translateX(-50%);
+    width: 400px; height: 400px; border-radius: 50%;
+    background: radial-gradient(circle, rgba(255,168,92,.20), rgba(255,168,92,.05) 45%, transparent 70%);
+    filter: blur(4px); pointer-events: none;
+  }
+  .mote { position: absolute; border-radius: 50%; background: var(--lantern); pointer-events: none; opacity: 0; }
+  @media (prefers-reduced-motion: no-preference) {
+    .mote { animation: float-up 9s linear infinite; }
+    @keyframes float-up {
+      0% { transform: translateY(30px); opacity: 0; }
+      15% { opacity: var(--o, .5); }
+      85% { opacity: var(--o, .5); }
+      100% { transform: translateY(-120px); opacity: 0; }
+    }
+  }
+  .hero-eyebrow { font-family: var(--mono); font-size: 12px; letter-spacing: .3em; color: var(--muted); margin-bottom: 34px; }
+  .hero-eyebrow b { color: var(--lantern); font-weight: 400; }
+  h1 {
+    font-family: var(--serif); font-weight: 500; margin: 0 0 30px;
+    font-size: clamp(34px, 6.4vw, 62px); line-height: 1.55; color: var(--washi-strong); text-wrap: balance;
+  }
+  h1 .hl { color: var(--lantern); text-shadow: 0 0 24px rgba(255,168,92,.35); }
+  .role-line { font-family: var(--mono); font-size: 13px; letter-spacing: .2em; color: var(--lantern); margin-bottom: 20px; }
+  .hero-sub { font-size: 14px; color: var(--muted); }
+  .hero-sub .name { color: var(--washi-strong); font-weight: 600; margin-right: 12px; }
+  .scroll-cue {
+    position: absolute; bottom: 34px; left: 50%; transform: translateX(-50%);
+    font-family: var(--mono); font-size: 11px; letter-spacing: .28em; color: var(--muted);
+    writing-mode: vertical-rl;
+  }
+  .scroll-cue::after {
+    content: ""; display: block; width: 1px; height: 42px; margin: 10px auto 0;
+    background: linear-gradient(to bottom, var(--lantern), transparent);
+  }
+
+  /* ========== About(知) ========== */
+  .about-grid { display: grid; grid-template-columns: 300px 1fr; gap: 44px; align-items: start; }
+  @media (max-width: 720px) { .about-grid { grid-template-columns: 1fr; gap: 28px; } }
+  .about-info { list-style: none; margin: 0; padding: 0; }
+  .about-info li {
+    display: grid; grid-template-columns: 56px 1fr; gap: 12px;
+    padding: 11px 0; border-bottom: 1px dashed var(--line); font-size: 14px;
+  }
+  .about-info .k { color: var(--lantern); font-family: var(--mono); font-size: 12px; padding-top: 2px; }
+  .about-story p { margin: 0 0 16px; font-size: 15px; line-height: 2; }
+
+  /* ========== Skills(好) ========== */
+  .stack-rows { display: flex; flex-direction: column; gap: 4px; }
+  .stack-row {
+    display: grid; grid-template-columns: 44px 190px 1fr; gap: 16px; align-items: center;
+    padding: 16px 14px; border-radius: 12px; transition: background .4s ease;
+  }
+  .stack-row:hover { background: rgba(255,168,92,.05); }
+  @media (max-width: 720px) { .stack-row { grid-template-columns: 44px 1fr; } .stack-row .pills { grid-column: 1 / -1; } }
+  .chip {
+    width: 44px; height: 44px; border-radius: 10px; display: grid; place-items: center;
+    font-family: var(--mono); font-size: 13px; font-weight: 700;
+    color: var(--lantern); border: 1px solid var(--line); background: var(--night-2);
+  }
+  .cat { font-size: 14.5px; font-weight: 600; color: var(--washi-strong); }
+  .cat small { display: block; font-weight: 400; font-size: 12px; color: var(--muted); }
+  .pills { display: flex; gap: 8px; flex-wrap: wrap; }
+  .pill {
+    font-family: var(--mono); font-size: 12.5px; padding: 6px 14px; border-radius: 999px;
+    border: 1px solid var(--line); color: var(--washi); transition: all .35s ease;
+  }
+  .pill:hover { border-color: var(--lantern); box-shadow: 0 0 12px rgba(255,168,92,.25); }
+
+  /* ========== Experience(好): 灯籠タイムライン ========== */
+  .timeline { list-style: none; margin: 0; padding: 0 0 0 30px; border-left: 1px solid var(--line); }
+  .timeline li { position: relative; padding: 0 0 34px 26px; }
+  .timeline li:last-child { padding-bottom: 0; }
+  .t-lamp {
+    position: absolute; left: -37px; top: 4px;
+    width: 13px; height: 16px; border-radius: 3px 3px 5px 5px;
+    background: var(--night-2); border: 1px solid var(--line); transition: all .8s ease;
+  }
+  .in .t-lamp {
+    background: linear-gradient(to bottom, var(--lantern-core), var(--lantern));
+    border-color: var(--lantern);
+    box-shadow: 0 0 12px 3px rgba(255,168,92,.45);
+  }
+  .t-when { font-family: var(--mono); font-size: 12px; color: var(--lantern); letter-spacing: .08em; }
+  .t-title { font-size: 15.5px; font-weight: 600; color: var(--washi-strong); margin: 4px 0 2px; }
+  .t-desc { font-size: 13.5px; color: var(--muted); }
+  .todo {
+    display: inline-block; font-family: var(--mono); font-size: 10.5px; padding: 2px 9px;
+    border-radius: 999px; border: 1px dashed var(--lantern-deep); color: var(--lantern); margin-left: 8px;
+  }
+
+  /* ========== Projects(楽) ========== */
+  .proj { padding: 34px 0; border-top: 1px solid var(--line); }
+  .proj:first-of-type { border-top: 0; padding-top: 10px; }
+  .proj h3 { font-family: var(--serif); font-weight: 600; font-size: 20px; color: var(--washi-strong); margin: 0 0 4px; }
+  .proj-meta { font-family: var(--mono); font-size: 12px; color: var(--muted); margin-bottom: 18px; }
+  .proj-rows { display: grid; grid-template-columns: 96px 1fr; gap: 10px 18px; margin-bottom: 18px; }
+  @media (max-width: 600px) { .proj-rows { grid-template-columns: 1fr; gap: 4px; } }
+  .proj-rows dt {
+    font-family: var(--mono); font-size: 11.5px; color: #2A1503; letter-spacing: .04em;
+    background: linear-gradient(to bottom, var(--lantern-core), var(--lantern));
+    border-radius: 999px; padding: 3px 10px; height: fit-content; text-align: center; opacity: .92;
+  }
+  .proj-rows dd { margin: 0; font-size: 14px; align-self: center; }
+  .tags { display: flex; gap: 8px; flex-wrap: wrap; }
+
+  /* ========== Beyond(楽) ========== */
+  .beyond-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px; }
+  @media (max-width: 720px) { .beyond-grid { grid-template-columns: 1fr; } }
+  .b-card {
+    border: 1px solid var(--line); border-radius: 16px; overflow: hidden;
+    background: var(--night-2); transition: all .5s ease;
+  }
+  .b-card:hover { border-color: var(--lantern-deep); box-shadow: 0 6px 30px rgba(255,168,92,.12); transform: translateY(-3px); }
+  .ph {
+    aspect-ratio: 4/3; display: grid; place-items: center;
+    font-family: var(--mono); font-size: 11.5px; color: var(--muted); letter-spacing: .1em;
+    background: repeating-linear-gradient(45deg, transparent, transparent 12px, rgba(255,168,92,.05) 12px, rgba(255,168,92,.05) 13px);
+    border-bottom: 1px solid var(--line);
+  }
+  .b-body { padding: 18px; }
+  .b-body h3 { font-size: 15.5px; margin: 0 0 8px; color: var(--washi-strong); }
+  .b-body p { margin: 0; font-size: 13px; color: var(--muted); line-height: 1.8; }
+
+  /* ========== 誓い(座右の銘): 全ての灯りが揃う場所 ========== */
+  .vow-sec { text-align: center; padding: 150px 0; overflow: hidden; }
+  .vow-sec::before {
+    content: ""; position: absolute; inset: 0; pointer-events: none;
+    background: radial-gradient(ellipse 75% 60% at 50% 50%, rgba(255,168,92,.17), transparent 70%);
+  }
+  .lantern-row { display: flex; justify-content: center; gap: 26px; margin-bottom: 50px; }
+  .lantern-row .andon { position: relative; }
+  blockquote {
+    font-family: var(--serif); font-size: clamp(19px, 2.8vw, 26px); line-height: 2;
+    color: var(--washi-strong); margin: 0 0 14px; font-weight: 500;
+  }
+  .cite { font-family: var(--mono); font-size: 12px; color: var(--muted); margin-bottom: 40px; }
+  .vow { font-family: var(--serif); font-size: clamp(16px, 2vw, 19px); line-height: 2.1; max-width: 46ch; margin: 0 auto; }
+  .vow b { color: var(--lantern); font-weight: 700; text-shadow: 0 0 20px rgba(255,168,92,.4); }
+
+  /* ========== Contact: 道の先 ========== */
+  .contact { text-align: center; padding: 130px 0 100px; }
+  .contact::before {
+    content: ""; position: absolute; inset: 0; pointer-events: none;
+    background: radial-gradient(ellipse 85% 70% at 50% 100%, rgba(255,168,92,.2), transparent 65%);
+  }
+  .contact h2 { margin-bottom: 18px; }
+  .contact p { color: var(--muted); font-size: 14.5px; margin: 0 0 40px; }
+  .btn-row { display: flex; justify-content: center; gap: 16px; flex-wrap: wrap; }
+  .btn {
+    display: inline-flex; align-items: center; gap: 10px;
+    font-family: var(--mono); font-size: 14px; text-decoration: none;
+    padding: 14px 30px; border-radius: 999px; transition: all .35s ease;
+  }
+  .btn-primary {
+    color: #2A1503; font-weight: 700;
+    background: linear-gradient(to bottom, var(--lantern-core), var(--lantern));
+    box-shadow: 0 0 24px rgba(255,168,92,.35);
+  }
+  .btn-primary:hover { box-shadow: 0 0 40px rgba(255,168,92,.55); transform: translateY(-2px); }
+  .btn-ghost { color: var(--washi); border: 1px solid var(--line); }
+  .btn-ghost:hover { border-color: var(--lantern); }
+  .btn:focus-visible { outline: 2px solid var(--lantern); outline-offset: 3px; }
+  footer {
+    text-align: center; font-family: var(--mono); font-size: 11.5px; color: var(--muted);
+    letter-spacing: .1em; padding: 40px 0 46px; border-top: 1px solid var(--line);
+  }
+</style>
+</head>
+<body>
+
+<nav class="path-rail" aria-label="ページ内位置">
+  <a href="#hero" data-rail></a><a href="#about" data-rail></a><a href="#skills" data-rail></a>
+  <a href="#experience" data-rail></a><a href="#projects" data-rail></a><a href="#beyond" data-rail></a><a href="#contact" data-rail></a>
+</nav>
+
+<header class="hero" id="hero" data-sec>
+  <div class="first-light"></div>
+  <div class="mote" style="left:38%; top:30%; width:3px; height:3px; --o:.5;"></div>
+  <div class="mote" style="left:56%; top:42%; width:2px; height:2px; --o:.4; animation-delay:2.5s;"></div>
+  <div class="mote" style="left:47%; top:22%; width:2.5px; height:2.5px; --o:.45; animation-delay:5s;"></div>
+  <div class="mote" style="left:63%; top:26%; width:2px; height:2px; --o:.35; animation-delay:7s;"></div>
+  <div>
+    <div class="hero-eyebrow">夜道に、灯りをともすように <b>—</b> PORTFOLIO 2028卒</div>
+    <h1>人を<span class="hl">笑顔</span>にし、<br><span class="hl">心を動かす</span>ものを生み出す。</h1>
+    <div class="role-line">PdM × ENGINEER × CREATOR</div>
+    <div class="hero-sub"><span class="name">鈴木日向</span>慶應義塾大学 環境情報学部</div>
+  </div>
+  <div class="scroll-cue">道を歩く</div>
+</header>
+
+<section class="stage-chi" id="about" data-sec>
+  <div class="wrap">
+    <div class="sec-head rv" data-lit><span class="andon">知</span><span class="sec-num">01</span><span class="sec-label">About — 知る</span></div>
+    <h2 class="rv">ものづくりの原点は、目の前の人の反応。</h2>
+    <div class="about-grid rv">
+      <ul class="about-info">
+        <li><span class="k">名前</span><span>鈴木日向/Hinata Suzuki</span></li>
+        <li><span class="k">所属</span><span>慶應義塾大学 環境情報学部</span></li>
+        <li><span class="k">研究</span><span>古谷知之研究室 — NLP・感情分析</span></li>
+        <li><span class="k">趣味</span><span>旅行・将棋</span></li>
+      </ul>
+      <div class="about-story">
+        <p>慶應義塾大学 環境情報学部(2023年9月入学)。古谷知之研究室にて自然言語処理における感情分析を研究。2024年8月、42Tokyo Piscineに合格し入学。現在は長期インターンでAIエージェントのR&amp;DとWebアプリ開発に携わる。</p>
+        <p>ラジオ、漫才、旅、そしてソフトウェア。手段は違っても、つくる理由はいつも同じ——目の前の人を笑顔にすること。お金のためではなく、クリエイターとして価値を生むことを大切にしている。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="stage-ko" id="skills" data-sec>
+  <div class="wrap">
+    <div class="sec-head rv" data-lit><span class="andon">好</span><span class="sec-num">02</span><span class="sec-label">Skills — 好む</span></div>
+    <h2 class="rv">手を動かすほど、好きになっていった技術。</h2>
+    <div class="stack-rows rv">
+      <div class="stack-row"><span class="chip">Py</span><span class="cat">Python / NLP<small>インターン・研究で使用</small></span><span class="pills"><span class="pill">Python</span><span class="pill">PyTorch</span><span class="pill">MeCab</span><span class="pill">GiNZA</span></span></div>
+      <div class="stack-row"><span class="chip">AI</span><span class="cat">LLM応用<small>個人開発・R&amp;D</small></span><span class="pills"><span class="pill">RAG</span><span class="pill">ベクトルDB</span><span class="pill">AIエージェント</span></span></div>
+      <div class="stack-row"><span class="chip">TS</span><span class="cat">Web開発<small>インターンで使用</small></span><span class="pills"><span class="pill">TypeScript</span><span class="pill">React</span><span class="pill">Node.js</span></span></div>
+      <div class="stack-row"><span class="chip">DB</span><span class="cat">Database</span><span class="pills"><span class="pill">PostgreSQL</span></span></div>
+      <div class="stack-row"><span class="chip">Ops</span><span class="cat">Infra / Tools</span><span class="pills"><span class="pill">Docker</span><span class="pill">Git / GitHub</span></span></div>
+    </div>
+  </div>
+</section>
+
+<section class="stage-ko" id="experience" data-sec>
+  <div class="wrap">
+    <div class="sec-head rv" data-lit><span class="andon">好</span><span class="sec-num">03</span><span class="sec-label">Experience — 歩いてきた道</span></div>
+    <h2 class="rv">一つずつ、灯りをともしてきた。</h2>
+    <ul class="timeline">
+      <li class="rv"><span class="t-lamp"></span><div class="t-when">2023.09</div><div class="t-title">慶應義塾大学 環境情報学部 入学</div><div class="t-desc">専攻: コンピューターサイエンス/データサイエンス</div></li>
+      <li class="rv"><span class="t-lamp"></span><div class="t-when">要確認<span class="todo">期間</span></div><div class="t-title">FM83.1HZレディオ湘南の University Studio運営</div><div class="t-desc">台本/ナビゲーター/ミキサー番組全体の業務に携わる</div></li>
+      <li class="rv"><span class="t-lamp"></span><div class="t-when">2024.08</div><div class="t-title">42Tokyo Piscine 合格・入学</div><div class="t-desc">4週間の選抜課程を経てエンジニア教育機関へ</div></li>
+      <li class="rv"><span class="t-lamp"></span><div class="t-when">2025.07 –</div><div class="t-title">長期インターン | エンジニア・ITコンサルタント</div><div class="t-desc">AIエージェントR&amp;D、Webアプリ開発(現在も継続中)</div></li>
+      <li class="rv"><span class="t-lamp"></span><div class="t-when">2025.08 –</div><div class="t-title">福島県復興地プロジェクト</div><div class="t-desc">県内高校にてAIワークショップを実施(古谷研究室)</div></li>
+    </ul>
+  </div>
+</section>
+
+<section class="stage-raku" id="projects" data-sec>
+  <div class="wrap">
+    <div class="sec-head rv" data-lit><span class="andon">楽</span><span class="sec-num">04</span><span class="sec-label">Projects — 楽しんでつくる</span></div>
+    <h2 class="rv">楽しんだ分だけ、かたちになった。</h2>
+    <article class="proj rv">
+      <h3>履歴書解析AIエージェント R&amp;D <span class="todo">公開可否 要確認</span></h3>
+      <div class="proj-meta">長期インターン / 2025.07 – 2025.10</div>
+      <dl class="proj-rows">
+        <dt>課題</dt><dd>(会社確認後に記載 — 抽象化の可能性あり)</dd>
+        <dt>役割</dt><dd>R&amp;D担当エンジニア</dd>
+        <dt>技術選定</dt><dd>なぜLLM/このアプローチか(記載予定)</dd>
+        <dt>工夫</dt><dd>LLMによるスキル抽出・構造化のアプローチ設計</dd>
+        <dt>成果と学び</dt><dd>(数値・導入状況・得た学びを確認後に記載)</dd>
+      </dl>
+      <div class="tags"><span class="pill">Python</span><span class="pill">LLM</span><span class="pill">NLP</span></div>
+    </article>
+    <article class="proj rv">
+      <h3>Webアプリ開発 <span class="todo">公開可否 要確認</span></h3>
+      <div class="proj-meta">長期インターン / 2025.11 – 現在</div>
+      <dl class="proj-rows">
+        <dt>課題</dt><dd>(会社確認後に記載)</dd>
+        <dt>役割</dt><dd>開発エンジニア</dd>
+        <dt>技術選定</dt><dd>React / Node.js / PostgreSQL の選定理由(記載予定)</dd>
+        <dt>工夫</dt><dd>(記載予定)</dd>
+        <dt>成果と学び</dt><dd>(記載予定)</dd>
+      </dl>
+      <div class="tags"><span class="pill">TypeScript</span><span class="pill">React</span><span class="pill">Node.js</span><span class="pill">PostgreSQL</span></div>
+    </article>
+    <article class="proj rv">
+      <h3>Discord Bot(個人開発)</h3>
+      <div class="proj-meta">個人開発 / GitHub公開</div>
+      <dl class="proj-rows">
+        <dt>課題</dt><dd>コミュニティ内の知識散逸 — 過去ログから答えられる仕組みがない</dd>
+        <dt>役割</dt><dd>企画・設計・実装すべて</dd>
+        <dt>技術選定</dt><dd>RAG+ベクトルDBを選んだ理由(記載予定)</dd>
+        <dt>工夫</dt><dd>文脈を保った検索・応答パイプラインの設計</dd>
+        <dt>成果と学び</dt><dd>(利用数など数値を追記予定)</dd>
+      </dl>
+      <div class="tags"><span class="pill">RAG</span><span class="pill">ベクトルDB</span><span class="pill">Python</span></div>
+    </article>
+  </div>
+</section>
+
+<section class="stage-raku" id="beyond" data-sec>
+  <div class="wrap">
+    <div class="sec-head rv" data-lit><span class="andon">楽</span><span class="sec-num">05</span><span class="sec-label">Beyond Code — 舞台の外でも</span></div>
+    <h2 class="rv">コードの外でも、人を笑顔に。</h2>
+    <div class="beyond-grid">
+      <div class="b-card rv"><div class="ph">素材待ち:旅の写真</div><div class="b-body"><h3>海外一人旅 2ヶ月</h3><p>陸路での国境越え。現地住民へのインタビュー。Instagram動画は1万いいねを超えた。</p></div></div>
+      <div class="b-card rv"><div class="ph">素材待ち:ステージ写真</div><div class="b-body"><h3>漫才ステージ</h3><p>脚本から立ち姿まで、自分でつくって舞台に立つ。笑いは最速で人を笑顔にする手段。</p></div></div>
+      <div class="b-card rv"><div class="ph">素材待ち:ワークショップ写真</div><div class="b-body"><h3>福島 AIワークショップ</h3><p>復興地の高校生へAIの面白さを届ける。テクノロジーを「体験」として手渡す試み。</p></div></div>
+    </div>
+  </div>
+</section>
+
+<section class="vow-sec" data-sec>
+  <div class="wrap">
+    <div class="lantern-row rv" data-lit>
+      <span class="andon">知</span><span class="andon">好</span><span class="andon">楽</span>
+    </div>
+    <blockquote class="rv">「之を知る者は之を好む者に如かず、<br>之を好む者は之を楽しむ者に如かず」</blockquote>
+    <div class="cite rv">— 論語・雍也</div>
+    <p class="vow rv">知るより、好む。好むより、楽しむ。<br>だから私は誰よりも<b>「楽しむ者」</b>として、つくる。</p>
+  </div>
+</section>
+
+<section class="contact" id="contact" data-sec>
+  <div class="wrap">
+    <div class="sec-head rv" style="justify-content:center;" data-lit><span class="andon">楽</span><span class="sec-num">06</span><span class="sec-label">Contact — 道の先へ</span></div>
+    <h2 class="rv">一緒に楽しみましょう</h2>
+    <p class="rv">ここまで歩いてくれてありがとうございます。灯りの先で、お話ししましょう。</p>
+    <div class="btn-row rv">
+      <a class="btn btn-primary" href="https://github.com/hinata-111">GitHub →</a>
+      <a class="btn btn-ghost" href="mailto:yos570038@gmail.com">Email →</a>
+    </div>
+  </div>
+</section>
+
+<footer>© 2026 鈴木日向 — 灯りは、まだ増えていく。</footer>
+
+<script>
+  (function () {
+    var reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    var rails = document.querySelectorAll('[data-rail]');
+    var secs = document.querySelectorAll('[data-sec]');
+    var io = new IntersectionObserver(function (es) {
+      es.forEach(function (e) {
+        if (!e.isIntersecting) return;
+        var i = Array.prototype.indexOf.call(secs, e.target);
+        for (var j = 0; j <= i && j < rails.length; j++) rails[j].classList.add('lit');
+      });
+    }, { threshold: 0.25 });
+    secs.forEach(function (s) { io.observe(s); });
+
+    var rv = document.querySelectorAll('.rv');
+    if (reduced) { rv.forEach(function (el) { el.classList.add('in'); }); }
+    else {
+      var io2 = new IntersectionObserver(function (es) {
+        es.forEach(function (e) {
+          if (e.isIntersecting) { e.target.classList.add('in'); io2.unobserve(e.target); }
+        });
+      }, { threshold: 0.2 });
+      rv.forEach(function (el) { io2.observe(el); });
+    }
+
+    var lit = document.querySelectorAll('[data-lit]');
+    var io3 = new IntersectionObserver(function (es) {
+      es.forEach(function (e) { if (e.isIntersecting) e.target.classList.add('lit'); });
+    }, { threshold: 0.6 });
+    lit.forEach(function (el) { io3.observe(el); });
+
+    // タイムラインの灯籠も個別点灯
+    document.querySelectorAll('.timeline li').forEach(function (li) {
+      new IntersectionObserver(function (es) {
+        es.forEach(function (e) { if (e.isIntersecting) e.target.classList.add('in'); });
+      }, { threshold: 0.6 }).observe(li);
+    });
+  })();
+</script>
+</body>
+</html>
