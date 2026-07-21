@@ -7,7 +7,7 @@ export type BeyondItem = { phLabel: string; title: string; desc: string };
 
 export const profile = {
   name: "鈴木日向",
-  grad: "Portfolio — 2028卒",
+  eyebrow: "Portfolio",
   catchTop: "笑顔",
   catchBottom: "心を動かす",
   roleLine: "PdM × ENGINEER × CREATOR",

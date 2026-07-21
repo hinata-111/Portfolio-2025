@@ -8,7 +8,7 @@ export default function Hero() {
       <div className="glow glow-b" />
       <HeroEffects />
       <div className="hero-inner">
-        <div className="hero-eyebrow mono">{profile.grad}</div>
+        <div className="hero-eyebrow mono">{profile.eyebrow}</div>
         <h1 className="serif">
           人を<span className="hl">{profile.catchTop}</span>にし、
           <br />

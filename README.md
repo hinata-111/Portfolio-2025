@@ -1,6 +1,6 @@
 # Portfolio 2025
 
-就活用ポートフォリオサイト。「人を笑顔にし、心を動かすものを生み出す」。
+個人ポートフォリオサイト。「人を笑顔にし、心を動かすものを生み出す」。
 
 ## Tech Stack
 - Next.js (App Router) + TypeScript
@@ -13,7 +13,7 @@ npm install / npm run dev / npm test / npm run build
 
 ## Architecture
 - `app/content.ts` — 全コンテンツを型付きデータで集約。プロジェクト・経歴の追加はデータ1要素の追加のみ
-- `app/components/` — セクション単位の独立コンポーネント。クライアント処理は Reveal / HeroEffects / CursorLight / ConsoleEgg に隔離
+- `app/components/` — セクション単位の独立コンポーネント。クライアント処理は Reveal / HeroEffects / CursorLight / ConsoleEgg / PathRail に隔離
 - 設計書: `docs/superpowers/specs/2026-07-07-portfolio-design.md`
 - モックアップ: `docs/design/portfolio-mockup-v7.html`
 
