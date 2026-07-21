@@ -89,53 +89,6 @@ body {
 }
 @media (pointer: fine) { .cursor-light.on { opacity: 1; } }
 
-/* 案1: フォント統一+アウトライン除去+落ち着いた動き */
-.ticker {
-  position: relative; z-index: 2;
-  margin-top: 76px;
-  padding: 22px 0 26px;
-  border-top: 1px solid var(--line);
-  overflow: hidden;
-  white-space: nowrap;
-  -webkit-mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
-  mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
-}
-.ticker-track { display: inline-block; }
-.ticker span {
-  display: inline-block;
-  font-family: "Hiragino Mincho ProN", "Yu Mincho", "Noto Serif JP", serif;
-  font-size: clamp(18px, 2.4vw, 26px);
-  font-weight: 500;
-  letter-spacing: .04em;
-  font-style: italic;
-  margin-right: 3.2em;
-  color: var(--muted);
-}
-.ticker span.fill { color: var(--sun); font-style: normal; font-weight: 700; }
-
-/* 案2: 単語クロスフェード型 */
-.ticker-cross {
-  position: relative;
-  height: 46px;
-  border-top: 1px solid var(--line);
-  overflow: visible;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 24px;
-  flex-wrap: wrap;
-  white-space: nowrap;
-  mask-image: none;
-  -webkit-mask-image: none;
-}
-.ticker-cross span {
-  font-family: "Hiragino Mincho ProN", "Yu Mincho", "Noto Serif JP", serif;
-  font-size: clamp(20px, 2.6vw, 30px);
-  font-weight: 500;
-  letter-spacing: .06em;
-  color: var(--muted);
-}
-.ticker-cross span.fill { color: var(--sun); font-weight: 700; }
 .hero-inner { position: relative; z-index: 2; padding: 0 20px; }
 .glow { position: absolute; border-radius: 50%; filter: blur(70px); pointer-events: none; z-index: 0; }
 .glow-a { width: 560px; height: 420px; background: var(--glow-1); top: -120px; left: 50%; transform: translateX(-70%); }
@@ -386,28 +339,6 @@ footer::before {
   .hero-inner > *:nth-child(3) { animation-delay: .9s; }
   .hero-inner > *:nth-child(4) { animation-delay: 1.02s; }
   @keyframes rise { from { opacity: 0; transform: translateY(18px); } to { opacity: 1; transform: none; } }
-
-  .ticker-track { animation: ticker 40s linear infinite; }
-  @keyframes ticker { from { transform: translateX(0); } to { transform: translateX(-50%); } }
-
-  .ticker-cross {
-    display: block;
-    white-space: nowrap;
-  }
-  .ticker-cross span {
-    position: absolute;
-    left: 50%; top: 50%;
-    transform: translate(-50%, -50%);
-    opacity: 0;
-    animation: cross-fade 18s ease-in-out infinite;
-  }
-  @keyframes cross-fade {
-    0% { opacity: 0; transform: translate(-50%, -50%) translateY(6px); }
-    4% { opacity: 1; transform: translate(-50%, -50%) translateY(0); }
-    15% { opacity: 1; }
-    18% { opacity: 0; }
-    100% { opacity: 0; }
-  }
 
   .hl::after { animation: sweep .6s cubic-bezier(.6,.05,.2,1) both; }
   .hero .hl:nth-of-type(1)::after { animation-delay: 1.25s; }

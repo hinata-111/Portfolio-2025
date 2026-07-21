@@ -1,4 +1,4 @@
-import { profile, tickerWords } from "@/app/content";
+import { profile } from "@/app/content";
 import HeroEffects from "@/app/components/HeroEffects";
 
 export default function Hero() {
@@ -23,17 +23,6 @@ export default function Hero() {
         </div>
       </div>
       <div className="scroll-cue" aria-hidden="true" />
-      <div className="ticker ticker-cross" aria-hidden="true">
-        {tickerWords.map((w, i) => (
-          <span
-            key={i}
-            className={w.fill ? "fill" : undefined}
-            style={{ animationDelay: `${i * 3}s` }}
-          >
-            {w.text}
-          </span>
-        ))}
-      </div>
     </header>
   );
 }

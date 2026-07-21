@@ -4,7 +4,6 @@ export type TimelineItem = { when: string; title: string; desc: string; todo?: s
 export type ProjectRow = { label: string; value: string };
 export type Project = { title: string; todoBadge?: string; meta: string; rows: ProjectRow[]; tags: string[] };
 export type BeyondItem = { phLabel: string; title: string; desc: string };
-export type TickerWord = { text: string; fill?: boolean };
 
 export const profile = {
   name: "鈴木日向",
@@ -96,15 +95,6 @@ export const beyond: BeyondItem[] = [
   { phLabel: "素材待ち:旅の写真", title: "海外一人旅 2ヶ月", desc: "陸路での国境越え。現地住民へのインタビュー。Instagram動画は1万いいねを超えた。" },
   { phLabel: "素材待ち:ステージ写真", title: "漫才ステージ", desc: "脚本から立ち姿まで、自分でつくって舞台に立つ。笑いは最速で人を笑顔にする手段。" },
   { phLabel: "素材待ち:ワークショップ写真", title: "福島 AIワークショップ", desc: "復興地の高校生へAIの面白さを届ける。テクノロジーを「体験」として手渡す試み。" },
-];
-
-export const tickerWords: TickerWord[] = [
-  { text: "MAKE" },
-  { text: "作る", fill: true },
-  { text: "MOVE" },
-  { text: "動かす", fill: true },
-  { text: "BUILD" },
-  { text: "届ける", fill: true },
 ];
 
 export const contact = {

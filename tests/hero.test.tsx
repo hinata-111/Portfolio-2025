@@ -1,7 +1,7 @@
 import { render, screen, within } from "@testing-library/react";
 import { describe, it, expect } from "vitest";
 import Hero from "@/app/components/Hero";
-import { profile, tickerWords } from "@/app/content";
+import { profile } from "@/app/content";
 
 describe("Hero", () => {
   it("renders catch phrase with two highlighted words", () => {
@@ -11,11 +11,5 @@ describe("Hero", () => {
     expect(within(h1).getByText("心を動かす")).toHaveClass("hl");
     expect(screen.getByText(profile.name)).toBeInTheDocument();
     expect(h1).toBeInTheDocument();
-  });
-  it("renders ticker words", () => {
-    render(<Hero />);
-    for (const w of tickerWords) {
-      expect(screen.getByText(w.text)).toBeInTheDocument();
-    }
   });
 });
