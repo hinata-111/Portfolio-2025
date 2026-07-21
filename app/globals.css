@@ -421,13 +421,13 @@ a:focus-visible, button:focus-visible {
   pointer-events: none;
 }
 .stage-chi::before {
-  background: radial-gradient(ellipse 70% 50% at 50% 0%, rgba(255,197,61,.04), transparent 70%);
+  background: radial-gradient(ellipse 90% 65% at 50% 0%, rgba(255,197,61,.04) 0%, rgba(255,197,61,.02) 45%, transparent 85%);
 }
 .stage-ko::before {
-  background: radial-gradient(ellipse 70% 50% at 50% 0%, rgba(255,197,61,.08), transparent 70%);
+  background: radial-gradient(ellipse 90% 65% at 50% 0%, rgba(255,197,61,.08) 0%, rgba(255,197,61,.04) 45%, transparent 85%);
 }
 .stage-raku::before {
-  background: radial-gradient(ellipse 70% 50% at 50% 0%, rgba(255,197,61,.14), transparent 70%);
+  background: radial-gradient(ellipse 90% 65% at 50% 0%, rgba(255,197,61,.14) 0%, rgba(255,197,61,.07) 45%, transparent 85%);
 }
 .stage-chi > *,
 .stage-ko > *,
@@ -437,32 +437,32 @@ a:focus-visible, button:focus-visible {
 }
 @media (prefers-color-scheme: light) {
   .stage-chi::before {
-    background: radial-gradient(ellipse 70% 50% at 50% 0%, rgba(255,197,61,.02), transparent 70%);
+    background: radial-gradient(ellipse 90% 65% at 50% 0%, rgba(255,197,61,.02) 0%, rgba(255,197,61,.01) 45%, transparent 85%);
   }
   .stage-ko::before {
-    background: radial-gradient(ellipse 70% 50% at 50% 0%, rgba(255,197,61,.04), transparent 70%);
+    background: radial-gradient(ellipse 90% 65% at 50% 0%, rgba(255,197,61,.04) 0%, rgba(255,197,61,.02) 45%, transparent 85%);
   }
   .stage-raku::before {
-    background: radial-gradient(ellipse 70% 50% at 50% 0%, rgba(255,197,61,.07), transparent 70%);
+    background: radial-gradient(ellipse 90% 65% at 50% 0%, rgba(255,197,61,.07) 0%, rgba(255,197,61,.035) 45%, transparent 85%);
   }
 }
 :root[data-theme="light"] .stage-chi::before {
-  background: radial-gradient(ellipse 70% 50% at 50% 0%, rgba(255,197,61,.02), transparent 70%);
+  background: radial-gradient(ellipse 90% 65% at 50% 0%, rgba(255,197,61,.02) 0%, rgba(255,197,61,.01) 45%, transparent 85%);
 }
 :root[data-theme="light"] .stage-ko::before {
-  background: radial-gradient(ellipse 70% 50% at 50% 0%, rgba(255,197,61,.04), transparent 70%);
+  background: radial-gradient(ellipse 90% 65% at 50% 0%, rgba(255,197,61,.04) 0%, rgba(255,197,61,.02) 45%, transparent 85%);
 }
 :root[data-theme="light"] .stage-raku::before {
-  background: radial-gradient(ellipse 70% 50% at 50% 0%, rgba(255,197,61,.07), transparent 70%);
+  background: radial-gradient(ellipse 90% 65% at 50% 0%, rgba(255,197,61,.07) 0%, rgba(255,197,61,.035) 45%, transparent 85%);
 }
 :root[data-theme="dark"] .stage-chi::before {
-  background: radial-gradient(ellipse 70% 50% at 50% 0%, rgba(255,197,61,.04), transparent 70%);
+  background: radial-gradient(ellipse 90% 65% at 50% 0%, rgba(255,197,61,.04) 0%, rgba(255,197,61,.02) 45%, transparent 85%);
 }
 :root[data-theme="dark"] .stage-ko::before {
-  background: radial-gradient(ellipse 70% 50% at 50% 0%, rgba(255,197,61,.08), transparent 70%);
+  background: radial-gradient(ellipse 90% 65% at 50% 0%, rgba(255,197,61,.08) 0%, rgba(255,197,61,.04) 45%, transparent 85%);
 }
 :root[data-theme="dark"] .stage-raku::before {
-  background: radial-gradient(ellipse 70% 50% at 50% 0%, rgba(255,197,61,.14), transparent 70%);
+  background: radial-gradient(ellipse 90% 65% at 50% 0%, rgba(255,197,61,.14) 0%, rgba(255,197,61,.07) 45%, transparent 85%);
 }
 @media (prefers-reduced-motion: reduce) {
   .path-rail a { transition: none; }
