@@ -5,10 +5,9 @@ import Projects from "@/app/components/Projects";
 import Beyond from "@/app/components/Beyond";
 
 describe("Experience", () => {
-  it("renders 5 timeline items with todo badge on radio", () => {
+  it("renders 5 timeline items", () => {
     render(<Experience />);
     expect(document.querySelectorAll(".timeline li")).toHaveLength(5);
-    expect(screen.getByText("期間")).toHaveClass("todo");
   });
 });
 

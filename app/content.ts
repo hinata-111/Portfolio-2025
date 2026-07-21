@@ -44,7 +44,7 @@ export const stack: StackRow[] = [
 
 export const timeline: TimelineItem[] = [
   { when: "2023.09", title: "慶應義塾大学 環境情報学部 入学", desc: "専攻: コンピューターサイエンス/データサイエンス" },
-  { when: "要確認", todo: "期間", title: "FM83.1HZレディオ湘南の University Studio運営", desc: "台本/ナビゲーター/ミキサー番組全体の業務に携わる" },
+  { when: "2024.04 – 2026.03", title: "レディオ湘南 学生ラジオ番組 マネージャー", desc: "福利厚生団体「音像工房」— 台本/ナビゲーター/ミキサー番組全体の業務に携わる" },
   { when: "2024.08", title: "42Tokyo Piscine 合格・入学", desc: "4週間の選抜課程を経てエンジニア教育機関へ" },
   { when: "2025.07 –", title: "長期インターン | エンジニア・ITコンサルタント", desc: "AIエージェントR&D、Webアプリ開発(現在も継続中)" },
   { when: "2025.08 –", title: "福島県復興地プロジェクト", desc: "県内高校にてAIワークショップを実施(古谷研究室)" },
