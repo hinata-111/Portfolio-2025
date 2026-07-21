@@ -29,9 +29,9 @@ export const aboutParagraphs = [
 export const motto = {
   quote: "之を知る者は之を好む者に如かず、之を好む者は之を楽しむ者に如かず",
   cite: "— 論語・雍也",
-  vowBefore: "知る者より、好む者。好む者より、楽しむ者。だから私は、誰よりも",
+  vowBefore: "知るより、好む。好むより、楽しむ。だから私は誰よりも",
   vowStrong: "「楽しむ者」",
-  vowAfter: "としてつくる。",
+  vowAfter: "として、つくる。",
 };
 
 export const stack: StackRow[] = [
