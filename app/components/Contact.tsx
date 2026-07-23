@@ -8,7 +8,6 @@ export default function Contact() {
       <Reveal>
         <SectionHead num="06" label="Contact" />
       </Reveal>
-      <Reveal as="h2">一緒に楽しみましょう</Reveal>
       <Reveal className="contact-row">
         <a className="btn btn-primary" href={contact.github}>
           GitHub <span className="arr">→</span>

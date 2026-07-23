@@ -431,66 +431,66 @@ a:focus-visible, button:focus-visible {
   opacity: 1;
 }
 .ambient-layer-chi {
-  --ambient-core: color-mix(in srgb, var(--sun) 4%, transparent);
-  --ambient-tail: color-mix(in srgb, var(--sun) 2%, transparent);
-  --ambient-wash: color-mix(in srgb, var(--sun) 1.5%, transparent);
-}
-.ambient-layer-ko {
-  --ambient-core: color-mix(in srgb, var(--sun) 8%, transparent);
-  --ambient-tail: color-mix(in srgb, var(--sun) 4%, transparent);
-  --ambient-wash: color-mix(in srgb, var(--sun) 3%, transparent);
-}
-.ambient-layer-raku {
-  --ambient-core: color-mix(in srgb, var(--sun) 14%, transparent);
-  --ambient-tail: color-mix(in srgb, var(--sun) 7%, transparent);
-  --ambient-wash: color-mix(in srgb, var(--sun) 5%, transparent);
-}
-@media (prefers-color-scheme: light) {
-  .ambient-layer-chi {
-    --ambient-core: color-mix(in srgb, var(--sun) 2%, transparent);
-    --ambient-tail: color-mix(in srgb, var(--sun) 1%, transparent);
-    --ambient-wash: color-mix(in srgb, var(--sun) .75%, transparent);
-  }
-  .ambient-layer-ko {
-    --ambient-core: color-mix(in srgb, var(--sun) 4%, transparent);
-    --ambient-tail: color-mix(in srgb, var(--sun) 2%, transparent);
-    --ambient-wash: color-mix(in srgb, var(--sun) 1.5%, transparent);
-  }
-  .ambient-layer-raku {
-    --ambient-core: color-mix(in srgb, var(--sun) 7%, transparent);
-    --ambient-tail: color-mix(in srgb, var(--sun) 3.5%, transparent);
-    --ambient-wash: color-mix(in srgb, var(--sun) 2.5%, transparent);
-  }
-}
-:root[data-theme="light"] .ambient-layer-chi {
-  --ambient-core: color-mix(in srgb, var(--sun) 2%, transparent);
-  --ambient-tail: color-mix(in srgb, var(--sun) 1%, transparent);
-  --ambient-wash: color-mix(in srgb, var(--sun) .75%, transparent);
-}
-:root[data-theme="light"] .ambient-layer-ko {
-  --ambient-core: color-mix(in srgb, var(--sun) 4%, transparent);
-  --ambient-tail: color-mix(in srgb, var(--sun) 2%, transparent);
-  --ambient-wash: color-mix(in srgb, var(--sun) 1.5%, transparent);
-}
-:root[data-theme="light"] .ambient-layer-raku {
   --ambient-core: color-mix(in srgb, var(--sun) 7%, transparent);
   --ambient-tail: color-mix(in srgb, var(--sun) 3.5%, transparent);
   --ambient-wash: color-mix(in srgb, var(--sun) 2.5%, transparent);
 }
-:root[data-theme="dark"] .ambient-layer-chi {
-  --ambient-core: color-mix(in srgb, var(--sun) 4%, transparent);
-  --ambient-tail: color-mix(in srgb, var(--sun) 2%, transparent);
-  --ambient-wash: color-mix(in srgb, var(--sun) 1.5%, transparent);
-}
-:root[data-theme="dark"] .ambient-layer-ko {
-  --ambient-core: color-mix(in srgb, var(--sun) 8%, transparent);
-  --ambient-tail: color-mix(in srgb, var(--sun) 4%, transparent);
-  --ambient-wash: color-mix(in srgb, var(--sun) 3%, transparent);
-}
-:root[data-theme="dark"] .ambient-layer-raku {
+.ambient-layer-ko {
   --ambient-core: color-mix(in srgb, var(--sun) 14%, transparent);
   --ambient-tail: color-mix(in srgb, var(--sun) 7%, transparent);
   --ambient-wash: color-mix(in srgb, var(--sun) 5%, transparent);
+}
+.ambient-layer-raku {
+  --ambient-core: color-mix(in srgb, var(--sun) 22%, transparent);
+  --ambient-tail: color-mix(in srgb, var(--sun) 11%, transparent);
+  --ambient-wash: color-mix(in srgb, var(--sun) 8%, transparent);
+}
+@media (prefers-color-scheme: light) {
+  .ambient-layer-chi {
+    --ambient-core: color-mix(in srgb, var(--sun) 3.5%, transparent);
+    --ambient-tail: color-mix(in srgb, var(--sun) 1.75%, transparent);
+    --ambient-wash: color-mix(in srgb, var(--sun) 1.25%, transparent);
+  }
+  .ambient-layer-ko {
+    --ambient-core: color-mix(in srgb, var(--sun) 7%, transparent);
+    --ambient-tail: color-mix(in srgb, var(--sun) 3.5%, transparent);
+    --ambient-wash: color-mix(in srgb, var(--sun) 2.5%, transparent);
+  }
+  .ambient-layer-raku {
+    --ambient-core: color-mix(in srgb, var(--sun) 11%, transparent);
+    --ambient-tail: color-mix(in srgb, var(--sun) 5.5%, transparent);
+    --ambient-wash: color-mix(in srgb, var(--sun) 4%, transparent);
+  }
+}
+:root[data-theme="light"] .ambient-layer-chi {
+  --ambient-core: color-mix(in srgb, var(--sun) 3.5%, transparent);
+  --ambient-tail: color-mix(in srgb, var(--sun) 1.75%, transparent);
+  --ambient-wash: color-mix(in srgb, var(--sun) 1.25%, transparent);
+}
+:root[data-theme="light"] .ambient-layer-ko {
+  --ambient-core: color-mix(in srgb, var(--sun) 7%, transparent);
+  --ambient-tail: color-mix(in srgb, var(--sun) 3.5%, transparent);
+  --ambient-wash: color-mix(in srgb, var(--sun) 2.5%, transparent);
+}
+:root[data-theme="light"] .ambient-layer-raku {
+  --ambient-core: color-mix(in srgb, var(--sun) 11%, transparent);
+  --ambient-tail: color-mix(in srgb, var(--sun) 5.5%, transparent);
+  --ambient-wash: color-mix(in srgb, var(--sun) 4%, transparent);
+}
+:root[data-theme="dark"] .ambient-layer-chi {
+  --ambient-core: color-mix(in srgb, var(--sun) 7%, transparent);
+  --ambient-tail: color-mix(in srgb, var(--sun) 3.5%, transparent);
+  --ambient-wash: color-mix(in srgb, var(--sun) 2.5%, transparent);
+}
+:root[data-theme="dark"] .ambient-layer-ko {
+  --ambient-core: color-mix(in srgb, var(--sun) 14%, transparent);
+  --ambient-tail: color-mix(in srgb, var(--sun) 7%, transparent);
+  --ambient-wash: color-mix(in srgb, var(--sun) 5%, transparent);
+}
+:root[data-theme="dark"] .ambient-layer-raku {
+  --ambient-core: color-mix(in srgb, var(--sun) 22%, transparent);
+  --ambient-tail: color-mix(in srgb, var(--sun) 11%, transparent);
+  --ambient-wash: color-mix(in srgb, var(--sun) 8%, transparent);
 }
 @media (prefers-reduced-motion: reduce) {
   .path-rail a { transition: none; }

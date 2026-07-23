@@ -9,7 +9,6 @@ describe("Home page", () => {
       expect(document.getElementById(id)).not.toBeNull()
     );
     expect(screen.getByRole("heading", { level: 1 })).toHaveTextContent("笑顔");
-    expect(screen.getByText("一緒に楽しみましょう")).toBeInTheDocument();
     expect(document.querySelector(".contact-fab")).toHaveAttribute("href", "#contact");
     expect(screen.getByRole("contentinfo")).toBeInTheDocument();
   });
