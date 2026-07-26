@@ -230,6 +230,50 @@ p.lede { max-width: 36em; margin: 0 auto 16px; }
   .stack-row { grid-template-columns: 1fr; gap: 10px; padding: 16px 2px; }
 }
 
+/* ---------- Experience: 星座タイムライン(装飾) ---------- */
+.constellation-map { position: relative; height: 220px; margin: 0 auto 32px; max-width: 720px; }
+.constellation-map svg { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
+.constellation-map svg line {
+  stroke: color-mix(in srgb, var(--muted) 45%, transparent);
+  stroke-width: 1;
+}
+.const-star {
+  position: absolute;
+  width: 10px; height: 10px;
+  border-radius: 50%;
+  background: var(--shape-yellow);
+  box-shadow: 0 0 10px 2px color-mix(in srgb, var(--shape-yellow) 60%, transparent);
+  transform: translate(-50%, -50%);
+  cursor: pointer;
+}
+.const-star:hover, .const-star:focus-visible {
+  background: var(--sun);
+  box-shadow: 0 0 16px 4px color-mix(in srgb, var(--sun) 70%, transparent);
+  outline: none;
+}
+.const-star .tip {
+  position: absolute;
+  bottom: 20px; left: 50%;
+  transform: translateX(-50%);
+  width: max-content; max-width: 220px;
+  background: var(--surface);
+  border: 1px solid color-mix(in srgb, var(--muted) 30%, transparent);
+  border-radius: 8px;
+  padding: 10px 12px;
+  font-size: 12px; line-height: 1.6; color: var(--ink);
+  opacity: 0; pointer-events: none;
+  transition: opacity .2s;
+}
+.const-star:hover .tip, .const-star:focus-visible .tip { opacity: 1; }
+.const-star .tip .when {
+  color: var(--muted); display: block; margin-bottom: 2px;
+  font-family: ui-monospace, "SF Mono", "Cascadia Code", Consolas, monospace;
+  font-size: 11px;
+}
+@media (max-width: 620px) {
+  .constellation-map { display: none; }
+}
+
 /* ---------- Timeline ---------- */
 .timeline { list-style: none; margin: 0 auto; padding: 0; position: relative; max-width: 720px; }
 .timeline::before {
