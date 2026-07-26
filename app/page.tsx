@@ -9,13 +9,13 @@ import ContactFab from "@/app/components/ContactFab";
 import CursorLight from "@/app/components/CursorLight";
 import ConsoleEgg from "@/app/components/ConsoleEgg";
 import PathRail from "@/app/components/PathRail";
-import AmbientLight from "@/app/components/AmbientLight";
+import CosmicBackground from "@/app/components/CosmicBackground";
 import { profile } from "@/app/content";
 
 export default function Home() {
   return (
     <main>
-      <AmbientLight />
+      <CosmicBackground />
       <Hero />
       <PathRail />
       <div className="wrap">

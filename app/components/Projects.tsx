@@ -4,7 +4,7 @@ import Reveal from "@/app/components/Reveal";
 
 export default function Projects() {
   return (
-    <section id="projects" className="stage-raku">
+    <section id="projects">
       <Reveal>
         <SectionHead num="04" label="Projects" />
       </Reveal>

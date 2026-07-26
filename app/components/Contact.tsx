@@ -4,7 +4,7 @@ import Reveal from "@/app/components/Reveal";
 
 export default function Contact() {
   return (
-    <section id="contact" className="stage-raku">
+    <section id="contact">
       <Reveal>
         <SectionHead num="06" label="Contact" />
       </Reveal>

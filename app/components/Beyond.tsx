@@ -4,7 +4,7 @@ import Reveal from "@/app/components/Reveal";
 
 export default function Beyond() {
   return (
-    <section id="beyond" className="stage-raku">
+    <section id="beyond">
       <Reveal>
         <SectionHead num="05" label="Beyond Code" />
       </Reveal>

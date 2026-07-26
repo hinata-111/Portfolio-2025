@@ -1,12 +1,12 @@
 import { profile } from "@/app/content";
-import HeroEffects from "@/app/components/HeroEffects";
 
 export default function Hero() {
   return (
     <header className="hero" id="hero">
       <div className="glow glow-a" />
       <div className="glow glow-b" />
-      <HeroEffects />
+      <div className="nebula" aria-hidden="true" />
+      <div className="orbit-ring" aria-hidden="true" />
       <div className="hero-inner">
         <div className="hero-eyebrow mono">{profile.eyebrow}</div>
         <h1 className="serif">
