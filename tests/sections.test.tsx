@@ -24,7 +24,6 @@ describe("Experience", () => {
     render(<Experience />);
     const stars = document.querySelectorAll(".const-star");
     stars.forEach((star, i) => {
-      expect(star).toHaveAttribute("tabIndex", "0");
       const tip = star.querySelector(".tip");
       expect(tip).not.toBeNull();
       expect(tip?.textContent).toContain(timeline[i].title);

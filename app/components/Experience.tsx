@@ -30,7 +30,6 @@ export default function Experience() {
             key={i}
             className="const-star"
             style={{ left: `${pt.x}%`, top: `${pt.y}%` }}
-            tabIndex={0}
           >
             <div className="tip">
               <span className="when">{timeline[i].when}</span>

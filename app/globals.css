@@ -246,7 +246,7 @@ p.lede { max-width: 36em; margin: 0 auto 16px; }
   transform: translate(-50%, -50%);
   cursor: pointer;
 }
-.const-star:hover, .const-star:focus-visible {
+.const-star:hover {
   background: var(--sun);
   box-shadow: 0 0 16px 4px color-mix(in srgb, var(--sun) 70%, transparent);
   outline: none;
@@ -264,7 +264,7 @@ p.lede { max-width: 36em; margin: 0 auto 16px; }
   opacity: 0; pointer-events: none;
   transition: opacity .2s;
 }
-.const-star:hover .tip, .const-star:focus-visible .tip { opacity: 1; }
+.const-star:hover .tip { opacity: 1; }
 .const-star .tip .when {
   color: var(--muted); display: block; margin-bottom: 2px;
   font-family: ui-monospace, "SF Mono", "Cascadia Code", Consolas, monospace;
