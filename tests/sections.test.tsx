@@ -20,7 +20,7 @@ describe("Experience", () => {
     expect(document.querySelectorAll(".constellation-map svg line")).toHaveLength(4);
   });
 
-  it("gives each constellation star a focusable tooltip with the matching timeline entry", () => {
+  it("gives each constellation star a hover tooltip with the matching timeline entry", () => {
     render(<Experience />);
     const stars = document.querySelectorAll(".const-star");
     stars.forEach((star, i) => {
