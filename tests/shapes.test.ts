@@ -30,7 +30,7 @@ describe("shapes data", () => {
     }
   });
 
-  it("keeps shape positions within the page bounds", () => {
+  it("keeps shape positions within the background layer's bounds", () => {
     for (const shape of shapeLayout) {
       expect(shape.top).toBeGreaterThanOrEqual(4);
       expect(shape.top).toBeLessThanOrEqual(96);

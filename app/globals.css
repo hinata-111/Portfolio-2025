@@ -475,7 +475,7 @@ a:focus-visible, button:focus-visible {
   top: 0;
   left: 0;
   width: 100%;
-  height: 480vh;
+  height: 960vh;
   z-index: -1;
   pointer-events: none;
   will-change: transform;
@@ -529,7 +529,7 @@ a:focus-visible, button:focus-visible {
   top: 0;
   left: 0;
   width: 100%;
-  height: 480vh;
+  height: 960vh;
   z-index: 0;
   pointer-events: none;
   will-change: transform;
@@ -542,7 +542,6 @@ a:focus-visible, button:focus-visible {
   height: var(--size);
   opacity: .55;
   animation: drift var(--duration) ease-in-out var(--delay) infinite;
-  will-change: transform;
 }
 .shape-circle { border-radius: 50%; }
 .shape-square { border-radius: 4px; }
@@ -609,6 +608,13 @@ a:focus-visible, button:focus-visible {
   z-index: 0;
   pointer-events: none;
 }
+@media (prefers-reduced-motion: no-preference) {
+  .orbit-ring { animation: orbit-spin 40s linear infinite; }
+  @keyframes orbit-spin {
+    from { transform: translate(-50%, -50%) rotate(-8deg); }
+    to   { transform: translate(-50%, -50%) rotate(352deg); }
+  }
+}
 .orbit-ring::before {
   content: "";
   position: absolute;
@@ -621,5 +627,5 @@ a:focus-visible, button:focus-visible {
 }
 @media (prefers-reduced-motion: reduce) {
   .path-rail a { transition: none; }
-  .star-dot, .shooting-star, .shape, .nebula { animation: none; }
+  .star-dot, .shooting-star, .shape, .nebula, .orbit-ring { animation: none; }
 }

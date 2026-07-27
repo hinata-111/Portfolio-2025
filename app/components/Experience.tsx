@@ -25,6 +25,7 @@ export default function Experience() {
             );
           })}
         </svg>
+        {/* constellationLayout[i] corresponds to timeline[i] by position; tests/shapes.test.ts enforces the length match */}
         {constellationLayout.map((pt, i) => (
           <div
             key={i}
