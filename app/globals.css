@@ -446,24 +446,56 @@ a:focus-visible, button:focus-visible {
   gap: 22px;
   transform: translateY(-50%);
 }
+.path-rail::before {
+  content: "";
+  position: absolute;
+  left: 2px;
+  top: 3px;
+  bottom: 3px;
+  width: 1px;
+  background: linear-gradient(to bottom, color-mix(in srgb, var(--muted) 28%, transparent), transparent);
+}
+.rail-track {
+  position: absolute;
+  left: 2px;
+  top: 0;
+  width: 1px;
+  background: linear-gradient(to bottom, var(--shape-teal), var(--sun));
+  box-shadow: 0 0 3px 1px color-mix(in srgb, var(--sun) 35%, transparent);
+  transition: height .6s ease;
+}
 .path-rail a {
+  position: relative;
   display: block;
-  width: 10px;
-  height: 14px;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
   border: 1px solid var(--line);
-  border-radius: 3px 3px 5px 5px;
-  background: var(--surface);
+  background: var(--ground);
   transition: all .6s ease;
+  z-index: 1;
 }
 .path-rail a.lit {
   border-color: var(--sun);
-  background: linear-gradient(to bottom, #FFE9C4, var(--sun));
-  box-shadow: 0 0 10px 2px rgba(255,197,61,.5);
+  background: var(--sun);
+  box-shadow: 0 0 3px 1px rgba(255,197,61,.5);
+}
+.path-rail a.current {
+  width: 9px;
+  height: 9px;
+  margin-left: -1.5px;
+  background: radial-gradient(circle, #fff, var(--sun));
+  box-shadow: 0 0 6px 2px rgba(255,197,61,.7);
+  animation: rail-twinkle 2.2s ease-in-out infinite;
+}
+@keyframes rail-twinkle {
+  0%, 100% { opacity: 1; }
+  50% { opacity: .7; }
 }
 .path-rail a:focus-visible {
   outline: 2px solid var(--sun);
   outline-offset: 3px;
-  border-radius: 3px 3px 5px 5px;
+  border-radius: 50%;
 }
 @media (max-width: 860px) {
   .path-rail { display: none; }
@@ -627,5 +659,6 @@ a:focus-visible, button:focus-visible {
 }
 @media (prefers-reduced-motion: reduce) {
   .path-rail a { transition: none; }
-  .star-dot, .shooting-star, .shape, .nebula, .orbit-ring { animation: none; }
+  .rail-track { transition: none; }
+  .star-dot, .shooting-star, .shape, .nebula, .orbit-ring, .path-rail a.current { animation: none; }
 }

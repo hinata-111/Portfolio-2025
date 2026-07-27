@@ -41,13 +41,23 @@ export default function PathRail() {
     return () => observer.disconnect();
   }, []);
 
+  const trackPercent =
+    highestLitIndex >= 0 ? (highestLitIndex / (railSections.length - 1)) * 100 : 0;
+
   return (
     <nav className="path-rail" aria-label="ページ内位置">
+      <div className="rail-track" aria-hidden="true" style={{ height: `${trackPercent}%` }} />
       {railSections.map((section, index) => (
         <a
           key={section.id}
           href={`#${section.id}`}
-          className={index <= highestLitIndex ? "lit" : undefined}
+          className={
+            index > highestLitIndex
+              ? undefined
+              : index === highestLitIndex
+                ? "lit current"
+                : "lit"
+          }
           aria-label={`${section.label}へ移動`}
         />
       ))}
