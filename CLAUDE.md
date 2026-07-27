@@ -17,7 +17,7 @@
 - クライアント処理は `Reveal` / `CursorLight` / `ConsoleEgg` / `PathRail` / `CosmicBackground` の 5 コンポーネントに隔離。他はサーバーコンポーネント
 - 背景演出は全ページ共通の `CosmicBackground`(マルチカラー図形+星+視差スクロール)。配置データは `app/shapes.ts` に決定論的擬似乱数で固定生成し実行時乱数は使わない
 - 視差スクロールのみ scroll イベント(rAFスロットリング)を使用 — 他の演出([Reveal]/[PathRail]等)は IntersectionObserver のみで実装する方針の例外
-- 品質要件: `:focus-visible` 必須 / Canvas は画面外で rAF 停止 / mousemove は rAF スロットリング / resize は debounce / `prefers-reduced-motion: reduce` で全アニメ無効化
+- 品質要件: `:focus-visible` 必須 / scroll・mousemove は rAF スロットリング / resize は debounce / `prefers-reduced-motion: reduce` で全アニメ無効化
 - 外部ライブラリ追加は実装計画記載分のみ(YAGNI)
 - 未確定情報はプレースホルダーのまま(`【氏名】`、`要確認` バッジ等)。勝手に埋めない
 

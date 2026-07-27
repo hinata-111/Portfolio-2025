@@ -5,7 +5,7 @@
 ## Tech Stack
 - Next.js (App Router) + TypeScript
 - 素の CSS(デザイントークン、ダーク/ライト対応)— 外部 UI ライブラリなし
-- Canvas API による Hero 演出(画面外では rAF 停止、reduced-motion 対応)
+- 全ページ共通の宇宙背景演出 `CosmicBackground`(視差スクロール、reduced-motion 対応)
 - Vitest + React Testing Library
 
 ## Development
