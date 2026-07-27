@@ -31,6 +31,35 @@ export default function CosmicBackground() {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
+  // レイアウト補正: 背景レイヤーの高さを実ページ高から動的計算する。
+  // prefers-reduced-motion でも実行する(モーションでなくレイアウトの補正のため)。
+  useEffect(() => {
+    const shapesEl = shapesRef.current;
+    const starsEl = starsRef.current;
+    if (!shapesEl || !starsEl) return;
+
+    const applyHeight = () => {
+      const scrollMax = Math.max(document.documentElement.scrollHeight - window.innerHeight, 0);
+      const needed = scrollMax * (1 + NEAR_FACTOR) + window.innerHeight;
+      const heightPx = Math.ceil(needed * 1.1);
+      shapesEl.style.height = `${heightPx}px`;
+      starsEl.style.height = `${heightPx}px`;
+    };
+    applyHeight();
+
+    let resizeTimer: ReturnType<typeof setTimeout>;
+    const onResize = () => {
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(applyHeight, 150); // 品質要件④ debounce
+    };
+    window.addEventListener("resize", onResize);
+
+    return () => {
+      window.removeEventListener("resize", onResize);
+      clearTimeout(resizeTimer);
+    };
+  }, []);
+
   return (
     <>
       <div ref={starsRef} className="starfield" aria-hidden="true">

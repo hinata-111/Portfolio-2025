@@ -13,4 +13,12 @@ describe("CosmicBackground", () => {
     expect(container.querySelectorAll(".shooting-star")).toHaveLength(shootingStarLayout.length);
     expect(container.querySelectorAll(".shape")).toHaveLength(shapeLayout.length);
   });
+
+  it("sets an inline height on the background layers computed from the document height", () => {
+    const { container } = render(<CosmicBackground />);
+    const starfield = container.querySelector(".starfield") as HTMLElement;
+    const shapes = container.querySelector(".floating-shapes") as HTMLElement;
+    expect(starfield.style.height).not.toBe("");
+    expect(shapes.style.height).not.toBe("");
+  });
 });
