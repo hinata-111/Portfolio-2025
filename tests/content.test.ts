@@ -12,9 +12,99 @@ describe("content", () => {
     expect(aboutInfo).toHaveLength(4);
     expect(aboutParagraphs).toHaveLength(2);
     expect(stack).toHaveLength(5);
-    expect(timeline).toHaveLength(5);
+    expect(timeline).toHaveLength(6);
     expect(projects).toHaveLength(3);
     expect(beyond).toHaveLength(3);
+  });
+  it("adds the Tabime stack to the existing skill categories", () => {
+    expect(stack.map((row) => row.cat)).toEqual([
+      "Python / NLP",
+      "LLM応用",
+      "Web開発",
+      "Database",
+      "Infra / Tools",
+    ]);
+
+    const pillsByCategory = Object.fromEntries(stack.map((row) => [row.cat, row.pills]));
+
+    expect(pillsByCategory["LLM応用"]).toContain("Cloudflare AI Gateway");
+    expect(pillsByCategory["LLM応用"]).not.toContain("Gemini API");
+    expect(pillsByCategory["Web開発"]).toEqual(
+      expect.arrayContaining(["Vite", "Tailwind CSS", "Hono", "Better Auth"]),
+    );
+    expect(pillsByCategory.Database).toContain("Cloudflare D1");
+    expect(pillsByCategory["Infra / Tools"]).toEqual(
+      expect.arrayContaining([
+        "Cloudflare Workers / Pages",
+        "GitHub Actions",
+      ]),
+    );
+    expect(pillsByCategory["Infra / Tools"]).not.toContain("pnpm Monorepo");
+    expect(stack.find((row) => row.cat === "Web開発")?.note).toBe("インターン・個人開発で使用");
+  });
+  it("includes the Silk Road solo trip", () => {
+    expect(timeline).toContainEqual({
+      when: "2026.04 – 2026.06",
+      title: "シルクロード一人旅",
+      desc: "シルクロードを一人で旅した",
+    });
+  });
+  it("keeps the overseas solo trip concise while stating its reason and route", () => {
+    const trip = beyond[0];
+
+    expect(trip.title).toBe("海外一人旅 — 2ヶ月・8ヶ国");
+    expect(trip.meta).toBe("個人活動 / 2026.04 – 2026.06");
+    expect(trip.details).toEqual([
+      expect.objectContaining({ label: "旅の理由" }),
+      expect.objectContaining({ label: "旅の記録" }),
+    ]);
+    expect(trip.details?.map((detail) => detail.value).join(" ")).toContain("陸路で国境を越え");
+    expect(trip.details?.map((detail) => detail.value).join(" ")).toContain("1万いいね");
+    expect(trip.href).toBe("https://tabime.pages.dev");
+  });
+  it("moves the Fukushima workshop into projects and removes Discord Bot", () => {
+    expect(projects.some((project) => project.title === "Discord Bot(個人開発)")).toBe(false);
+    expect(projects.some((project) => project.title === "福島復興知プロジェクト")).toBe(true);
+    expect(beyond.some((item) => item.title === "福島復興知プロジェクト")).toBe(false);
+  });
+  it("presents Tabime as a concise doorway to the product", () => {
+    const tabime = projects.find((project) => project.title === "Tabime — 悩みから旅先を見つけるAI");
+
+    expect(tabime?.summary).toContain("海外一人旅");
+    expect(tabime?.summary).toContain("企画、プロダクト設計、技術選定");
+    expect(tabime?.summary).not.toMatch(/3軸|8タイプ|3問|9問/);
+    expect(tabime?.href).toBe("https://tabime.pages.dev");
+  });
+  it("combines the internship work and states the factual responsibility boundary", () => {
+    const internship = projects.find((project) => project.title === "長期インターン — AI R&D / Web開発");
+    const copy = internship?.details?.map((detail) => detail.value).join(" ") ?? "";
+
+    expect(projects.filter((project) => project.title.includes("長期インターン"))).toHaveLength(1);
+    expect(internship?.details).toHaveLength(2);
+    expect(copy).not.toMatch(/記載予定|会社確認後/);
+    expect(copy).toContain("要件整理");
+    expect(copy).toContain("精度評価・改善");
+    expect(copy).toContain("個人情報のマスキング");
+    expect(copy).toContain("ユーザーアカウントページ");
+    expect(copy).toContain("お気に入り機能");
+    expect(copy).toContain("PostgreSQL");
+  });
+  it("describes the Fukushima project with its verified scale and workshop design", () => {
+    const fukushima = projects.find((project) => project.title === "福島復興知プロジェクト");
+    const copy = fukushima?.summary ?? "";
+
+    expect(copy).toContain("県内2校・計8回");
+    expect(copy).toContain("AI×街づくり");
+    expect(copy).toContain("企画・実施");
+    expect(timeline.some((item) => item.title === "福島復興知事業")).toBe(true);
+  });
+  it("keeps the student radio activity to a short factual introduction", () => {
+    const radio = beyond.find((item) => item.title === "学生ラジオ番組 — レディオ湘南");
+
+    expect(radio?.meta).toBe("福利厚生団体 音像工房 / 2023.09 – 現在");
+    expect(radio?.desc).toContain("台本、ナビゲーター、ミキサー");
+    expect(radio?.desc).toContain("後輩育成と番組制作の仕組みづくり");
+    expect(radio?.details).toBeUndefined();
   });
   it("has the Confucius motto", () => {
     expect(motto.quote).toContain("之を楽しむ者に如かず");

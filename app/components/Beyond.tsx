@@ -6,20 +6,59 @@ export default function Beyond() {
   return (
     <section id="beyond">
       <Reveal>
-        <SectionHead num="05" label="Beyond Code" />
+        <SectionHead num="05" label="Life & Creative Practice" />
       </Reveal>
-      <Reveal as="h2">コードの外側でも、人を笑顔に。</Reveal>
+      <Reveal as="h2">プロジェクトの外で、続けてきたこと。</Reveal>
       <div className="beyond-grid">
-        {beyond.map((b, i) => (
-          <Reveal key={b.title} className="beyond" delay={(i % 4) as 0 | 1 | 2 | 3}>
-            <div className="ph mono">{b.phLabel}</div>
-            <div className="body">
-              <b>{b.title}</b>
-              <p>{b.desc}</p>
-            </div>
-          </Reveal>
-        ))}
+        {beyond.map((b, i) => {
+          const headingId = `beyond-title-${i}`;
+
+          return (
+            <Reveal
+              as="article"
+              key={b.title}
+              className={`beyond${b.featured ? " beyond--featured" : ""}`}
+              delay={(i % 4) as 0 | 1 | 2 | 3}
+              aria-labelledby={headingId}
+            >
+              <div className="ph mono">{b.phLabel}</div>
+              <div className="body">
+                <h3 id={headingId}>{b.title}</h3>
+                {b.meta && <div className="meta mono">{b.meta}</div>}
+                <p className="beyond-lead">{b.desc}</p>
+                {b.details && (
+                  <div className="life-details">
+                    {b.details.map((detail) => (
+                      <div key={detail.label} className="life-detail">
+                        <span className="mono">{detail.label}</span>
+                        <p>{detail.value}</p>
+                      </div>
+                    ))}
+                  </div>
+                )}
+                {b.tags && (
+                  <div className="tags">
+                    {b.tags.map((tag) => (
+                      <span key={tag} className="tag">
+                        {tag}
+                      </span>
+                    ))}
+                  </div>
+                )}
+                {b.href && b.linkLabel && (
+                  <a className="project-link" href={b.href} target="_blank" rel="noreferrer">
+                    {b.linkLabel}
+                    <span aria-hidden="true">↗</span>
+                  </a>
+                )}
+              </div>
+            </Reveal>
+          );
+        })}
       </div>
+      <Reveal as="p" className="section-invite">
+        気になった活動があれば、ぜひその話から。
+      </Reveal>
     </section>
   );
 }

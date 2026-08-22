@@ -18,4 +18,6 @@ npm install / npm run dev / npm test / npm run build
 - モックアップ: `docs/design/portfolio-mockup-v7.html`
 
 ## Deploy
-Vercel にインポートしてデフォルト設定でデプロイ。
+Vercel にインポートしてデフォルト設定でデプロイ。独自ドメインを使う場合は、Vercelの環境変数に `NEXT_PUBLIC_SITE_URL` を設定する。
+
+公開前の確認項目は [docs/progress.md](docs/progress.md) に記載。

@@ -8,7 +8,6 @@ export default function About() {
       <Reveal>
         <SectionHead num="01" label="About" />
       </Reveal>
-      <Reveal as="h2">ものづくりの原点は、目の前の人の反応。</Reveal>
       <Reveal className="about-grid">
         <div>
           <ul className="about-info">

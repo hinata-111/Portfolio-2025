@@ -8,38 +8,38 @@ export default function Projects() {
       <Reveal>
         <SectionHead num="04" label="Projects" />
       </Reveal>
-      <Reveal as="h2">プロジェクト</Reveal>
-      {projects.map((p) => (
-        <Reveal as="article" key={p.title} className="project">
-          <h3>
-            {p.title}
-            {p.todoBadge && <span className="todo">{p.todoBadge}</span>}
-          </h3>
-          <div className="meta mono">{p.meta}</div>
-          <dl className="prs">
-            {p.rows.map((r) => (
-              <div key={r.label} style={{ display: "contents" }}>
-                <dt>{r.label}</dt>
-                <dd>{r.value}</dd>
-              </div>
-            ))}
-          </dl>
-          <div className="tags">
-            {p.tags.map((t) => (
-              <span key={t} className="tag">
-                {t}
-              </span>
-            ))}
-          </div>
+      <Reveal as="h2">創作物</Reveal>
+      {projects.map((p, index) => (
+        <Reveal
+          as="article"
+          key={p.title}
+          className={`project${index === 0 ? " project--featured" : ""}`}
+          data-project-index={String(index + 1).padStart(2, "0")}
+          aria-labelledby={`project-title-${index}`}
+        >
+          <span className="project-kicker mono" aria-hidden="true">
+            PROJECT {String(index + 1).padStart(2, "0")}
+          </span>
+          <h3 id={`project-title-${index}`}>{p.title}</h3>
+          <p className="project-summary">{p.summary}</p>
+          {p.details && (
+            <div className="project-details">
+              {p.details.map((detail) => (
+                <div key={detail.title} className="project-detail">
+                  <h4>{detail.title}</h4>
+                  <p>{detail.value}</p>
+                </div>
+              ))}
+            </div>
+          )}
+          {p.href && p.linkLabel && (
+            <a className="project-link" href={p.href} target="_blank" rel="noreferrer">
+              {p.linkLabel}
+              <span aria-hidden="true">↗</span>
+            </a>
+          )}
         </Reveal>
       ))}
-      <Reveal
-        as="p"
-        className="lede center"
-        style={{ color: "var(--muted)", fontSize: 14, marginTop: 28 }}
-      >
-        その他の制作物は GitHub を参照 →
-      </Reveal>
     </section>
   );
 }

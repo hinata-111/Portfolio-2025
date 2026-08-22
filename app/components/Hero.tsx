@@ -6,7 +6,7 @@ export default function Hero() {
       <div className="glow glow-a" />
       <div className="glow glow-b" />
       <div className="nebula" aria-hidden="true" />
-      <div className="orbit-ring" aria-hidden="true" />
+      <div className="hero-fade" aria-hidden="true" />
       <div className="hero-inner">
         <div className="hero-eyebrow mono">{profile.eyebrow}</div>
         <h1 className="serif">

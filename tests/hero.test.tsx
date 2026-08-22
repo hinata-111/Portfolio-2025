@@ -12,4 +12,14 @@ describe("Hero", () => {
     expect(screen.getByText(profile.name)).toBeInTheDocument();
     expect(h1).toBeInTheDocument();
   });
+
+  it("renders a decorative fade between the hero and the first section", () => {
+    const { container } = render(<Hero />);
+    expect(container.querySelector(".hero-fade")).toHaveAttribute("aria-hidden", "true");
+  });
+
+  it("does not render the retired orbit ring decoration", () => {
+    const { container } = render(<Hero />);
+    expect(container.querySelector(".orbit-ring")).toBeNull();
+  });
 });

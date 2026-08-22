@@ -8,7 +8,7 @@ const railSections = [
   { id: "skills", label: "Skills" },
   { id: "experience", label: "Experience" },
   { id: "projects", label: "Projects" },
-  { id: "beyond", label: "Beyond Code" },
+  { id: "beyond", label: "Life & Creative Practice" },
   { id: "contact", label: "Contact" },
 ];
 
@@ -59,7 +59,11 @@ export default function PathRail() {
                 : "lit"
           }
           aria-label={`${section.label}へ移動`}
-        />
+        >
+          <span className="path-label mono" aria-hidden="true">
+            {section.label}
+          </span>
+        </a>
       ))}
     </nav>
   );

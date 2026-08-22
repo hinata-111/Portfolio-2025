@@ -13,6 +13,16 @@ const expectedHrefs = [
   "#contact",
 ];
 
+const expectedLabels = [
+  "Hero",
+  "About",
+  "Skills",
+  "Experience",
+  "Projects",
+  "Life & Creative Practice",
+  "Contact",
+];
+
 function renderPathRailWithSections() {
   return render(
     <>
@@ -38,6 +48,14 @@ describe("PathRail", () => {
     render(<PathRail />);
 
     expect(screen.getByRole("navigation", { name: "ページ内位置" })).toBeInTheDocument();
+  });
+
+  it("shows the existing section names beside the orbital route", () => {
+    render(<PathRail />);
+
+    const labels = Array.from(document.querySelectorAll(".path-label"));
+    expect(labels.map((label) => label.textContent)).toEqual(expectedLabels);
+    labels.forEach((label) => expect(label).toHaveAttribute("aria-hidden", "true"));
   });
 
   it("lights observed section links and keeps them lit", async () => {
