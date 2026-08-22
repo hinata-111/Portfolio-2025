@@ -1,6 +1,7 @@
-import { aboutInfo, aboutParagraphs, motto } from "@/app/content";
+import { aboutInfo, aboutParagraphs, motto, socials } from "@/app/content";
 import SectionHead from "@/app/components/SectionHead";
 import Reveal from "@/app/components/Reveal";
+import { SocialIcon } from "@/app/components/icons";
 
 export default function About() {
   return (
@@ -15,6 +16,27 @@ export default function About() {
               <li key={item.k}>
                 <span className="k mono">{item.k}</span>
                 <span className="v">{item.v}</span>
+              </li>
+            ))}
+          </ul>
+          <ul className="about-socials">
+            {socials.map((social) => (
+              <li key={social.label}>
+                {social.href ? (
+                  <a
+                    href={social.href}
+                    target="_blank"
+                    rel="noreferrer"
+                    aria-label={`${social.label}を開く`}
+                  >
+                    <SocialIcon label={social.label} />
+                  </a>
+                ) : (
+                  <span className="about-social-todo">
+                    <SocialIcon label={social.label} />
+                    <span className="todo">{social.label} 要確認</span>
+                  </span>
+                )}
               </li>
             ))}
           </ul>

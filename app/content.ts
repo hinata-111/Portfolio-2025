@@ -10,6 +10,7 @@ export type Project = {
   linkLabel?: string;
 };
 export type LifeDetail = { label: string; value: string };
+export type Social = { label: string; href: string };
 export type BeyondItem = {
   phLabel: string;
   title: string;
@@ -129,6 +130,12 @@ export const beyond: BeyondItem[] = [
     desc: "相方とネタをつくり、脚本から立ち姿まで考えて舞台へ。目の前の人を笑わせることに向き合う、最も直接的な表現活動。",
     tags: ["漫才", "脚本", "ステージ", "表現"],
   },
+];
+
+// href が空の項目は URL 未確定。埋めるだけでリンクとして描画される
+export const socials: Social[] = [
+  { label: "GitHub", href: "https://github.com/hinata-111" },
+  { label: "X", href: "" },
 ];
 
 export const contact = {

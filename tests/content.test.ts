@@ -1,6 +1,6 @@
 import { describe, it, expect } from "vitest";
 import {
-  profile, aboutInfo, aboutParagraphs, motto, stack, timeline, projects, beyond,
+  profile, aboutInfo, aboutParagraphs, motto, stack, timeline, projects, beyond, socials,
 } from "@/app/content";
 
 describe("content", () => {
@@ -109,5 +109,13 @@ describe("content", () => {
   it("has the Confucius motto", () => {
     expect(motto.quote).toContain("之を楽しむ者に如かず");
     expect(motto.cite).toBe("— 論語・雍也");
+  });
+});
+
+describe("socials", () => {
+  it("lists GitHub with a URL and keeps X unresolved", () => {
+    expect(socials.map((social) => social.label)).toEqual(["GitHub", "X"]);
+    expect(socials[0].href).toBe("https://github.com/hinata-111");
+    expect(socials[1].href).toBe("");
   });
 });
