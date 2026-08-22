@@ -1088,14 +1088,15 @@ h2 {
     justify-content: center;
     gap: 4px;
     z-index: 50;
-    transform: none;
     visibility: hidden;
-    translate: -100% 0;
-    transition: translate .32s cubic-bezier(.2,.7,.3,1), visibility .32s;
+    /* スライドは transform だけで表現する。transform と translate プロパティを
+       混ぜると、ビルド時の CSS 最適化が片方だけを transform に畳んで対が壊れる */
+    transform: translateX(-100%);
+    transition: transform .32s cubic-bezier(.2,.7,.3,1), visibility .32s;
   }
   .side-nav[data-open="true"] {
     visibility: visible;
-    translate: 0 0;
+    transform: none;
   }
   .side-nav a {
     grid-template-columns: 26px 1fr;

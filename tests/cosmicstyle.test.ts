@@ -32,4 +32,14 @@ describe("side nav layout contract", () => {
   it("disables the added nav motion under reduced motion", () => {
     expect(css).toMatch(/@media\s*\(prefers-reduced-motion:\s*reduce\)[\s\S]*\.side-nav/);
   });
+
+  it("slides the drawer with transform alone", () => {
+    // transform と translate プロパティを混ぜると、ビルド時の CSS 最適化が
+    // 閉状態だけを transform に畳み、開状態の translate が打ち消せなくなる。
+    // 実際にドロワーが画面外に貼りついたので、混在を禁止する。
+    const drawer = css.slice(css.indexOf("max-width: 1239px) and (hover: none)"));
+    expect(drawer).toMatch(/\.side-nav\s*\{[^}]*transform:\s*translateX\(-100%\)/s);
+    expect(drawer).toMatch(/\.side-nav\[data-open="true"\]\s*\{[^}]*transform:\s*none/s);
+    expect(drawer).not.toMatch(/^\s*translate:/m);
+  });
 });
