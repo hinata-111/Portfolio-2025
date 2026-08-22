@@ -457,70 +457,66 @@ a:focus-visible, button:focus-visible {
   border-radius: 6px;
 }
 
-/* ---------- Path rail: fixed lantern minimap ---------- */
-.path-rail {
+/* ---------- Side nav: fixed section list ---------- */
+.side-nav {
   position: fixed;
   left: 26px;
   top: 50%;
   z-index: 40;
   display: flex;
   flex-direction: column;
-  gap: 22px;
+  gap: 2px;
+  max-width: 158px;
   transform: translateY(-50%);
 }
-.path-rail::before {
+.side-nav a {
+  position: relative;
+  display: grid;
+  grid-template-columns: 18px 1fr;
+  align-items: baseline;
+  gap: 8px;
+  padding: 6px 10px 6px 12px;
+  border-radius: 10px;
+  color: var(--muted);
+  font-size: 11.5px;
+  line-height: 1.35;
+  letter-spacing: .06em;
+  text-decoration: none;
+  transition: color .3s ease, background .3s ease;
+}
+.side-nav a::before {
   content: "";
   position: absolute;
-  left: 2px;
-  top: 3px;
-  bottom: 3px;
-  width: 1px;
-  background: linear-gradient(to bottom, color-mix(in srgb, var(--muted) 28%, transparent), transparent);
-}
-.rail-track {
-  position: absolute;
-  left: 2px;
-  top: 0;
-  width: 1px;
-  background: linear-gradient(to bottom, var(--muted), var(--sun));
-  box-shadow: 0 0 3px 1px color-mix(in srgb, var(--sun) 35%, transparent);
-  transition: height .6s ease;
-}
-.path-rail a {
-  position: relative;
-  display: block;
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  border: 1px solid var(--line);
-  background: var(--ground);
-  transition: all .6s ease;
-  z-index: 1;
-}
-.path-rail a.lit {
-  border-color: var(--sun);
+  left: 0;
+  top: 50%;
+  width: 2px;
+  height: 0;
+  border-radius: 999px;
   background: var(--sun);
-  box-shadow: 0 0 3px 1px rgba(255,197,61,.5);
+  transform: translateY(-50%);
+  transition: height .3s ease;
 }
-.path-rail a.current {
-  width: 9px;
-  height: 9px;
-  margin-left: -1.5px;
-  background: radial-gradient(circle, #fff, var(--sun));
-  box-shadow: 0 0 6px 2px rgba(255,197,61,.7);
-  animation: rail-twinkle 2.2s ease-in-out infinite;
+.side-nav a:hover {
+  color: var(--ink);
+  background: color-mix(in srgb, var(--ink-strong) 6%, transparent);
 }
-@keyframes rail-twinkle {
-  0%, 100% { opacity: 1; }
-  50% { opacity: .7; }
+.side-nav a.current {
+  color: var(--ink-strong);
+  font-weight: 700;
 }
-.path-rail a:focus-visible {
+.side-nav a.current::before { height: calc(100% - 10px); }
+.side-nav-num {
+  color: var(--muted);
+  font-size: 9px;
+  letter-spacing: .16em;
+}
+.side-nav a.current .side-nav-num { color: var(--sun-deep); }
+.side-nav a:focus-visible {
   outline: 2px solid var(--sun);
-  outline-offset: 3px;
-  border-radius: 50%;
+  outline-offset: 2px;
 }
 @media (max-width: 860px) {
-  .path-rail { display: none; }
+  .side-nav { display: none; }
 }
 
 /* ---------- Cosmic background: starfield / floating shapes ---------- */
@@ -565,9 +561,9 @@ a:focus-visible, button:focus-visible {
   50% { transform: scale(1.08); opacity: 1; }
 }
 @media (prefers-reduced-motion: reduce) {
-  .path-rail a { transition: none; }
-  .rail-track { transition: none; }
-  .star-dot, .nebula, .path-rail a.current { animation: none; }
+  .side-nav a,
+  .side-nav a::before { transition: none; }
+  .star-dot, .nebula { animation: none; }
 }
 
 /* ---------- Cosmic Mission Archive refinement ---------- */
@@ -844,43 +840,14 @@ h2 {
 
 .contact-row { position: relative; z-index: 1; }
 
-.path-rail {
+.side-nav {
   left: 24px;
-  gap: 26px;
-}
-
-.path-rail a {
-  display: block;
-}
-
-.path-label {
-  position: absolute;
-  left: 20px;
-  top: 50%;
-  padding: 4px 9px;
+  padding: 10px 8px;
   border: 1px solid var(--cosmic-hairline);
-  border-radius: 999px;
-  background: color-mix(in srgb, var(--ground) 82%, transparent);
-  color: var(--muted);
-  font-size: 9px;
-  letter-spacing: .12em;
-  line-height: 1.2;
-  white-space: nowrap;
-  opacity: 0;
-  transform: translate(-4px, -50%);
-  transition: opacity .24s ease, transform .24s ease, color .24s ease;
-  backdrop-filter: blur(12px);
-  pointer-events: none;
+  border-radius: 16px;
+  background: color-mix(in srgb, var(--ground) 62%, transparent);
+  backdrop-filter: blur(14px);
 }
-
-.path-rail a:hover .path-label,
-.path-rail a:focus-visible .path-label,
-.path-rail a.current .path-label {
-  opacity: 1;
-  transform: translate(0, -50%);
-}
-
-.path-rail a.current .path-label { color: var(--ink-strong); }
 
 .star-dot { opacity: .34; }
 
@@ -918,7 +885,6 @@ h2 {
 @media (prefers-reduced-motion: reduce) {
   .stack-row:hover,
   .project:hover { transform: none; }
-  .path-label { transition: none; }
 }
 
 /* ---------- Scroll-depth gate background ---------- */
