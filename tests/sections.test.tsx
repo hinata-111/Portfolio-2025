@@ -4,6 +4,8 @@ import Experience from "@/app/components/Experience";
 import Projects from "@/app/components/Projects";
 import Beyond from "@/app/components/Beyond";
 import { timeline } from "@/app/content";
+import Contact from "@/app/components/Contact";
+import { contact } from "@/app/content";
 
 describe("Experience", () => {
   it("renders 6 timeline items", () => {
@@ -128,5 +130,17 @@ describe("Beyond", () => {
     const comedy = screen.getByRole("article", { name: "漫才ステージ" });
     expect(radio.querySelector(".life-details")).not.toBeInTheDocument();
     expect(comedy.querySelector(".life-details")).not.toBeInTheDocument();
+  });
+});
+
+describe("Contact", () => {
+  it("makes the email a working mailto link", () => {
+    render(<Contact />);
+
+    expect(screen.getByRole("link", { name: /Email/ })).toHaveAttribute(
+      "href",
+      `mailto:${contact.email}`,
+    );
+    expect(screen.getByRole("link", { name: /GitHub/ })).toHaveAttribute("href", contact.github);
   });
 });
