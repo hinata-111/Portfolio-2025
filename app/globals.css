@@ -521,7 +521,7 @@ a:focus-visible, button:focus-visible {
   line-height: 1.35;
   letter-spacing: .06em;
   text-decoration: none;
-  transition: color .3s ease, background .3s ease;
+  transition: color .3s ease, background .3s ease, text-shadow .3s ease;
 }
 .side-nav a::before {
   content: "";
@@ -535,10 +535,17 @@ a:focus-visible, button:focus-visible {
   transform: translateY(-50%);
   transition: height .3s ease;
 }
-.side-nav a:hover {
-  color: var(--ink);
-  background: color-mix(in srgb, var(--ink-strong) 6%, transparent);
+/* 触れた行が灯る。キーボード操作でも同じ状態が出るよう :focus-visible を対にする */
+.side-nav a:hover,
+.side-nav a:focus-visible {
+  color: var(--sun-deep);
+  background: color-mix(in srgb, var(--sun) 10%, transparent);
+  text-shadow: 0 0 12px color-mix(in srgb, var(--sun) 55%, transparent);
 }
+.side-nav a:hover::before,
+.side-nav a:focus-visible::before { height: calc(100% - 10px); }
+.side-nav a:hover .side-nav-num,
+.side-nav a:focus-visible .side-nav-num { color: var(--sun); }
 .side-nav a.current {
   color: var(--ink-strong);
   font-weight: 700;
@@ -548,14 +555,59 @@ a:focus-visible, button:focus-visible {
   color: var(--muted);
   font-size: 9px;
   letter-spacing: .16em;
+  transition: color .3s ease;
 }
 .side-nav a.current .side-nav-num { color: var(--sun-deep); }
 .side-nav a:focus-visible {
   outline: 2px solid var(--sun);
   outline-offset: 2px;
 }
-@media (max-width: 860px) {
-  .side-nav { display: none; }
+
+/* ドロワー用。レール時は CSS で隠れる */
+.side-nav-toggle {
+  position: fixed;
+  left: 18px;
+  top: 18px;
+  z-index: 60;
+  display: none;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  border: 1px solid var(--cosmic-hairline);
+  border-radius: 14px;
+  background: color-mix(in srgb, var(--ground) 78%, transparent);
+  backdrop-filter: blur(14px);
+  cursor: pointer;
+}
+.side-nav-toggle-bars,
+.side-nav-toggle-bars::before,
+.side-nav-toggle-bars::after {
+  display: block;
+  width: 18px;
+  height: 1.5px;
+  border-radius: 999px;
+  background: var(--ink-strong);
+}
+.side-nav-toggle-bars { position: relative; }
+.side-nav-toggle-bars::before,
+.side-nav-toggle-bars::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  transition: transform .3s cubic-bezier(.2,.7,.3,1);
+}
+.side-nav-toggle-bars::before { top: -6px; }
+.side-nav-toggle-bars::after { top: 6px; }
+.side-nav-toggle[aria-expanded="true"] .side-nav-toggle-bars { background: transparent; }
+.side-nav-toggle[aria-expanded="true"] .side-nav-toggle-bars::before { transform: translateY(6px) rotate(45deg); }
+.side-nav-toggle[aria-expanded="true"] .side-nav-toggle-bars::after { transform: translateY(-6px) rotate(-45deg); }
+.side-nav-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 45;
+  background: color-mix(in srgb, var(--ground) 62%, transparent);
+  backdrop-filter: blur(3px);
 }
 
 /* ---------- Cosmic background: starfield / floating shapes ---------- */
@@ -600,8 +652,14 @@ a:focus-visible, button:focus-visible {
   50% { transform: scale(1.08); opacity: 1; }
 }
 @media (prefers-reduced-motion: reduce) {
+  /* 色の変化は残し、動きだけ止める。ドロワーはスライドせず即座に出す */
+  .side-nav,
   .side-nav a,
-  .side-nav a::before { transition: none; }
+  .side-nav a::before,
+  .side-nav-num,
+  .side-nav-label,
+  .side-nav-toggle-bars::before,
+  .side-nav-toggle-bars::after { transition: none; }
   .star-dot, .nebula { animation: none; }
 }
 
@@ -622,7 +680,8 @@ body {
 }
 
 .wrap {
-  max-width: 1024px;
+  /* 左右対称にガターを引くので、被りを消しても中央寄せは崩れない */
+  max-width: min(1024px, calc(100vw - var(--side-nav-gutter) * 2));
   padding-inline: 40px;
 }
 
@@ -959,6 +1018,96 @@ h2 {
   border-radius: 16px;
   background: color-mix(in srgb, var(--ground) 62%, transparent);
   backdrop-filter: blur(14px);
+  transition: background .3s ease, border-color .3s ease;
+}
+
+/* カーソルが帯に入るとナビ全体が一段明るくなる */
+.side-nav:hover,
+.side-nav:focus-within {
+  border-color: color-mix(in srgb, var(--sun) 30%, var(--cosmic-hairline));
+  background: color-mix(in srgb, var(--ground) 86%, transparent);
+}
+
+/* ---------- Side nav: 幅 × ホバー可否でモードを切り替える ----------
+   ガターは「ナビが本文から取り上げる幅」。--side-nav-gutter を .wrap の
+   max-width が参照しているので、ここを変えれば本文の列幅が自動で追従する。
+   モード指定はこの位置より前にある Cosmic のパネル指定を上書きする必要が
+   あるため、必ずそれより後ろに置くこと。 */
+:root { --side-nav-gutter: 0px; }
+
+/* 1. 全ラベルのレール。幅に余裕があるので入力方法を問わず成立する */
+@media (min-width: 1240px) {
+  :root { --side-nav-gutter: 214px; }
+}
+
+/* 2. 番号だけのレール。ラベルはホバー/フォーカスでピルとして出す */
+@media (min-width: 861px) and (max-width: 1239px) and (hover: hover) {
+  :root { --side-nav-gutter: 94px; }
+
+  .side-nav { max-width: none; }
+  .side-nav a { grid-template-columns: 18px; }
+  .side-nav-label {
+    position: absolute;
+    left: calc(100% + 6px);
+    top: 50%;
+    padding: 4px 10px;
+    border: 1px solid var(--cosmic-hairline);
+    border-radius: 999px;
+    background: color-mix(in srgb, var(--ground) 92%, transparent);
+    color: var(--ink-strong);
+    font-size: 10px;
+    white-space: nowrap;
+    opacity: 0;
+    transform: translate(-4px, -50%);
+    transition: opacity .24s ease, transform .24s ease;
+    backdrop-filter: blur(12px);
+    pointer-events: none;
+  }
+  .side-nav a:hover .side-nav-label,
+  .side-nav a:focus-visible .side-nav-label {
+    opacity: 1;
+    transform: translate(0, -50%);
+  }
+}
+
+/* 3. ドロワー。ホバーできない端末は「触れた時点で移動が確定」してしまい、
+      ラベルを事前に見せる手段がないため、開いて全ラベルを読ませる */
+@media (max-width: 1239px) and (hover: none) {
+  .side-nav-toggle { display: grid; }
+
+  .side-nav {
+    left: 0;
+    top: 0;
+    width: min(268px, 82vw);
+    max-width: none;
+    height: 100%;
+    padding: 84px 14px 24px;
+    border-width: 0 1px 0 0;
+    border-radius: 0;
+    background: color-mix(in srgb, var(--ground) 96%, transparent);
+    justify-content: center;
+    gap: 4px;
+    z-index: 50;
+    transform: none;
+    visibility: hidden;
+    translate: -100% 0;
+    transition: translate .32s cubic-bezier(.2,.7,.3,1), visibility .32s;
+  }
+  .side-nav[data-open="true"] {
+    visibility: visible;
+    translate: 0 0;
+  }
+  .side-nav a {
+    grid-template-columns: 26px 1fr;
+    padding: 13px 14px;
+    font-size: 14px;
+  }
+  .side-nav-num { font-size: 10px; }
+}
+
+/* 4. ホバーできる端末の狭い画面。番号だけでも列を圧迫するので畳む */
+@media (max-width: 860px) and (hover: hover) {
+  .side-nav { display: none; }
 }
 
 .star-dot { opacity: .34; }

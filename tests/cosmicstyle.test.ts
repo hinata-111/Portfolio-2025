@@ -15,3 +15,21 @@ describe("cosmic depth-gate visual contract", () => {
     for (const token of ["--shape-pink", "--shape-teal", "--shape-yellow", "--shape-navy", "--cosmic-cyan", "--cosmic-pink"]) expect(css).not.toContain(token);
   });
 });
+
+describe("side nav layout contract", () => {
+  it("reserves the nav's footprint so the content column can never sit under it", () => {
+    // 本文の列幅は「画面幅 - ガター2つ分」を上限にする。左右対称に引くので中央寄せは崩れない。
+    expect(css).toMatch(/--side-nav-gutter/);
+    expect(css).toMatch(/\.wrap[^}]*max-width:\s*min\(\s*1024px\s*,\s*calc\(\s*100vw\s*-\s*var\(--side-nav-gutter\)\s*\*\s*2\s*\)\s*\)/s);
+  });
+
+  it("switches between full rail, compact rail, and drawer by width and hover capability", () => {
+    expect(css).toMatch(/@media\s*\(min-width:\s*1240px\)/);
+    expect(css).toMatch(/@media[^{]*max-width:\s*1239px[^{]*hover:\s*hover/);
+    expect(css).toMatch(/@media[^{]*max-width:\s*1239px[^{]*hover:\s*none/);
+  });
+
+  it("disables the added nav motion under reduced motion", () => {
+    expect(css).toMatch(/@media\s*\(prefers-reduced-motion:\s*reduce\)[\s\S]*\.side-nav/);
+  });
+});

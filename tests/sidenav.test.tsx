@@ -1,7 +1,24 @@
-import { act, render, screen, waitFor } from "@testing-library/react";
-import { describe, expect, it } from "vitest";
+import { act, fireEvent, render, screen, waitFor } from "@testing-library/react";
+import { describe, expect, it, vi } from "vitest";
 import SideNav from "@/app/components/SideNav";
 import { MockIntersectionObserver } from "@/vitest.setup";
+
+/**
+ * ドロワーは「狭い幅 かつ ホバーできない端末」でだけ動く。
+ * jsdom は matchMedia を持たないので、そのクエリだけ true を返すよう差し替える。
+ */
+function useDrawerViewport(isDrawer: boolean) {
+  window.matchMedia = vi.fn().mockImplementation((query: string) => ({
+    matches: isDrawer && query.includes("hover: none"),
+    media: query,
+    onchange: null,
+    addListener: vi.fn(),
+    removeListener: vi.fn(),
+    addEventListener: vi.fn(),
+    removeEventListener: vi.fn(),
+    dispatchEvent: vi.fn(),
+  }));
+}
 
 const expectedHrefs = [
   "#hero",
@@ -139,5 +156,110 @@ describe("SideNav", () => {
       "aria-current",
       "true",
     );
+  });
+});
+
+describe("SideNav drawer (narrow + touch)", () => {
+  function openDrawer() {
+    const toggle = screen.getByRole("button", { name: "セクションメニューを開く" });
+    fireEvent.click(toggle);
+    return toggle;
+  }
+
+  it("renders a collapsed toggle wired to the nav panel", () => {
+    useDrawerViewport(true);
+    render(<SideNav />);
+
+    const toggle = screen.getByRole("button", { name: "セクションメニューを開く" });
+    const panel = screen.getByRole("navigation", { name: "セクションナビゲーション" });
+
+    expect(toggle).toHaveAttribute("aria-expanded", "false");
+    expect(toggle).toHaveAttribute("aria-controls", panel.id);
+    expect(panel).not.toHaveAttribute("data-open");
+  });
+
+  it("opens the panel and moves focus into it", () => {
+    useDrawerViewport(true);
+    render(<SideNav />);
+
+    openDrawer();
+
+    const panel = screen.getByRole("navigation", { name: "セクションナビゲーション" });
+    expect(panel).toHaveAttribute("data-open", "true");
+    expect(screen.getByRole("button", { name: "セクションメニューを閉じる" })).toHaveAttribute(
+      "aria-expanded",
+      "true",
+    );
+    expect(document.activeElement).toBe(screen.getByRole("link", { name: "Top" }));
+  });
+
+  it("closes on Escape and returns focus to the toggle", () => {
+    useDrawerViewport(true);
+    render(<SideNav />);
+
+    const toggle = openDrawer();
+    fireEvent.keyDown(document, { key: "Escape" });
+
+    expect(
+      screen.getByRole("navigation", { name: "セクションナビゲーション" }),
+    ).not.toHaveAttribute("data-open");
+    expect(document.activeElement).toBe(toggle);
+  });
+
+  it("keeps Tab inside the open panel", () => {
+    useDrawerViewport(true);
+    render(<SideNav />);
+
+    openDrawer();
+
+    const links = screen.getAllByRole("link");
+    const first = links[0];
+    const last = links[links.length - 1];
+
+    last.focus();
+    fireEvent.keyDown(document, { key: "Tab" });
+    expect(document.activeElement).toBe(first);
+
+    fireEvent.keyDown(document, { key: "Tab", shiftKey: true });
+    expect(document.activeElement).toBe(last);
+  });
+
+  it("closes after choosing a section", () => {
+    useDrawerViewport(true);
+    render(<SideNav />);
+
+    openDrawer();
+    fireEvent.click(screen.getByRole("link", { name: "Projects" }));
+
+    expect(
+      screen.getByRole("navigation", { name: "セクションナビゲーション" }),
+    ).not.toHaveAttribute("data-open");
+  });
+
+  it("closes when the backdrop is tapped", () => {
+    useDrawerViewport(true);
+    const { container } = render(<SideNav />);
+
+    openDrawer();
+    const backdrop = container.querySelector(".side-nav-backdrop");
+    expect(backdrop).not.toBeNull();
+    fireEvent.click(backdrop!);
+
+    expect(
+      screen.getByRole("navigation", { name: "セクションナビゲーション" }),
+    ).not.toHaveAttribute("data-open");
+  });
+
+  it("does not hijack focus or close on click when the rail is showing", () => {
+    useDrawerViewport(false);
+    render(<SideNav />);
+
+    // レール表示中はトグルがCSSで隠れるが、押されても開閉ロジックは走らせない
+    fireEvent.click(screen.getByRole("button", { name: "セクションメニューを開く" }));
+
+    expect(
+      screen.getByRole("navigation", { name: "セクションナビゲーション" }),
+    ).not.toHaveAttribute("data-open");
+    expect(document.activeElement).toBe(document.body);
   });
 });
