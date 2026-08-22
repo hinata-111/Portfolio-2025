@@ -13,6 +13,7 @@ export default function Projects() {
         <Reveal
           as="article"
           key={p.title}
+          id={`project-${index}`}
           className={`project${index === 0 ? " project--featured" : ""}`}
           data-project-index={String(index + 1).padStart(2, "0")}
           aria-labelledby={`project-title-${index}`}

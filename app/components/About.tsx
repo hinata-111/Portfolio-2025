@@ -1,4 +1,4 @@
-import { aboutInfo, aboutParagraphs, motto, socials } from "@/app/content";
+import { aboutInfo, aboutParagraphs, motto, projects, socials } from "@/app/content";
 import SectionHead from "@/app/components/SectionHead";
 import Reveal from "@/app/components/Reveal";
 import { SocialIcon } from "@/app/components/icons";
@@ -46,6 +46,27 @@ export default function About() {
             <p key={p}>{p}</p>
           ))}
         </div>
+      </Reveal>
+      <Reveal as="nav" className="about-projects" aria-label="プロジェクト索引">
+        <p className="about-projects-head mono">PROJECTS</p>
+        <ul>
+          {projects.map((p, index) => (
+            <li key={p.title}>
+              <a href={`#project-${index}`}>
+                <span className="about-project-num mono" aria-hidden="true">
+                  {String(index + 1).padStart(2, "0")}
+                </span>
+                <span className="about-project-body">
+                  <span className="about-project-title">{p.title}</span>
+                  <span className="about-project-summary">{p.summary}</span>
+                </span>
+                <span className="about-project-arrow" aria-hidden="true">
+                  ↓
+                </span>
+              </a>
+            </li>
+          ))}
+        </ul>
       </Reveal>
       <Reveal className="motto">
         <blockquote className="serif">

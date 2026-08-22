@@ -2,7 +2,7 @@ import { render, screen } from "@testing-library/react";
 import { describe, it, expect } from "vitest";
 import About from "@/app/components/About";
 import Skills from "@/app/components/Skills";
-import { socials } from "@/app/content";
+import { projects, socials } from "@/app/content";
 
 describe("About", () => {
   it("renders info list, story and motto", () => {
@@ -27,6 +27,20 @@ describe("About", () => {
 
     expect(screen.queryByRole("link", { name: "Xを開く" })).not.toBeInTheDocument();
     expect(screen.getByText("X 要確認")).toBeInTheDocument();
+  });
+
+  it("indexes every project and links down to its card", () => {
+    render(<About />);
+
+    const index = screen.getByRole("navigation", { name: "プロジェクト索引" });
+    const links = Array.from(index.querySelectorAll("a"));
+
+    expect(links).toHaveLength(projects.length);
+    expect(links.map((link) => link.getAttribute("href"))).toEqual(
+      projects.map((_, i) => `#project-${i}`),
+    );
+    expect(links[0]).toHaveTextContent(projects[0].title);
+    expect(links[0]).toHaveTextContent(projects[0].summary);
   });
 });
 

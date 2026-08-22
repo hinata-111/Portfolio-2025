@@ -78,6 +78,17 @@ describe("Projects", () => {
     expect(internship).toHaveTextContent("精度評価・改善");
     expect(internship).toHaveTextContent("PostgreSQL");
   });
+
+  it("gives every project an anchor the About index can link to", () => {
+    render(<Projects />);
+
+    const projectArticles = Array.from(document.querySelectorAll(".project"));
+    expect(projectArticles.map((project) => project.id)).toEqual([
+      "project-0",
+      "project-1",
+      "project-2",
+    ]);
+  });
 });
 
 describe("Beyond", () => {

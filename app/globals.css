@@ -705,6 +705,78 @@ h2 {
   backdrop-filter: blur(18px);
 }
 
+.about-projects { margin: 34px 0 0; text-align: left; }
+.about-projects-head {
+  margin: 0 0 12px;
+  color: var(--muted);
+  font-size: 10px;
+  letter-spacing: .24em;
+}
+.about-projects ul {
+  list-style: none;
+  display: grid;
+  gap: 10px;
+  margin: 0;
+  padding: 0;
+}
+.about-projects a {
+  display: grid;
+  grid-template-columns: 26px 1fr 16px;
+  align-items: start;
+  gap: 14px;
+  padding: 16px 18px;
+  border: 1px solid var(--cosmic-hairline);
+  border-radius: 16px;
+  background: var(--cosmic-glass);
+  text-decoration: none;
+  transition: transform .3s cubic-bezier(.2,.7,.3,1), border-color .3s ease, box-shadow .3s ease;
+}
+.about-projects a:hover {
+  transform: translateY(-2px);
+  border-color: color-mix(in srgb, var(--sun) 30%, var(--cosmic-hairline));
+  box-shadow: 0 16px 40px rgba(0, 0, 0, .14);
+}
+.about-projects a:focus-visible {
+  outline: 2px solid var(--sun);
+  outline-offset: 3px;
+}
+.about-project-num {
+  padding-top: 3px;
+  color: var(--sun-deep);
+  font-size: 10px;
+  letter-spacing: .16em;
+}
+.about-project-body { display: grid; gap: 5px; min-width: 0; }
+.about-project-title {
+  color: var(--ink-strong);
+  font-size: 14.5px;
+  font-weight: 700;
+  line-height: 1.5;
+}
+.about-project-summary {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  overflow: hidden;
+  color: var(--muted);
+  font-size: 12.5px;
+  line-height: 1.7;
+}
+.about-project-arrow {
+  padding-top: 3px;
+  color: var(--muted);
+  font-size: 13px;
+  transition: transform .3s ease;
+}
+.about-projects a:hover .about-project-arrow { transform: translateY(3px); }
+@media (prefers-reduced-motion: reduce) {
+  .about-projects a,
+  .about-project-arrow { transition: none; }
+  .about-projects a:hover { transform: none; }
+  .about-projects a:hover .about-project-arrow { transform: none; }
+}
+
 .motto {
   position: relative;
   padding: 44px 32px;
@@ -788,6 +860,7 @@ h2 {
   max-width: none;
   margin: 22px 0;
   padding: 42px;
+  scroll-margin-top: 90px;
   border: 1px solid var(--cosmic-hairline);
   border-radius: 28px;
   background:
@@ -911,6 +984,7 @@ h2 {
   .sec-head { justify-content: center; }
   h2 { margin-bottom: 38px; text-align: center; }
   .about-grid { grid-template-columns: 1fr; gap: 26px; padding: 26px 22px; }
+  .about-projects a { padding: 14px 15px; gap: 11px; }
   .motto { padding: 34px 12px; }
   .stack-row { grid-template-columns: 1fr; padding: 16px; }
   .stack-row:hover { transform: none; }
