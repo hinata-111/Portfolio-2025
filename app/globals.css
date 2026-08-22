@@ -168,6 +168,45 @@ p.lede { max-width: 36em; margin: 0 auto 16px; }
 .about-info .k { color: var(--sun-deep); font-weight: 700; font-size: 12px; letter-spacing: .08em; }
 .about-info .v { color: var(--ink); }
 .about-story p { margin: 0 0 14px; font-size: 15px; line-height: 1.9; }
+.about-socials {
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+  margin: 16px 0 0;
+  padding: 0;
+}
+.about-socials a,
+.about-social-todo {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  color: var(--muted);
+}
+.about-socials a {
+  width: 34px;
+  height: 34px;
+  justify-content: center;
+  border: 1px solid var(--line);
+  border-radius: 50%;
+  text-decoration: none;
+  transition: color .3s ease, border-color .3s ease, transform .3s cubic-bezier(.2,.7,.3,1);
+}
+.about-socials a:hover {
+  color: var(--sun-deep);
+  border-color: var(--sun);
+  transform: translateY(-2px);
+}
+.about-socials a:focus-visible {
+  outline: 2px solid var(--sun);
+  outline-offset: 3px;
+}
+.about-social-todo .todo { margin-left: 0; }
+@media (prefers-reduced-motion: reduce) {
+  .about-socials a { transition: none; }
+  .about-socials a:hover { transform: none; }
+}
 @media (max-width: 640px) {
   .about-grid { grid-template-columns: 1fr; gap: 26px; }
 }
@@ -457,70 +496,118 @@ a:focus-visible, button:focus-visible {
   border-radius: 6px;
 }
 
-/* ---------- Path rail: fixed lantern minimap ---------- */
-.path-rail {
+/* ---------- Side nav: fixed section list ---------- */
+.side-nav {
   position: fixed;
   left: 26px;
   top: 50%;
   z-index: 40;
   display: flex;
   flex-direction: column;
-  gap: 22px;
+  gap: 2px;
+  max-width: 158px;
   transform: translateY(-50%);
 }
-.path-rail::before {
+.side-nav a {
+  position: relative;
+  display: grid;
+  grid-template-columns: 18px 1fr;
+  align-items: baseline;
+  gap: 8px;
+  padding: 6px 10px 6px 12px;
+  border-radius: 10px;
+  color: var(--muted);
+  font-size: 11.5px;
+  line-height: 1.35;
+  letter-spacing: .06em;
+  text-decoration: none;
+  transition: color .3s ease, background .3s ease, text-shadow .3s ease;
+}
+.side-nav a::before {
   content: "";
   position: absolute;
-  left: 2px;
-  top: 3px;
-  bottom: 3px;
-  width: 1px;
-  background: linear-gradient(to bottom, color-mix(in srgb, var(--muted) 28%, transparent), transparent);
-}
-.rail-track {
-  position: absolute;
-  left: 2px;
-  top: 0;
-  width: 1px;
-  background: linear-gradient(to bottom, var(--muted), var(--sun));
-  box-shadow: 0 0 3px 1px color-mix(in srgb, var(--sun) 35%, transparent);
-  transition: height .6s ease;
-}
-.path-rail a {
-  position: relative;
-  display: block;
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  border: 1px solid var(--line);
-  background: var(--ground);
-  transition: all .6s ease;
-  z-index: 1;
-}
-.path-rail a.lit {
-  border-color: var(--sun);
+  left: 0;
+  top: 50%;
+  width: 2px;
+  height: 0;
+  border-radius: 999px;
   background: var(--sun);
-  box-shadow: 0 0 3px 1px rgba(255,197,61,.5);
+  transform: translateY(-50%);
+  transition: height .3s ease;
 }
-.path-rail a.current {
-  width: 9px;
-  height: 9px;
-  margin-left: -1.5px;
-  background: radial-gradient(circle, #fff, var(--sun));
-  box-shadow: 0 0 6px 2px rgba(255,197,61,.7);
-  animation: rail-twinkle 2.2s ease-in-out infinite;
+/* 触れた行が灯る。キーボード操作でも同じ状態が出るよう :focus-visible を対にする */
+.side-nav a:hover,
+.side-nav a:focus-visible {
+  color: var(--sun-deep);
+  background: color-mix(in srgb, var(--sun) 10%, transparent);
+  text-shadow: 0 0 12px color-mix(in srgb, var(--sun) 55%, transparent);
 }
-@keyframes rail-twinkle {
-  0%, 100% { opacity: 1; }
-  50% { opacity: .7; }
+.side-nav a:hover::before,
+.side-nav a:focus-visible::before { height: calc(100% - 10px); }
+.side-nav a:hover .side-nav-num,
+.side-nav a:focus-visible .side-nav-num { color: var(--sun); }
+.side-nav a.current {
+  color: var(--ink-strong);
+  font-weight: 700;
 }
-.path-rail a:focus-visible {
+.side-nav a.current::before { height: calc(100% - 10px); }
+.side-nav-num {
+  color: var(--muted);
+  font-size: 9px;
+  letter-spacing: .16em;
+  transition: color .3s ease;
+}
+.side-nav a.current .side-nav-num { color: var(--sun-deep); }
+.side-nav a:focus-visible {
   outline: 2px solid var(--sun);
-  outline-offset: 3px;
-  border-radius: 50%;
+  outline-offset: 2px;
 }
-@media (max-width: 860px) {
-  .path-rail { display: none; }
+
+/* ドロワー用。レール時は CSS で隠れる */
+.side-nav-toggle {
+  position: fixed;
+  left: 18px;
+  top: 18px;
+  z-index: 60;
+  display: none;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  border: 1px solid var(--cosmic-hairline);
+  border-radius: 14px;
+  background: color-mix(in srgb, var(--ground) 78%, transparent);
+  backdrop-filter: blur(14px);
+  cursor: pointer;
+}
+.side-nav-toggle-bars,
+.side-nav-toggle-bars::before,
+.side-nav-toggle-bars::after {
+  display: block;
+  width: 18px;
+  height: 1.5px;
+  border-radius: 999px;
+  background: var(--ink-strong);
+}
+.side-nav-toggle-bars { position: relative; }
+.side-nav-toggle-bars::before,
+.side-nav-toggle-bars::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  transition: transform .3s cubic-bezier(.2,.7,.3,1);
+}
+.side-nav-toggle-bars::before { top: -6px; }
+.side-nav-toggle-bars::after { top: 6px; }
+.side-nav-toggle[aria-expanded="true"] .side-nav-toggle-bars { background: transparent; }
+.side-nav-toggle[aria-expanded="true"] .side-nav-toggle-bars::before { transform: translateY(6px) rotate(45deg); }
+.side-nav-toggle[aria-expanded="true"] .side-nav-toggle-bars::after { transform: translateY(-6px) rotate(-45deg); }
+.side-nav-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 45;
+  background: color-mix(in srgb, var(--ground) 62%, transparent);
+  backdrop-filter: blur(3px);
 }
 
 /* ---------- Cosmic background: starfield / floating shapes ---------- */
@@ -565,9 +652,15 @@ a:focus-visible, button:focus-visible {
   50% { transform: scale(1.08); opacity: 1; }
 }
 @media (prefers-reduced-motion: reduce) {
-  .path-rail a { transition: none; }
-  .rail-track { transition: none; }
-  .star-dot, .nebula, .path-rail a.current { animation: none; }
+  /* 色の変化は残し、動きだけ止める。ドロワーはスライドせず即座に出す */
+  .side-nav,
+  .side-nav a,
+  .side-nav a::before,
+  .side-nav-num,
+  .side-nav-label,
+  .side-nav-toggle-bars::before,
+  .side-nav-toggle-bars::after { transition: none; }
+  .star-dot, .nebula { animation: none; }
 }
 
 /* ---------- Cosmic Mission Archive refinement ---------- */
@@ -587,7 +680,8 @@ body {
 }
 
 .wrap {
-  max-width: 1024px;
+  /* 左右対称にガターを引くので、被りを消しても中央寄せは崩れない */
+  max-width: min(1024px, calc(100vw - var(--side-nav-gutter) * 2));
   padding-inline: 40px;
 }
 
@@ -668,6 +762,78 @@ h2 {
     var(--cosmic-glass);
   box-shadow: 0 24px 80px rgba(0, 0, 0, .16);
   backdrop-filter: blur(18px);
+}
+
+.about-projects { margin: 34px 0 0; text-align: left; }
+.about-projects-head {
+  margin: 0 0 12px;
+  color: var(--muted);
+  font-size: 10px;
+  letter-spacing: .24em;
+}
+.about-projects ul {
+  list-style: none;
+  display: grid;
+  gap: 10px;
+  margin: 0;
+  padding: 0;
+}
+.about-projects a {
+  display: grid;
+  grid-template-columns: 26px 1fr 16px;
+  align-items: start;
+  gap: 14px;
+  padding: 16px 18px;
+  border: 1px solid var(--cosmic-hairline);
+  border-radius: 16px;
+  background: var(--cosmic-glass);
+  text-decoration: none;
+  transition: transform .3s cubic-bezier(.2,.7,.3,1), border-color .3s ease, box-shadow .3s ease;
+}
+.about-projects a:hover {
+  transform: translateY(-2px);
+  border-color: color-mix(in srgb, var(--sun) 30%, var(--cosmic-hairline));
+  box-shadow: 0 16px 40px rgba(0, 0, 0, .14);
+}
+.about-projects a:focus-visible {
+  outline: 2px solid var(--sun);
+  outline-offset: 3px;
+}
+.about-project-num {
+  padding-top: 3px;
+  color: var(--sun-deep);
+  font-size: 10px;
+  letter-spacing: .16em;
+}
+.about-project-body { display: grid; gap: 5px; min-width: 0; }
+.about-project-title {
+  color: var(--ink-strong);
+  font-size: 14.5px;
+  font-weight: 700;
+  line-height: 1.5;
+}
+.about-project-summary {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  overflow: hidden;
+  color: var(--muted);
+  font-size: 12.5px;
+  line-height: 1.7;
+}
+.about-project-arrow {
+  padding-top: 3px;
+  color: var(--muted);
+  font-size: 13px;
+  transition: transform .3s ease;
+}
+.about-projects a:hover .about-project-arrow { transform: translateY(3px); }
+@media (prefers-reduced-motion: reduce) {
+  .about-projects a,
+  .about-project-arrow { transition: none; }
+  .about-projects a:hover { transform: none; }
+  .about-projects a:hover .about-project-arrow { transform: none; }
 }
 
 .motto {
@@ -753,6 +919,7 @@ h2 {
   max-width: none;
   margin: 22px 0;
   padding: 42px;
+  scroll-margin-top: 90px;
   border: 1px solid var(--cosmic-hairline);
   border-radius: 28px;
   background:
@@ -844,43 +1011,105 @@ h2 {
 
 .contact-row { position: relative; z-index: 1; }
 
-.path-rail {
+.side-nav {
   left: 24px;
-  gap: 26px;
-}
-
-.path-rail a {
-  display: block;
-}
-
-.path-label {
-  position: absolute;
-  left: 20px;
-  top: 50%;
-  padding: 4px 9px;
+  padding: 10px 8px;
   border: 1px solid var(--cosmic-hairline);
-  border-radius: 999px;
-  background: color-mix(in srgb, var(--ground) 82%, transparent);
-  color: var(--muted);
-  font-size: 9px;
-  letter-spacing: .12em;
-  line-height: 1.2;
-  white-space: nowrap;
-  opacity: 0;
-  transform: translate(-4px, -50%);
-  transition: opacity .24s ease, transform .24s ease, color .24s ease;
-  backdrop-filter: blur(12px);
-  pointer-events: none;
+  border-radius: 16px;
+  background: color-mix(in srgb, var(--ground) 62%, transparent);
+  backdrop-filter: blur(14px);
+  transition: background .3s ease, border-color .3s ease;
 }
 
-.path-rail a:hover .path-label,
-.path-rail a:focus-visible .path-label,
-.path-rail a.current .path-label {
-  opacity: 1;
-  transform: translate(0, -50%);
+/* カーソルが帯に入るとナビ全体が一段明るくなる */
+.side-nav:hover,
+.side-nav:focus-within {
+  border-color: color-mix(in srgb, var(--sun) 30%, var(--cosmic-hairline));
+  background: color-mix(in srgb, var(--ground) 86%, transparent);
 }
 
-.path-rail a.current .path-label { color: var(--ink-strong); }
+/* ---------- Side nav: 幅 × ホバー可否でモードを切り替える ----------
+   ガターは「ナビが本文から取り上げる幅」。--side-nav-gutter を .wrap の
+   max-width が参照しているので、ここを変えれば本文の列幅が自動で追従する。
+   モード指定はこの位置より前にある Cosmic のパネル指定を上書きする必要が
+   あるため、必ずそれより後ろに置くこと。 */
+:root { --side-nav-gutter: 0px; }
+
+/* 1. 全ラベルのレール。幅に余裕があるので入力方法を問わず成立する */
+@media (min-width: 1240px) {
+  :root { --side-nav-gutter: 214px; }
+}
+
+/* 2. 番号だけのレール。ラベルはホバー/フォーカスでピルとして出す */
+@media (min-width: 861px) and (max-width: 1239px) and (hover: hover) {
+  :root { --side-nav-gutter: 94px; }
+
+  .side-nav { max-width: none; }
+  .side-nav a { grid-template-columns: 18px; }
+  .side-nav-label {
+    position: absolute;
+    left: calc(100% + 6px);
+    top: 50%;
+    padding: 4px 10px;
+    border: 1px solid var(--cosmic-hairline);
+    border-radius: 999px;
+    background: color-mix(in srgb, var(--ground) 92%, transparent);
+    color: var(--ink-strong);
+    font-size: 10px;
+    white-space: nowrap;
+    opacity: 0;
+    transform: translate(-4px, -50%);
+    transition: opacity .24s ease, transform .24s ease;
+    backdrop-filter: blur(12px);
+    pointer-events: none;
+  }
+  .side-nav a:hover .side-nav-label,
+  .side-nav a:focus-visible .side-nav-label {
+    opacity: 1;
+    transform: translate(0, -50%);
+  }
+}
+
+/* 3. ドロワー。ホバーできない端末は「触れた時点で移動が確定」してしまい、
+      ラベルを事前に見せる手段がないため、開いて全ラベルを読ませる */
+@media (max-width: 1239px) and (hover: none) {
+  .side-nav-toggle { display: grid; }
+
+  .side-nav {
+    left: 0;
+    top: 0;
+    width: min(268px, 82vw);
+    max-width: none;
+    height: 100%;
+    padding: 84px 14px 24px;
+    border-width: 0 1px 0 0;
+    border-radius: 0;
+    background: color-mix(in srgb, var(--ground) 96%, transparent);
+    justify-content: center;
+    gap: 4px;
+    z-index: 50;
+    visibility: hidden;
+    /* スライドは transform だけで表現する。transform と translate プロパティを
+       混ぜると、ビルド時の CSS 最適化が片方だけを transform に畳んで対が壊れる */
+    transform: translateX(-100%);
+    transition: transform .32s cubic-bezier(.2,.7,.3,1), visibility .32s;
+  }
+  .side-nav[data-open="true"] {
+    visibility: visible;
+    transform: none;
+  }
+  .side-nav a {
+    grid-template-columns: 26px 1fr;
+    padding: 13px 14px;
+    font-size: 14px;
+  }
+  .side-nav-num { font-size: 10px; }
+}
+
+/* 4. ホバーできる端末の狭い画面。番号だけでも列を圧迫するので畳む */
+@media (max-width: 860px) and (hover: hover) {
+  .side-nav { display: none; }
+}
 
 .star-dot { opacity: .34; }
 
@@ -905,6 +1134,7 @@ h2 {
   .sec-head { justify-content: center; }
   h2 { margin-bottom: 38px; text-align: center; }
   .about-grid { grid-template-columns: 1fr; gap: 26px; padding: 26px 22px; }
+  .about-projects a { padding: 14px 15px; gap: 11px; }
   .motto { padding: 34px 12px; }
   .stack-row { grid-template-columns: 1fr; padding: 16px; }
   .stack-row:hover { transform: none; }
@@ -918,7 +1148,6 @@ h2 {
 @media (prefers-reduced-motion: reduce) {
   .stack-row:hover,
   .project:hover { transform: none; }
-  .path-label { transition: none; }
 }
 
 /* ---------- Scroll-depth gate background ---------- */

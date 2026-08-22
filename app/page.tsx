@@ -8,7 +8,7 @@ import Contact from "@/app/components/Contact";
 import ContactFab from "@/app/components/ContactFab";
 import CursorLight from "@/app/components/CursorLight";
 import ConsoleEgg from "@/app/components/ConsoleEgg";
-import PathRail from "@/app/components/PathRail";
+import SideNav from "@/app/components/SideNav";
 import CosmicBackground from "@/app/components/CosmicBackground";
 import { profile } from "@/app/content";
 
@@ -17,7 +17,7 @@ export default function Home() {
     <main>
       <CosmicBackground />
       <Hero />
-      <PathRail />
+      <SideNav />
       <div className="wrap">
         <About />
         <Skills />

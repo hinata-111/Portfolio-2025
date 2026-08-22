@@ -1,6 +1,6 @@
 import { describe, it, expect } from "vitest";
 import {
-  profile, aboutInfo, aboutParagraphs, motto, stack, timeline, projects, beyond,
+  profile, aboutInfo, aboutParagraphs, motto, stack, timeline, projects, beyond, socials,
 } from "@/app/content";
 
 describe("content", () => {
@@ -11,7 +11,7 @@ describe("content", () => {
   it("has expected collection sizes", () => {
     expect(aboutInfo).toHaveLength(4);
     expect(aboutParagraphs).toHaveLength(2);
-    expect(stack).toHaveLength(5);
+    expect(stack).toHaveLength(4);
     expect(timeline).toHaveLength(6);
     expect(projects).toHaveLength(3);
     expect(beyond).toHaveLength(3);
@@ -19,7 +19,6 @@ describe("content", () => {
   it("adds the Tabime stack to the existing skill categories", () => {
     expect(stack.map((row) => row.cat)).toEqual([
       "Python / NLP",
-      "LLM応用",
       "Web開発",
       "Database",
       "Infra / Tools",
@@ -27,17 +26,12 @@ describe("content", () => {
 
     const pillsByCategory = Object.fromEntries(stack.map((row) => [row.cat, row.pills]));
 
-    expect(pillsByCategory["LLM応用"]).toContain("Cloudflare AI Gateway");
-    expect(pillsByCategory["LLM応用"]).not.toContain("Gemini API");
     expect(pillsByCategory["Web開発"]).toEqual(
-      expect.arrayContaining(["Vite", "Tailwind CSS", "Hono", "Better Auth"]),
+      expect.arrayContaining(["Vite", "Tailwind CSS", "Hono"]),
     );
     expect(pillsByCategory.Database).toContain("Cloudflare D1");
     expect(pillsByCategory["Infra / Tools"]).toEqual(
-      expect.arrayContaining([
-        "Cloudflare Workers / Pages",
-        "GitHub Actions",
-      ]),
+      expect.arrayContaining(["Cloudflare Workers / Pages"]),
     );
     expect(pillsByCategory["Infra / Tools"]).not.toContain("pnpm Monorepo");
     expect(stack.find((row) => row.cat === "Web開発")?.note).toBe("インターン・個人開発で使用");
@@ -46,7 +40,7 @@ describe("content", () => {
     expect(timeline).toContainEqual({
       when: "2026.04 – 2026.06",
       title: "シルクロード一人旅",
-      desc: "シルクロードを一人で旅した",
+      desc: "中国北京からエジプト・カイロまで、シルクロード横断の一人旅を実施",
     });
   });
   it("keeps the overseas solo trip concise while stating its reason and route", () => {
@@ -71,12 +65,12 @@ describe("content", () => {
     const tabime = projects.find((project) => project.title === "Tabime — 悩みから旅先を見つけるAI");
 
     expect(tabime?.summary).toContain("海外一人旅");
-    expect(tabime?.summary).toContain("企画、プロダクト設計、技術選定");
+    expect(tabime?.summary).toContain("企画、プロダクト開発");
     expect(tabime?.summary).not.toMatch(/3軸|8タイプ|3問|9問/);
     expect(tabime?.href).toBe("https://tabime.pages.dev");
   });
   it("combines the internship work and states the factual responsibility boundary", () => {
-    const internship = projects.find((project) => project.title === "長期インターン — AI R&D / Web開発");
+    const internship = projects.find((project) => project.title === "長期インターン — 株式会社スパイクスタジオ");
     const copy = internship?.details?.map((detail) => detail.value).join(" ") ?? "";
 
     expect(projects.filter((project) => project.title.includes("長期インターン"))).toHaveLength(1);
@@ -109,5 +103,13 @@ describe("content", () => {
   it("has the Confucius motto", () => {
     expect(motto.quote).toContain("之を楽しむ者に如かず");
     expect(motto.cite).toBe("— 論語・雍也");
+  });
+});
+
+describe("socials", () => {
+  it("lists GitHub with a URL and keeps X unresolved", () => {
+    expect(socials.map((social) => social.label)).toEqual(["GitHub", "X"]);
+    expect(socials[0].href).toBe("https://github.com/hinata-111");
+    expect(socials[1].href).toBe("");
   });
 });

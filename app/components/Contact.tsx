@@ -12,7 +12,7 @@ export default function Contact() {
         <a className="btn btn-primary" href={contact.github}>
           GitHub <span className="arr">→</span>
         </a>
-        <a className="btn btn-ghost" href={contact.email}>
+        <a className="btn btn-ghost" href={`mailto:${contact.email}`}>
           Email <span className="arr">→</span>
         </a>
       </Reveal>

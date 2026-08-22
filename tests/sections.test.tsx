@@ -4,6 +4,8 @@ import Experience from "@/app/components/Experience";
 import Projects from "@/app/components/Projects";
 import Beyond from "@/app/components/Beyond";
 import { timeline } from "@/app/content";
+import Contact from "@/app/components/Contact";
+import { contact } from "@/app/content";
 
 describe("Experience", () => {
   it("renders 6 timeline items", () => {
@@ -38,7 +40,7 @@ describe("Projects", () => {
     expect(document.querySelectorAll(".project")).toHaveLength(3);
     expect(document.querySelector(".project .todo")).not.toBeInTheDocument();
     expect(screen.getByText("Tabime — 悩みから旅先を見つけるAI")).toBeInTheDocument();
-    expect(screen.getByText("長期インターン — AI R&D / Web開発")).toBeInTheDocument();
+    expect(screen.getByText("長期インターン — 株式会社スパイクスタジオ")).toBeInTheDocument();
     expect(screen.getByText("福島復興知プロジェクト")).toBeInTheDocument();
     expect(screen.getByText(/県内2校・計8回/)).toBeInTheDocument();
     expect(document.querySelectorAll(".project .meta")).toHaveLength(0);
@@ -70,13 +72,24 @@ describe("Projects", () => {
     render(<Projects />);
 
     const internship = screen.getByRole("article", {
-      name: "長期インターン — AI R&D / Web開発",
+      name: "長期インターン — 株式会社スパイクスタジオ",
     });
     expect(internship.querySelectorAll(".project-detail")).toHaveLength(2);
     expect(internship).toHaveTextContent("履歴書解析AIエージェント");
     expect(internship).toHaveTextContent("Webアプリケーション");
     expect(internship).toHaveTextContent("精度評価・改善");
     expect(internship).toHaveTextContent("PostgreSQL");
+  });
+
+  it("gives every project an anchor the About index can link to", () => {
+    render(<Projects />);
+
+    const projectArticles = Array.from(document.querySelectorAll(".project"));
+    expect(projectArticles.map((project) => project.id)).toEqual([
+      "project-0",
+      "project-1",
+      "project-2",
+    ]);
   });
 });
 
@@ -117,5 +130,17 @@ describe("Beyond", () => {
     const comedy = screen.getByRole("article", { name: "漫才ステージ" });
     expect(radio.querySelector(".life-details")).not.toBeInTheDocument();
     expect(comedy.querySelector(".life-details")).not.toBeInTheDocument();
+  });
+});
+
+describe("Contact", () => {
+  it("makes the email a working mailto link", () => {
+    render(<Contact />);
+
+    expect(screen.getByRole("link", { name: /Email/ })).toHaveAttribute(
+      "href",
+      `mailto:${contact.email}`,
+    );
+    expect(screen.getByRole("link", { name: /GitHub/ })).toHaveAttribute("href", contact.github);
   });
 });

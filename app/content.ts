@@ -10,6 +10,7 @@ export type Project = {
   linkLabel?: string;
 };
 export type LifeDetail = { label: string; value: string };
+export type Social = { label: string; href: string };
 export type BeyondItem = {
   phLabel: string;
   title: string;
@@ -61,7 +62,6 @@ export const stack: StackRow[] = [
 export const timeline: TimelineItem[] = [
   { when: "2023.09", title: "慶應義塾大学 環境情報学部 入学", desc: "専攻: コンピューターサイエンス" },
   { when: "2024.04-", title: "レディオ湘南 学生ラジオ番組", desc: "—台本/ナビゲーター/ミキサー番組全体の業務に携わる" },
-  { when: "2024.04-2025.08", title: "", desc: "4週間の選抜課程を経てエンジニア教育機関へ" },
   { when: "2024.08", title: "42Tokyo Piscine 合格・入学", desc: "4週間の選抜課程を経てエンジニア教育機関へ" },
   { when: "2025.07 –", title: "長期インターン | エンジニア・ITコンサルタント", desc: "AIエージェントR&D、Webアプリ開発(現在も継続中)" },
   { when: "2025.08 –", title: "福島復興知事業", desc: "福島イノベーションコースト構想の「復興知」事業に採択。県内2校でAI技術に関する講義やワークショップを実施(現在も継続中)" },
@@ -129,6 +129,12 @@ export const beyond: BeyondItem[] = [
     desc: "相方とネタをつくり、脚本から立ち姿まで考えて舞台へ。目の前の人を笑わせることに向き合う、最も直接的な表現活動。",
     tags: ["漫才", "脚本", "ステージ", "表現"],
   },
+];
+
+// href が空の項目は URL 未確定。埋めるだけでリンクとして描画される
+export const socials: Social[] = [
+  { label: "GitHub", href: "https://github.com/hinata-111" },
+  { label: "X", href: "" },
 ];
 
 export const contact = {

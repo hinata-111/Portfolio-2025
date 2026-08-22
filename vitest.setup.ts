@@ -25,7 +25,7 @@ Object.defineProperty(window, "matchMedia", {
 });
 
 /**
- * jsdom does not implement IntersectionObserver. Reveal/PathRail
+ * jsdom does not implement IntersectionObserver. Reveal/SideNav
  * feature-detect it and no-op when it's undefined, which previously meant the actual
  * observer-driven reveal logic was never exercised by any test. This mock records
  * observed elements and exposes `trigger()` so tests can simulate a real intersection.
@@ -60,9 +60,9 @@ export class MockIntersectionObserver implements IntersectionObserver {
     return [];
   }
 
-  /** Simulate the observer firing for every currently-observed element. */
-  trigger(isIntersecting: boolean) {
-    const entries = Array.from(this.elements).map(
+  /** Simulate the observer firing for a specific subset of observed elements. */
+  triggerFor(targets: Element[], isIntersecting: boolean) {
+    const entries = targets.map(
       (target) =>
         ({
           isIntersecting,
@@ -75,6 +75,11 @@ export class MockIntersectionObserver implements IntersectionObserver {
         }) as IntersectionObserverEntry,
     );
     this.callback(entries, this);
+  }
+
+  /** Simulate the observer firing for every currently-observed element. */
+  trigger(isIntersecting: boolean) {
+    this.triggerFor(Array.from(this.elements), isIntersecting);
   }
 }
 
