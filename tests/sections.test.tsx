@@ -40,7 +40,7 @@ describe("Projects", () => {
     expect(document.querySelectorAll(".project")).toHaveLength(3);
     expect(document.querySelector(".project .todo")).not.toBeInTheDocument();
     expect(screen.getByText("Tabime — 悩みから旅先を見つけるAI")).toBeInTheDocument();
-    expect(screen.getByText("長期インターン — AI R&D / Web開発")).toBeInTheDocument();
+    expect(screen.getByText("長期インターン — 株式会社スパイクスタジオ")).toBeInTheDocument();
     expect(screen.getByText("福島復興知プロジェクト")).toBeInTheDocument();
     expect(screen.getByText(/県内2校・計8回/)).toBeInTheDocument();
     expect(document.querySelectorAll(".project .meta")).toHaveLength(0);
@@ -72,7 +72,7 @@ describe("Projects", () => {
     render(<Projects />);
 
     const internship = screen.getByRole("article", {
-      name: "長期インターン — AI R&D / Web開発",
+      name: "長期インターン — 株式会社スパイクスタジオ",
     });
     expect(internship.querySelectorAll(".project-detail")).toHaveLength(2);
     expect(internship).toHaveTextContent("履歴書解析AIエージェント");

@@ -2,7 +2,7 @@ import { render, screen } from "@testing-library/react";
 import { describe, it, expect } from "vitest";
 import About from "@/app/components/About";
 import Skills from "@/app/components/Skills";
-import { projects, socials } from "@/app/content";
+import { projects, socials, stack } from "@/app/content";
 
 describe("About", () => {
   it("renders info list, story and motto", () => {
@@ -45,10 +45,10 @@ describe("About", () => {
 });
 
 describe("Skills", () => {
-  it("renders 5 stack rows with pills", () => {
+  it("renders 4 stack rows with pills", () => {
     render(<Skills />);
     expect(document.getElementById("skills")).not.toBeNull();
-    expect(document.querySelectorAll(".stack-row")).toHaveLength(5);
+    expect(document.querySelectorAll(".stack-row")).toHaveLength(stack.length);
     expect(screen.getByText("PyTorch")).toBeInTheDocument();
     expect(screen.getByText("PostgreSQL")).toBeInTheDocument();
   });
