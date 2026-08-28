@@ -2,13 +2,29 @@ import { render, screen } from "@testing-library/react";
 import { describe, it, expect } from "vitest";
 import About from "@/app/components/About";
 import Skills from "@/app/components/Skills";
-import { projects, socials, stack } from "@/app/content";
+import { aboutParagraphs, projects, socials, stack } from "@/app/content";
 
 describe("About", () => {
-  it("renders info list, story and motto", () => {
+  it("presents the profile with a vertical portrait, identity, story and motto", () => {
     render(<About />);
+
     expect(document.getElementById("about")).not.toBeNull();
+    expect(screen.getByRole("heading", { name: "プロフィール" })).toBeInTheDocument();
+    const portrait = screen.getByRole("img", {
+      name: "夜の街並みを背景にした鈴木日向のポートレート",
+    });
+    expect(portrait).toHaveClass("about-portrait-image");
+    expect(portrait.closest("figure")).toHaveClass("about-portrait");
+    expect(screen.getByText("Hinata Suzuki")).toBeInTheDocument();
+    expect(screen.queryByText("ENGINEER × ENTERTAINMENT")).not.toBeInTheDocument();
     expect(document.querySelectorAll(".about-info li")).toHaveLength(4);
+    expect(screen.getByRole("link", { name: "yos570038@gmail.com" })).toHaveAttribute(
+      "href",
+      "mailto:yos570038@gmail.com",
+    );
+    aboutParagraphs.forEach((paragraph) =>
+      expect(screen.getByText(paragraph)).toBeInTheDocument(),
+    );
     expect(screen.getByText(/之を楽しむ者に如かず/)).toBeInTheDocument();
     expect(screen.getByText("「楽しむ者」")).toBeInTheDocument();
   });

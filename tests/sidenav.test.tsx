@@ -36,7 +36,7 @@ const expectedLabels = [
   "Skills",
   "Experience",
   "Projects",
-  "Life & Creative Practice",
+  "Projects Beyond My Work",
   "Contact",
 ];
 
@@ -152,7 +152,7 @@ describe("SideNav", () => {
     act(() => observer.triggerFor([sectionEl("beyond")], true));
     act(() => observer.triggerFor([sectionEl("beyond")], false));
 
-    expect(screen.getByRole("link", { name: "Life & Creative Practice" })).toHaveAttribute(
+    expect(screen.getByRole("link", { name: "Projects Beyond My Work" })).toHaveAttribute(
       "aria-current",
       "true",
     );

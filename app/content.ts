@@ -1,4 +1,4 @@
-export type InfoItem = { k: string; v: string };
+export type InfoItem = { k: string; v: string; href?: string };
 export type StackRow = { chip: string; cat: string; note?: string; pills: string[] };
 export type TimelineItem = { when: string; title: string; desc: string; todo?: string };
 export type ProjectDetail = { title: string; value: string };
@@ -13,6 +13,7 @@ export type LifeDetail = { label: string; value: string };
 export type Social = { label: string; href: string };
 export type BeyondItem = {
   phLabel: string;
+  imageSrc?: string;
   title: string;
   desc: string;
   meta?: string;
@@ -37,10 +38,11 @@ export const aboutInfo: InfoItem[] = [
   { k: "所属", v: "慶應義塾大学 環境情報学部" },
   { k: "研究", v: "古谷知之研究室 — NLP・感情分析" },
   { k: "趣味", v: "旅行・将棋" },
+  { k: "メール", v: "yos570038@gmail.com", href: "mailto:yos570038@gmail.com" },
 ];
 
 export const aboutParagraphs = [
-  "慶應義塾大学 環境情報学部(2023年9月入学)。古谷知之研究室にて自然言語処理における感情分析を研究。2024年8月、42Tokyo Piscineに合格し入学。現在は長期インターンでAIエージェントのR&DとWebアプリ開発に携わる。",
+  "慶應義塾大学 環境情報学部(2023年9月入学)。古谷知之研究室にて自然言語処理における感情分析を研究。2024年8月、42Tokyo Piscineに合格し入学。現在は長期インターンに従事し、AIエージェントのR&DとWebアプリ開発を担当。",
   "2ヶ月間シルクロードの一人旅行を行き、旅の経験をもとに、悩みから旅先を見つけるAI旅行サービス「Tabime」を開発、運営を手掛ける",
 ];
 
@@ -60,11 +62,12 @@ export const stack: StackRow[] = [
 ];
 
 export const timeline: TimelineItem[] = [
+  { when: "2023.08", title: "慶應義塾ニューヨーク学院 卒業", desc: "" },
   { when: "2023.09", title: "慶應義塾大学 環境情報学部 入学", desc: "専攻: コンピューターサイエンス" },
   { when: "2024.04-", title: "レディオ湘南 学生ラジオ番組", desc: "—台本/ナビゲーター/ミキサー番組全体の業務に携わる" },
   { when: "2024.08", title: "42Tokyo Piscine 合格・入学", desc: "4週間の選抜課程を経てエンジニア教育機関へ" },
   { when: "2025.07 –", title: "長期インターン | エンジニア・ITコンサルタント", desc: "AIエージェントR&D、Webアプリ開発(現在も継続中)" },
-  { when: "2025.08 –", title: "福島復興知事業", desc: "福島イノベーションコースト構想の「復興知」事業に採択。県内2校でAI技術に関する講義やワークショップを実施(現在も継続中)" },
+  { when: "2025.08 –", title: "福島復興知事業", desc: "福島イノベーション・コースト構想の「復興知」事業に採択。県内2校で生成AIの講義とワークショップを設計・実施(現在も継続中)" },
   { when: "2026.04 – 2026.06", title: "シルクロード一人旅", desc: "中国北京からエジプト・カイロまで、シルクロード横断の一人旅を実施" },
 ];
 
@@ -77,39 +80,40 @@ export const projects: Project[] = [
   },
   {
     title: "長期インターン — 株式会社スパイクスタジオ",
-    summary: "AIエージェントのR&DとWebアプリケーション開発に従事。要件整理から実装、評価・改善、ユーザーが触れる機能の開発まで経験しています。",
+    summary: "2025年7月から現在まで、AIエージェントのR&Dと、実際に運用されているWebサービスの開発に従事。要件整理から設計・実装、評価・改善まで、一連のプロセスを担当しています。",
     details: [
       {
-        title: "履歴書解析AIエージェント",
-        value: "社内ヒアリングをもとに抽出・評価項目を要件整理し、設計、実装、正解データ作成、精度評価・改善、個人情報のマスキングまで担当。",
+        title: "AIエージェントのR&D",
+        value: "社内ヒアリングを通じて、履歴書から抽出・評価する項目の要件を整理。エージェントの設計・実装から、正解データの作成、精度評価・改善、個人情報のマスキングまで一貫して担当しました。",
       },
       {
-        title: "Webアプリケーション",
-        value: "ユーザーアカウントページとお気に入り機能を、Reactの画面からNode.jsのサーバー処理、PostgreSQLへのデータ保存まで担当。",
+        title: "Webサービス開発",
+        value: "メンバーシップ登録やライブ配信の視聴、イベントの電子チケットなどを1つのアカウントで扱える、ファンがアーティストを応援するための会員制プラットフォーム。担当機能の要件を整理し、画面(React)からサーバー処理(Node.js)、データベース(PostgreSQL)まで一貫して実装しました。",
       },
     ],
   },
   {
     title: "福島復興知プロジェクト",
-    summary: "福島県内2校・計8回のAI講義を担当。「AI×街づくり」をテーマに、生成AIを地域の課題や魅力と結びつけるワークショップを企画・実施しました。",
+    summary: "福島イノベーション・コースト構想の「復興知」事業に採択され、県内2校で生成AIの講義とワークショップを継続的に担当。仕組みの解説から実際に手を動かす演習まで、高校生が自分でAIを試せる授業を設計・実施しています。",
   },
 ];
 
 export const beyond: BeyondItem[] = [
   {
     phLabel: "素材待ち:旅の写真",
+    imageSrc: "/images/beyond-travel.jpg",
     title: "海外一人旅 — 2ヶ月・8ヶ国",
     meta: "個人活動 / 2026.04 – 2026.06",
     desc: "中国からエジプトまで、2ヶ月で8ヶ国を一人旅。",
     featured: true,
     details: [
       {
-        label: "旅の理由",
-        value: "世界各地の街づくりを自分の肌で感じ、「人が笑顔になる場所とは何か」を確かめるため、シルクロードを一人で旅した。",
+        label: "旅の背景",
+        value: "クリエイターとして視野と表現の幅を広げるには、異なる文化や価値観を知識として学ぶだけでなく、自ら現地に身を置いて体験することが必要だと考えた。各地で育まれてきた文化や暮らし、その土地ならではの魅力に直接触れるため、シルクロードを一人で旅した。",
       },
       {
-        label: "旅の記録",
-        value: "地図と身振りを頼りに陸路で国境を越え、現地の人と関わりながら旅を記録。Instagram動画は1万いいねを超えた。",
+        label: "旅で得られたこと",
+        value: "言葉や習慣が異なる環境で、移動手段や宿、次の目的地を自分で決め続けた経験から、不確実な状況でも自ら考えて行動する力を得た。また、旅先での出会いや発見を発信した動画はInstagramで1万いいねを超えた。この経験は、悩みから旅先を提案するAI旅行サービス「Tabime」の開発にもつながっている。",
       },
     ],
     tags: ["Solo Travel", "8ヶ国", "Content Creation"],
@@ -118,6 +122,7 @@ export const beyond: BeyondItem[] = [
   },
   {
     phLabel: "素材待ち:ラジオ写真",
+    imageSrc: "/images/beyond-radio.jpg",
     title: "学生ラジオ番組 — レディオ湘南",
     meta: "福利厚生団体 音像工房 / 2023.09 – 現在",
     desc: "レディオ湘南の学生番組で、台本、ナビゲーター、ミキサーを経験。2年間マネージャーを務め、後輩育成と番組制作の仕組みづくりに携わった。",
@@ -125,6 +130,7 @@ export const beyond: BeyondItem[] = [
   },
   {
     phLabel: "素材待ち:ステージ写真",
+    imageSrc: "/images/beyond-comedy.jpg",
     title: "漫才ステージ",
     desc: "相方とネタをつくり、脚本から立ち姿まで考えて舞台へ。目の前の人を笑わせることに向き合う、最も直接的な表現活動。",
     tags: ["漫才", "脚本", "ステージ", "表現"],

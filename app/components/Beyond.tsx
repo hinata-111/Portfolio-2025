@@ -6,9 +6,9 @@ export default function Beyond() {
   return (
     <section id="beyond">
       <Reveal>
-        <SectionHead num="05" label="Life & Creative Practice" />
+        <SectionHead num="05" label="Projects Beyond My Work" />
       </Reveal>
-      <Reveal as="h2">プロジェクトの外で、続けてきたこと。</Reveal>
+      <Reveal as="h2">コードの外側</Reveal>
       <div className="beyond-grid">
         {beyond.map((b, i) => {
           const headingId = `beyond-title-${i}`;
@@ -21,7 +21,13 @@ export default function Beyond() {
               delay={(i % 4) as 0 | 1 | 2 | 3}
               aria-labelledby={headingId}
             >
-              <div className="ph mono">{b.phLabel}</div>
+              <div className="ph">
+                {b.imageSrc ? (
+                  <img src={b.imageSrc} alt={`${b.title}の写真`} loading={b.featured ? "eager" : "lazy"} />
+                ) : (
+                  <span className="mono">{b.phLabel}</span>
+                )}
+              </div>
               <div className="body">
                 <h3 id={headingId}>{b.title}</h3>
                 {b.meta && <div className="meta mono">{b.meta}</div>}

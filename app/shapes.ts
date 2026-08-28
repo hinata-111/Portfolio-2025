@@ -30,14 +30,16 @@ function buildStars(seed: number, count: number, sizeMin: number, sizeMax: numbe
   }));
 }
 
+// speed はページのスクロール量に対する倍率。1 を超えるぶんだけ背景が本文を追い越して流れる。
 export const starLayers = {
-  far: { speed: 1, stars: buildStars(21, 44, 0.7, 1.25, 0.26) },
-  mid: { speed: 2, stars: buildStars(42, 58, 1, 1.8, 0.38) },
-  near: { speed: 4, stars: buildStars(84, 72, 1.4, 2.5, 0.52) },
+  far: { speed: 1.3, stars: buildStars(21, 44, 0.7, 1.25, 0.26) },
+  mid: { speed: 1.7, stars: buildStars(42, 58, 1, 1.8, 0.38) },
+  near: { speed: 2.3, stars: buildStars(84, 72, 1.4, 2.5, 0.52) },
 } satisfies Record<"far" | "mid" | "near", StarLayer>;
 
 export type ConstellationPoint = { x: number; y: number };
 export const constellationLayout: ConstellationPoint[] = [
+  { x: 3, y: 42 },
   { x: 8, y: 70 },
   { x: 26, y: 30 },
   { x: 46, y: 65 },

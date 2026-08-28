@@ -9,10 +9,10 @@ describe("content", () => {
     expect(profile.catchBottom).toBe("心を動かす");
   });
   it("has expected collection sizes", () => {
-    expect(aboutInfo).toHaveLength(4);
+    expect(aboutInfo).toHaveLength(5);
     expect(aboutParagraphs).toHaveLength(2);
     expect(stack).toHaveLength(4);
-    expect(timeline).toHaveLength(6);
+    expect(timeline).toHaveLength(7);
     expect(projects).toHaveLength(3);
     expect(beyond).toHaveLength(3);
   });
@@ -49,10 +49,11 @@ describe("content", () => {
     expect(trip.title).toBe("海外一人旅 — 2ヶ月・8ヶ国");
     expect(trip.meta).toBe("個人活動 / 2026.04 – 2026.06");
     expect(trip.details).toEqual([
-      expect.objectContaining({ label: "旅の理由" }),
-      expect.objectContaining({ label: "旅の記録" }),
+      expect.objectContaining({ label: "旅の背景" }),
+      expect.objectContaining({ label: "旅で得られたこと" }),
     ]);
-    expect(trip.details?.map((detail) => detail.value).join(" ")).toContain("陸路で国境を越え");
+    expect(trip.details?.map((detail) => detail.value).join(" ")).toContain("クリエイターとして視野と表現の幅を広げる");
+    expect(trip.details?.map((detail) => detail.value).join(" ")).toContain("不確実な状況でも自ら考えて行動する力");
     expect(trip.details?.map((detail) => detail.value).join(" ")).toContain("1万いいね");
     expect(trip.href).toBe("https://tabime.pages.dev");
   });
@@ -75,21 +76,31 @@ describe("content", () => {
 
     expect(projects.filter((project) => project.title.includes("長期インターン"))).toHaveLength(1);
     expect(internship?.details).toHaveLength(2);
+    expect(internship?.summary).toContain("2025年7月から現在まで");
     expect(copy).not.toMatch(/記載予定|会社確認後/);
-    expect(copy).toContain("要件整理");
+    expect(internship?.details?.[0].title).toBe("AIエージェントのR&D");
+    expect(copy).toContain("要件を整理");
     expect(copy).toContain("精度評価・改善");
     expect(copy).toContain("個人情報のマスキング");
-    expect(copy).toContain("ユーザーアカウントページ");
-    expect(copy).toContain("お気に入り機能");
+    expect(copy).toContain("要件を整理");
+    expect(copy).toContain("一貫して実装");
     expect(copy).toContain("PostgreSQL");
+  });
+  it("includes graduation from Keio Academy of New York", () => {
+    expect(timeline[0]).toEqual({
+      when: "2023.08",
+      title: "慶應義塾ニューヨーク学院 卒業",
+      desc: "",
+    });
   });
   it("describes the Fukushima project with its verified scale and workshop design", () => {
     const fukushima = projects.find((project) => project.title === "福島復興知プロジェクト");
     const copy = fukushima?.summary ?? "";
 
-    expect(copy).toContain("県内2校・計8回");
-    expect(copy).toContain("AI×街づくり");
-    expect(copy).toContain("企画・実施");
+    expect(copy).toContain("県内2校");
+    expect(copy).toContain("生成AI");
+    expect(copy).toContain("設計・実施");
+    expect(copy).not.toContain("AI×街づくり");
     expect(timeline.some((item) => item.title === "福島復興知事業")).toBe(true);
   });
   it("keeps the student radio activity to a short factual introduction", () => {
@@ -111,5 +122,15 @@ describe("socials", () => {
     expect(socials.map((social) => social.label)).toEqual(["GitHub", "X"]);
     expect(socials[0].href).toBe("https://github.com/hinata-111");
     expect(socials[1].href).toBe("");
+  });
+});
+
+describe("about info", () => {
+  it("includes a working email address", () => {
+    expect(aboutInfo).toContainEqual({
+      k: "メール",
+      v: "yos570038@gmail.com",
+      href: "mailto:yos570038@gmail.com",
+    });
   });
 });
