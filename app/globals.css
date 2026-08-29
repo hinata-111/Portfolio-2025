@@ -1,6 +1,7 @@
 /* Design tokens & styles — ported from docs/design/portfolio-mockup-v7.html */
 /* ---- Palette A "Spotlight" — 開放レイアウト ---- */
 :root {
+  color-scheme: dark;
   --sun: #FFC53D;
   --sun-deep: #E8A013;
   --on-sun: #131B29;
@@ -17,52 +18,6 @@
   --glow-1: rgba(255,197,61,.16);
   --glow-2: rgba(84,110,180,.25);
 }
-@media (prefers-color-scheme: light) {
-  :root {
-    --on-sun: #131B29;
-    --hl-ink: #131B29;
-    --ink: #232D3F;
-    --ink-strong: #131B29;
-    --ground: #FAF8F2;
-    --surface: #FFFFFF;
-    --muted: #66707F;
-    --line: #E5E1D5;
-    --card-shadow: 0 1px 3px rgba(27,42,65,.05), 0 10px 28px rgba(27,42,65,.07);
-    --glow-1: rgba(255,197,61,.3);
-    --glow-2: rgba(120,140,200,.14);
-    }
-}
-:root[data-theme="dark"] {
-  --sun: #FFC53D;
-  --sun-deep: #E8A013;
-  --on-sun: #131B29;
-  --hl-ink: #FFF6DE;
-  --ink: #E8EAF0;
-  --ink-strong: #FFFFFF;
-  --ground: #0F1522;
-  --surface: #1A2333;
-  --muted: #93A0B4;
-  --line: #2B3750;
-  --card-shadow: 0 2px 6px rgba(0,0,0,.22), 0 14px 36px rgba(0,0,0,.24);
-  --glow-1: rgba(255,197,61,.16);
-  --glow-2: rgba(84,110,180,.25);
-}
-:root[data-theme="light"] {
-  --sun: #FFC53D;
-  --sun-deep: #E8A013;
-  --on-sun: #131B29;
-  --hl-ink: #131B29;
-  --ink: #232D3F;
-  --ink-strong: #131B29;
-  --ground: #FAF8F2;
-  --surface: #FFFFFF;
-  --muted: #66707F;
-  --line: #E5E1D5;
-  --card-shadow: 0 1px 3px rgba(27,42,65,.05), 0 10px 28px rgba(27,42,65,.07);
-  --glow-1: rgba(255,197,61,.3);
-  --glow-2: rgba(120,140,200,.14);
-}
-
 /* ---- タイプスケール ----
    9〜17px に15段階ぶんの刻みが密集していて、隣どうしの差(0.5px)が読めず
    見出しとの落差も相対的に埋もれていた。段数を畳んで1段ごとの差を明確にする。 */
@@ -1247,11 +1202,6 @@ h2 {
   filter: saturate(calc(1 + var(--scroll-velocity) * .9));
   transition: filter .5s ease-out;
 }
-/* ライトテーマでは暗色を混ぜると濁るので、寒色→暖色の淡い振り幅に置き換える */
-@media (prefers-color-scheme: light) {
-  .cosmic-background { --sky-deep: #8FA2C8; --sky-lift: #FFD98A; }
-}
-:root[data-theme="light"] .cosmic-background { --sky-deep: #8FA2C8; --sky-lift: #FFD98A; }
 .star-layer, .nebula-layer, .cosmic-boundary { position: absolute; inset: 0; pointer-events: none; }
 /* 星並びを2枚(=2画面分)積み、スクロール量×倍率を1枚ぶんでラップさせて流し続ける */
 .star-layer { z-index: 1; inset: 0 0 auto; height: 200vh; transform: translate3d(0, var(--star-shift, 0px), 0); will-change: transform; }

@@ -30,8 +30,15 @@ describe("cosmic depth-gate visual contract", () => {
     expect(block).toMatch(/background:\s*linear-gradient\(\s*180deg[\s\S]*var\(--sky-top\)[\s\S]*var\(--sky-bottom\)/);
     expect(block).toMatch(/--sky-top:\s*color-mix\([\s\S]*--scroll-progress/);
     expect(block).toMatch(/--sky-bottom:\s*color-mix\([\s\S]*--scroll-progress/);
-    // 明るい側の下地はライトテーマでも破綻しないよう差し替える
-    expect(css).toMatch(/prefers-color-scheme:\s*light\)\s*\{\s*\.cosmic-background/);
+  });
+  it("keeps the dark palette regardless of the device color scheme", () => {
+    const rootStart = css.indexOf(":root {");
+    const rootBlock = css.slice(rootStart, css.indexOf("\n}", rootStart) + 2);
+
+    expect(rootBlock).toMatch(/color-scheme:\s*dark/);
+    expect(css).not.toMatch(/prefers-color-scheme:\s*light/);
+    expect(css).not.toContain(':root[data-theme="light"]');
+    expect(css).not.toContain("--sky-deep: #8FA2C8");
   });
   it("re-saturates the background with scroll velocity", () => {
     expect(css).toMatch(/--scroll-velocity/);
