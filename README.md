@@ -8,6 +8,10 @@
 - 全ページ共通の宇宙背景演出 `CosmicBackground`(視差スクロール、reduced-motion 対応)
 - Vitest + React Testing Library
 
+## Pages
+- `/` — ポートフォリオ本体
+- `/connect` — 名前、所属、SNSへのリンクをまとめたプロフィールページ
+
 ## Development
 npm install / npm run dev / npm test / npm run build
 

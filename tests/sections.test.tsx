@@ -1,4 +1,4 @@
-import { render, screen } from "@testing-library/react";
+import { render, screen, within } from "@testing-library/react";
 import { describe, it, expect } from "vitest";
 import Experience from "@/app/components/Experience";
 import Projects from "@/app/components/Projects";
@@ -79,7 +79,8 @@ describe("Projects", () => {
     expect(internship).toHaveTextContent("2025年7月から現在まで");
     expect(internship).toHaveTextContent("AIエージェントのR&D");
     expect(internship).toHaveTextContent("Webサービス開発");
-    expect(internship).toHaveTextContent("精度評価・改善");
+    expect(internship).toHaveTextContent("技術検証");
+    expect(internship).toHaveTextContent("精度評価");
     expect(internship).toHaveTextContent("PostgreSQL");
   });
 
@@ -147,13 +148,17 @@ describe("Beyond", () => {
 });
 
 describe("Contact", () => {
-  it("makes the email a working mailto link", () => {
+  it("offers email as the only action", () => {
     render(<Contact />);
 
-    expect(screen.getByRole("link", { name: /Email/ })).toHaveAttribute(
+    const section = document.getElementById("contact");
+    expect(section).not.toBeNull();
+
+    const links = within(section!).getAllByRole("link");
+    expect(links).toHaveLength(1);
+    expect(within(section!).getByRole("link", { name: /Email/ })).toHaveAttribute(
       "href",
       `mailto:${contact.email}`,
     );
-    expect(screen.getByRole("link", { name: /GitHub/ })).toHaveAttribute("href", contact.github);
   });
 });

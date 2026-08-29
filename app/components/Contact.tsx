@@ -9,10 +9,7 @@ export default function Contact() {
         <SectionHead num="06" label="Contact" />
       </Reveal>
       <Reveal className="contact-row">
-        <a className="btn btn-primary" href={contact.github}>
-          GitHub <span className="arr">→</span>
-        </a>
-        <a className="btn btn-ghost" href={`mailto:${contact.email}`}>
+        <a className="btn btn-primary" href={`mailto:${contact.email}`}>
           Email <span className="arr">→</span>
         </a>
       </Reveal>

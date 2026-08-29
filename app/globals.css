@@ -1169,6 +1169,21 @@ h2 {
 @media (max-width: 560px) {
   .about-profile-main { grid-template-columns: 1fr; }
   .about-portrait { width: 150px; }
+  .project-details { gap: 0; }
+  .project-detail {
+    padding: 16px 0;
+    border-width: 1px 0 0;
+    border-radius: 0;
+    background: transparent;
+  }
+}
+
+@media (max-width: 620px) {
+  .timeline li { padding: 18px; }
+}
+
+@media (max-width: 480px) {
+  .contact-fab { display: none; }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -1191,8 +1206,8 @@ h2 {
   /* 上端に混ぜる暗色と下端に混ぜる明色。奥へ進む(スクロール)ほど上下差を開いて深さを出す */
   --sky-deep: #000814;
   --sky-lift: #5A80D6;
-  --sky-top: color-mix(in srgb, var(--sky-deep) calc(26% + var(--scroll-progress) * 26%), var(--ground));
-  --sky-bottom: color-mix(in srgb, var(--sky-lift) calc(20% + var(--scroll-progress) * 22%), var(--ground));
+  --sky-top: color-mix(in srgb, var(--sky-deep) calc(34% + var(--scroll-progress) * 28%), var(--ground));
+  --sky-bottom: color-mix(in srgb, var(--sky-lift) calc(28% + var(--scroll-progress) * 26%), var(--ground));
   position: fixed;
   inset: 0;
   z-index: 0;

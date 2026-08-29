@@ -11,6 +11,7 @@ export type Project = {
 };
 export type LifeDetail = { label: string; value: string };
 export type Social = { label: string; href: string };
+export type ConnectSocial = { label: "Instagram" | "X" | "GitHub"; href: string };
 export type BeyondItem = {
   phLabel: string;
   imageSrc?: string;
@@ -26,11 +27,23 @@ export type BeyondItem = {
 
 export const profile = {
   name: "鈴木日向",
+  nameLatin: "Hinata Suzuki",
   eyebrow: "Portfolio",
   catchTop: "笑顔",
   catchBottom: "心を動かす",
   roleLine: "ENGINEER × ENTERTAINMENT",
   affiliations: ["慶應義塾大学 環境情報学部"],
+};
+
+export const connectProfile = {
+  nameLatin: profile.nameLatin,
+  introduction:
+    "趣味について：ラジオをよく聞きます（10番組くらい）、HxHと涼宮ハルヒシリーズ、三島由紀夫が好きです",
+  socials: [
+    { label: "Instagram", href: "https://www.instagram.com/suzuki_1732/" },
+    { label: "X", href: "" },
+    { label: "GitHub", href: "https://github.com/hinata-111" },
+  ] satisfies ConnectSocial[],
 };
 
 export const aboutInfo: InfoItem[] = [
@@ -42,8 +55,8 @@ export const aboutInfo: InfoItem[] = [
 ];
 
 export const aboutParagraphs = [
-  "慶應義塾大学 環境情報学部(2023年9月入学)。古谷知之研究室にて自然言語処理における感情分析を研究。2024年8月、42Tokyo Piscineに合格し入学。現在は長期インターンに従事し、AIエージェントのR&DとWebアプリ開発を担当。",
-  "2ヶ月間シルクロードの一人旅行を行き、旅の経験をもとに、悩みから旅先を見つけるAI旅行サービス「Tabime」を開発、運営を手掛ける",
+  "2023年9月、慶應義塾大学環境情報学部に入学。古谷知之研究室で、自然言語処理における感情分析を研究しています。2024年8月には42Tokyo Piscineに合格し、エンジニアの勉強をスタート。現在は長期インターンで、AIエージェントのR&DとWebアプリ開発に取り組んでいます。",
+  "2か月間のシルクロード一人旅を経験。その体験をもとに、悩みから旅先を見つけるAI旅行サービス「Tabime」を開発・運営しています。",
 ];
 
 export const motto = {
@@ -84,11 +97,11 @@ export const projects: Project[] = [
     details: [
       {
         title: "AIエージェントのR&D",
-        value: "社内ヒアリングを通じて、履歴書から抽出・評価する項目の要件を整理。エージェントの設計・実装から、正解データの作成、精度評価・改善、個人情報のマスキングまで一貫して担当しました。",
+        value: "複数のAIエージェント開発に携わり、業務課題の整理から仕様検討・提案、設計・実装、技術検証まで担当。評価データの作成や精度評価、エラー分析、個人情報のマスキングを通じて、実用化に向けた改善にも取り組みました。",
       },
       {
         title: "Webサービス開発",
-        value: "メンバーシップ登録やライブ配信の視聴、イベントの電子チケットなどを1つのアカウントで扱える、ファンがアーティストを応援するための会員制プラットフォーム。担当機能の要件を整理し、画面(React)からサーバー処理(Node.js)、データベース(PostgreSQL)まで一貫して実装しました。",
+        value: "メンバーシップやライブ配信、電子チケットを扱う会員制ファンプラットフォームの開発に携わり、担当機能の要件整理から設計・実装、テストまで担当。React、Node.js、PostgreSQLを用いて、画面・サーバー・データベースを横断した開発に取り組みました。",
       },
     ],
   },
@@ -116,7 +129,7 @@ export const beyond: BeyondItem[] = [
         value: "言葉や習慣が異なる環境で、移動手段や宿、次の目的地を自分で決め続けた経験から、不確実な状況でも自ら考えて行動する力を得た。また、旅先での出会いや発見を発信した動画はInstagramで1万いいねを超えた。この経験は、悩みから旅先を提案するAI旅行サービス「Tabime」の開発にもつながっている。",
       },
     ],
-    tags: ["Solo Travel", "8ヶ国", "Content Creation"],
+    tags: ["Solo Travel", "Content Creation"],
     href: "https://tabime.pages.dev",
     linkLabel: "この旅から生まれたTabimeを見る",
   },

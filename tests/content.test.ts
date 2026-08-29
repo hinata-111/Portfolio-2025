@@ -16,6 +16,12 @@ describe("content", () => {
     expect(projects).toHaveLength(3);
     expect(beyond).toHaveLength(3);
   });
+  it("keeps the About profile compact and complete", () => {
+    expect(aboutParagraphs).toEqual([
+      "2023年9月、慶應義塾大学環境情報学部に入学。古谷知之研究室で、自然言語処理における感情分析を研究しています。2024年8月には42Tokyo Piscineに合格し、エンジニアの勉強をスタート。現在は長期インターンで、AIエージェントのR&DとWebアプリ開発に取り組んでいます。",
+      "2か月間のシルクロード一人旅を経験。その体験をもとに、悩みから旅先を見つけるAI旅行サービス「Tabime」を開発・運営しています。",
+    ]);
+  });
   it("adds the Tabime stack to the existing skill categories", () => {
     expect(stack.map((row) => row.cat)).toEqual([
       "Python / NLP",
@@ -55,6 +61,7 @@ describe("content", () => {
     expect(trip.details?.map((detail) => detail.value).join(" ")).toContain("クリエイターとして視野と表現の幅を広げる");
     expect(trip.details?.map((detail) => detail.value).join(" ")).toContain("不確実な状況でも自ら考えて行動する力");
     expect(trip.details?.map((detail) => detail.value).join(" ")).toContain("1万いいね");
+    expect(trip.tags).toEqual(["Solo Travel", "Content Creation"]);
     expect(trip.href).toBe("https://tabime.pages.dev");
   });
   it("moves the Fukushima workshop into projects and removes Discord Bot", () => {
@@ -78,13 +85,16 @@ describe("content", () => {
     expect(internship?.details).toHaveLength(2);
     expect(internship?.summary).toContain("2025年7月から現在まで");
     expect(copy).not.toMatch(/記載予定|会社確認後/);
-    expect(internship?.details?.[0].title).toBe("AIエージェントのR&D");
-    expect(copy).toContain("要件を整理");
-    expect(copy).toContain("精度評価・改善");
-    expect(copy).toContain("個人情報のマスキング");
-    expect(copy).toContain("要件を整理");
-    expect(copy).toContain("一貫して実装");
-    expect(copy).toContain("PostgreSQL");
+    expect(internship?.details).toEqual([
+      {
+        title: "AIエージェントのR&D",
+        value: "複数のAIエージェント開発に携わり、業務課題の整理から仕様検討・提案、設計・実装、技術検証まで担当。評価データの作成や精度評価、エラー分析、個人情報のマスキングを通じて、実用化に向けた改善にも取り組みました。",
+      },
+      {
+        title: "Webサービス開発",
+        value: "メンバーシップやライブ配信、電子チケットを扱う会員制ファンプラットフォームの開発に携わり、担当機能の要件整理から設計・実装、テストまで担当。React、Node.js、PostgreSQLを用いて、画面・サーバー・データベースを横断した開発に取り組みました。",
+      },
+    ]);
   });
   it("includes graduation from Keio Academy of New York", () => {
     expect(timeline[0]).toEqual({

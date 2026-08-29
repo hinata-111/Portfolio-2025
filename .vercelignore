@@ -1,0 +1,11 @@
+.claude/
+.codex/
+.env*
+.git/
+.next/
+.playwright-mcp/
+.superpowers/
+.vercel/
+coverage/
+node_modules/
+tests/

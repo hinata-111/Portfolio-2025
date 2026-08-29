@@ -30,6 +30,12 @@ describe("cosmic depth-gate visual contract", () => {
     expect(block).toMatch(/background:\s*linear-gradient\(\s*180deg[\s\S]*var\(--sky-top\)[\s\S]*var\(--sky-bottom\)/);
     expect(block).toMatch(/--sky-top:\s*color-mix\([\s\S]*--scroll-progress/);
     expect(block).toMatch(/--sky-bottom:\s*color-mix\([\s\S]*--scroll-progress/);
+    expect(block).toContain(
+      "--sky-top: color-mix(in srgb, var(--sky-deep) calc(34% + var(--scroll-progress) * 28%), var(--ground));",
+    );
+    expect(block).toContain(
+      "--sky-bottom: color-mix(in srgb, var(--sky-lift) calc(28% + var(--scroll-progress) * 26%), var(--ground));",
+    );
   });
   it("keeps the dark palette regardless of the device color scheme", () => {
     const rootStart = css.indexOf(":root {");
