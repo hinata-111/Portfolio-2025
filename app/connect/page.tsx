@@ -28,10 +28,11 @@ export default function ConnectPage() {
               alt={`${profile.name}のポートレート`}
             />
           </div>
-          <p className={styles.eyebrow}>CONNECT</p>
           <h1 id="connect-name">{profile.name}</h1>
           <p className={styles.nameLatin}>{connectProfile.nameLatin}</p>
           <p className={styles.affiliation}>{profile.affiliations[0]}</p>
+          <p className={styles.tagline}>{connectProfile.tagline}</p>
+          <p className={styles.roleLine}>{profile.roleLine}</p>
         </header>
 
         <ProfileDetails introduction={connectProfile.introduction} />

@@ -84,6 +84,15 @@ describe("Projects", () => {
     expect(internship).toHaveTextContent("PostgreSQL");
   });
 
+  it("links the Fukushima project to its official page", () => {
+    render(<Projects />);
+
+    expect(screen.getByRole("link", { name: "福島復興知事業の詳細を見る" })).toHaveAttribute(
+      "href",
+      "https://www.fipo.or.jp/education/43276",
+    );
+  });
+
   it("gives every project an anchor the About index can link to", () => {
     render(<Projects />);
 

@@ -67,15 +67,6 @@
   object-position: center 28%;
 }
 
-.eyebrow {
-  margin: 0 0 0.35rem;
-  color: #8a6500;
-  font-size: 0.7rem;
-  font-weight: 700;
-  line-height: 1.4;
-  letter-spacing: 0.18em;
-}
-
 .identity h1 {
   margin: 0;
   color: var(--connect-ink);
@@ -94,12 +85,31 @@
   letter-spacing: 0.025em;
 }
 
+.tagline {
+  margin: 0.42rem 0 0;
+  color: var(--connect-ink);
+  font-size: 0.94rem;
+  font-weight: 650;
+  line-height: 1.45;
+  letter-spacing: 0.01em;
+}
+
+.roleLine {
+  margin: 0.3rem 0 0;
+  color: var(--connect-muted);
+  font-size: 0.62rem;
+  font-weight: 650;
+  line-height: 1.4;
+  letter-spacing: 0.16em;
+}
+
 .affiliation {
-  margin: 0.95rem auto 0;
-  color: #3a3a3c;
-  font-size: 0.88rem;
-  font-weight: 560;
+  margin: 0.72rem auto 0;
+  color: var(--connect-muted);
+  font-size: 0.78rem;
+  font-weight: 520;
   line-height: 1.55;
+  letter-spacing: 0.025em;
 }
 
 .details {

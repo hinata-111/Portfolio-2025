@@ -113,6 +113,12 @@ describe("content", () => {
     expect(copy).not.toContain("AI×街づくり");
     expect(timeline.some((item) => item.title === "福島復興知事業")).toBe(true);
   });
+  it("links the Fukushima project to its official project page", () => {
+    const fukushima = projects.find((project) => project.title === "福島復興知プロジェクト");
+
+    expect(fukushima?.href).toBe("https://www.fipo.or.jp/education/43276");
+    expect(fukushima?.linkLabel).toBe("福島復興知事業の詳細を見る");
+  });
   it("keeps the student radio activity to a short factual introduction", () => {
     const radio = beyond.find((item) => item.title === "ラジオ番組運営 — レディオ湘南");
 

@@ -37,6 +37,7 @@ export const profile = {
 
 export const connectProfile = {
   nameLatin: profile.nameLatin,
+  tagline: "モノづくりが好きです",
   introduction:
     "趣味について：ラジオをよく聞きます（10番組くらい）、HxHと涼宮ハルヒシリーズ、三島由紀夫が好きです",
   socials: [
@@ -108,6 +109,8 @@ export const projects: Project[] = [
   {
     title: "福島復興知プロジェクト",
     summary: "福島イノベーション・コースト構想の「復興知」事業に採択され、県内2校で生成AIの講義とワークショップを継続的に担当。仕組みの解説から実際に手を動かす演習まで、高校生が自分でAIを試せる授業を設計・実施しています。",
+    href: "https://www.fipo.or.jp/education/43276",
+    linkLabel: "福島復興知事業の詳細を見る",
   },
 ];
 

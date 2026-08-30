@@ -9,7 +9,14 @@ describe("Connect page", () => {
 
     expect(screen.getByRole("heading", { level: 1, name: profile.name })).toBeInTheDocument();
     expect(screen.getByText(connectProfile.nameLatin)).toBeInTheDocument();
-    expect(screen.getByText(profile.affiliations[0])).toBeInTheDocument();
+    const tagline = screen.getByText("モノづくりが好きです");
+    const affiliation = screen.getByText(profile.affiliations[0]);
+    const roleLine = screen.getByText(profile.roleLine);
+    expect(tagline).toBeInTheDocument();
+    expect(affiliation).toBeInTheDocument();
+    expect(roleLine).toBeInTheDocument();
+    expect(affiliation.compareDocumentPosition(tagline) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
+    expect(tagline.compareDocumentPosition(roleLine) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
     expect(screen.getByRole("img", { name: `${profile.name}のポートレート` })).toBeInTheDocument();
   });
 
@@ -19,6 +26,7 @@ describe("Connect page", () => {
     const disclosure = screen.getByRole("button", { name: "詳しく…" });
     expect(disclosure).toHaveAttribute("aria-expanded", "false");
     expect(screen.getByText(connectProfile.introduction)).toBeInTheDocument();
+    expect(document.querySelectorAll("#connect-introduction br")).toHaveLength(1);
 
     fireEvent.click(disclosure);
     expect(screen.getByRole("button", { name: "閉じる" })).toHaveAttribute(
