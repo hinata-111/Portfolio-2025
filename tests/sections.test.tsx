@@ -106,7 +106,7 @@ describe("Beyond", () => {
       "src",
       "/images/beyond-travel.jpg",
     );
-    expect(screen.getByRole("img", { name: "学生ラジオ番組 — レディオ湘南の写真" })).toHaveAttribute(
+    expect(screen.getByRole("img", { name: "ラジオ番組運営 — レディオ湘南の写真" })).toHaveAttribute(
       "src",
       "/images/beyond-radio.jpg",
     );
@@ -139,7 +139,7 @@ describe("Beyond", () => {
     render(<Beyond />);
 
     const radio = screen.getByRole("article", {
-      name: "学生ラジオ番組 — レディオ湘南",
+      name: "ラジオ番組運営 — レディオ湘南",
     });
     const comedy = screen.getByRole("article", { name: "漫才ステージ" });
     expect(radio.querySelector(".life-details")).not.toBeInTheDocument();

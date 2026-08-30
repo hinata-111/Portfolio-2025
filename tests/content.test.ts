@@ -114,7 +114,7 @@ describe("content", () => {
     expect(timeline.some((item) => item.title === "福島復興知事業")).toBe(true);
   });
   it("keeps the student radio activity to a short factual introduction", () => {
-    const radio = beyond.find((item) => item.title === "学生ラジオ番組 — レディオ湘南");
+    const radio = beyond.find((item) => item.title === "ラジオ番組運営 — レディオ湘南");
 
     expect(radio?.meta).toBe("福利厚生団体 音像工房 / 2023.09 – 現在");
     expect(radio?.desc).toContain("台本、ナビゲーター、ミキサー");
