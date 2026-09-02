@@ -5,9 +5,6 @@ import styles from "./connect.module.css";
 
 export default function ProfileDetails({ introduction }: { introduction: string }) {
   const [isOpen, setIsOpen] = useState(false);
-  const breakIndex = introduction.indexOf("、");
-  const firstLine = breakIndex >= 0 ? introduction.slice(0, breakIndex + 1) : introduction;
-  const secondLine = breakIndex >= 0 ? introduction.slice(breakIndex + 1) : "";
 
   return (
     <section className={styles.details} aria-label="自己紹介">
@@ -23,9 +20,7 @@ export default function ProfileDetails({ introduction }: { introduction: string 
       <div className={styles.detailsReveal} data-open={isOpen} aria-hidden={!isOpen}>
         <div>
           <p id="connect-introduction" className={styles.introduction}>
-            {firstLine}
-            {secondLine ? <br aria-hidden="true" /> : null}
-            {secondLine}
+            {introduction}
           </p>
         </div>
       </div>

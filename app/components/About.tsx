@@ -91,10 +91,7 @@ export default function About() {
         </ul>
       </Reveal>
       <Reveal className="motto">
-        <blockquote className="serif">
-          {motto.quote.split("、")[0]}、<br />
-          {motto.quote.split("、")[1]}
-        </blockquote>
+        <blockquote className="serif">{motto.quote}</blockquote>
         <cite className="mono">{motto.cite}</cite>
         <p className="vow">
           {motto.vowBefore}

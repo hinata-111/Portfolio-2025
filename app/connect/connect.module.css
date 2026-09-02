@@ -184,6 +184,9 @@
   font-size: 0.78rem;
   line-height: 1.8;
   text-align: left;
+  line-break: strict;
+  overflow-wrap: break-word;
+  text-wrap: pretty;
 }
 
 .socials {

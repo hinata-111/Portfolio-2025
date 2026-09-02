@@ -26,7 +26,7 @@ describe("Connect page", () => {
     const disclosure = screen.getByRole("button", { name: "詳しく…" });
     expect(disclosure).toHaveAttribute("aria-expanded", "false");
     expect(screen.getByText(connectProfile.introduction)).toBeInTheDocument();
-    expect(document.querySelectorAll("#connect-introduction br")).toHaveLength(1);
+    expect(document.querySelectorAll("#connect-introduction br")).toHaveLength(0);
 
     fireEvent.click(disclosure);
     expect(screen.getByRole("button", { name: "閉じる" })).toHaveAttribute(

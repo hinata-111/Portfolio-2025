@@ -242,6 +242,9 @@ p.lede { max-width: 36em; margin: 0 auto 16px; }
   line-height: 2.1;
   color: var(--ink-strong);
   letter-spacing: .04em;
+  line-break: strict;
+  overflow-wrap: break-word;
+  text-wrap: balance;
 }
 .motto blockquote::before { content: "「"; color: var(--sun); }
 .motto blockquote::after  { content: "」"; color: var(--sun); }
