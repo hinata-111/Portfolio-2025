@@ -51,6 +51,8 @@ body {
   font-family: "Hiragino Kaku Gothic ProN", "Hiragino Sans", "Yu Gothic Medium", "Yu Gothic", "Noto Sans JP", sans-serif;
   line-height: 1.95;
   font-size: var(--fs-body);
+  line-break: strict;
+  overflow-wrap: break-word;
 }
 .serif { font-family: "Hiragino Mincho ProN", "Yu Mincho", "Noto Serif JP", serif; }
 .mono  { font-family: ui-monospace, "SF Mono", "Cascadia Code", Consolas, monospace; }
@@ -128,7 +130,7 @@ section { padding: var(--space-section) 0; position: relative; }
 .sec-num { font-size: var(--fs-meta); letter-spacing: .18em; color: var(--sun); font-weight: 600; }
 .sec-label { font-size: var(--fs-meta); letter-spacing: .28em; color: var(--muted); text-transform: uppercase; }
 h2 { font-size: var(--fs-section); margin: 0 0 var(--space-heading); font-weight: 700; color: var(--ink-strong); text-align: center; text-wrap: balance; }
-p.lede { max-width: 36em; margin: 0 auto 16px; }
+p.lede { max-width: 36em; margin: 0 auto 16px; text-wrap: pretty; }
 .center { text-align: center; }
 
 /* ---------- About: 縦長ポートレート+プロフィール ---------- */
@@ -187,7 +189,7 @@ p.lede { max-width: 36em; margin: 0 auto 16px; }
   padding-top: 26px;
   border-top: 1px solid var(--line);
 }
-.about-story p { margin: 0; font-size: var(--fs-body); line-height: 1.9; }
+.about-story p { margin: 0; font-size: var(--fs-body); line-height: 1.9; text-wrap: pretty; }
 .about-socials {
   list-style: none;
   display: flex;
