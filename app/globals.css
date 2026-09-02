@@ -51,6 +51,10 @@ body {
   font-family: "Hiragino Kaku Gothic ProN", "Hiragino Sans", "Yu Gothic Medium", "Yu Gothic", "Noto Sans JP", sans-serif;
   line-height: 1.95;
   font-size: var(--fs-body);
+  /* 日本語の折返しは全て継承でここに集約する。auto-phrase は文節単位で
+     改行位置を決めるので「10番組くら/い」のような語中改行を防ぐ(lang="ja" 必須)。
+     未対応ブラウザは無視するだけなので安全に上乗せできる。 */
+  word-break: auto-phrase;
   line-break: strict;
   overflow-wrap: break-word;
 }
@@ -101,6 +105,9 @@ body {
   margin: 0 auto 36px;
   text-wrap: balance; max-width: 16em;
   letter-spacing: .01em;
+  /* 文字が大きく1行の文字数が少ないので、body の auto-phrase(文節単位)だと
+     区切りが粗すぎて「心を」だけの行が出る。見出しは通常の折返しに戻す */
+  word-break: normal;
 }
 .hl { position: relative; padding: 0 .06em; color: var(--hl-ink); z-index: 0; }
 .hl::after {
@@ -244,8 +251,7 @@ p.lede { max-width: 36em; margin: 0 auto 16px; text-wrap: pretty; }
   line-height: 2.1;
   color: var(--ink-strong);
   letter-spacing: .04em;
-  line-break: strict;
-  overflow-wrap: break-word;
+  /* 短い引用なので balance。狭い幅で1行だけ極端に短い行が残るのを防ぐ */
   text-wrap: balance;
 }
 .motto blockquote::before { content: "「"; color: var(--sun); }
