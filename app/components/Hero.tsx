@@ -10,9 +10,12 @@ export default function Hero() {
       <div className="hero-inner">
         <div className="hero-eyebrow mono">{profile.eyebrow}</div>
         <h1 className="serif">
-          人を<span className="hl">{profile.catchTop}</span>にし、
-          <br />
-          <span className="hl">{profile.catchBottom}</span>ものを生み出す。
+          <span className="hero-line">
+            人を<span className="hl">{profile.catchTop}</span>にし、
+          </span>
+          <span className="hero-line">
+            <span className="hl">{profile.catchBottom}</span>ものを生み出す。
+          </span>
         </h1>
         <div className="role-line mono">{profile.roleLine}</div>
         <div className="hero-sub">

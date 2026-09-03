@@ -30,6 +30,40 @@ describe("日本語の折返し", () => {
     expect(rule("\\.hero h1")).toMatch(/word-break:\s*normal/);
   });
 
+  it("Hero見出しは<br>ではなくブロックで行を分ける", () => {
+    // h1 に <br> があると Chromium は text-wrap: balance を諦め、狭い幅で
+    // 「す。」だけの行が残る。行ごとにブロックにすれば balance が働く。
+    const hero = read("app/components/Hero.tsx");
+    expect(hero).not.toMatch(/<br/);
+    expect(hero.match(/hero-line/g)?.length).toBe(2);
+    expect(rule("\\.hero h1 \\.hero-line")).toMatch(/display:\s*block/);
+    // .hl は行ブロックごとに分かれたので、ずらしの基準も行側にある必要がある
+    expect(css).toMatch(/\.hero \.hero-line:nth-of-type\(1\) \.hl::after/);
+    expect(css).toMatch(/\.hero \.hero-line:nth-of-type\(2\) \.hl::after/);
+  });
+
+  it("実際に使える幅でカラム数が決まるようにする", () => {
+    // 2カラム固定だと featured カードの本文内でさらに half になり、
+    // 1カラム約90px(1行7文字)まで潰れていた
+    expect(rule("\\.life-details")).toMatch(/repeat\(auto-fit,\s*minmax\(/);
+    expect(css).not.toMatch(/\.life-details\s*\{[^}]*grid-template-columns:\s*1fr\s*;/s);
+  });
+
+  it("最小幅帯では見出しを1段落として語中改行を避ける", () => {
+    // 320px では 42px/19px のままだと1行の文字数が足りず、
+    // 「にし、」や「株式会社スパイクスタジ / オ」のように割れる
+    const narrow = css.match(/@media \(max-width: 360px\) \{\s*:root \{([^}]*)\}/s);
+    expect(narrow).not.toBeNull();
+    expect(narrow![1]).toMatch(/--fs-hero:/);
+    expect(narrow![1]).toMatch(/--fs-title:/);
+  });
+
+  it("iOS でも効く指定で強調句と短文を保護する", () => {
+    // text-wrap: pretty は iOS(〜18)で未対応。keep-all と balance は対応済み。
+    expect(rule("\\.motto \\.vow b")).toMatch(/word-break:\s*keep-all/);
+    expect(rule("\\.motto \\.vow")).toMatch(/text-wrap:\s*balance/);
+  });
+
   it("引用と本文に行送りの調整を入れている", () => {
     expect(rule("\\.motto blockquote")).toMatch(/text-wrap:\s*balance/);
     expect(rule("p\\.lede")).toMatch(/text-wrap:\s*pretty/);

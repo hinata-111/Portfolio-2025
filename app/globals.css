@@ -32,6 +32,15 @@
   --fs-section: clamp(31px, 3.6vw, 38px);  /* セクション見出し h2 */
   --fs-hero: clamp(42px, 6.6vw, 72px);     /* h1 */
 }
+/* 最小幅帯では1行に入る文字数が足りず、見出しが「にし、」「す。」や
+   「株式会社スパイクスタジ / オ」のように割れてしまう。この帯だけ1段落とす
+   (361px以上は現状維持)。 */
+@media (max-width: 360px) {
+  :root {
+    --fs-hero: 34px;
+    --fs-title: 18px;
+  }
+}
 
 /* ---- スペーシング ----
    セクション上下 140px = 間に 280px、720px の画面の4割が空白で埋まっていた。
@@ -109,6 +118,10 @@ body {
      区切りが粗すぎて「心を」だけの行が出る。見出しは通常の折返しに戻す */
   word-break: normal;
 }
+/* 1行ずつ独立したブロックにする。h1 に <br> を入れると Chromium は
+   text-wrap: balance を諦めてしまい、狭い幅で「す。」だけの行が残っていた。
+   ブロックに分ければ設計通りの2行構成を保ったまま、各行が個別に balance される。 */
+.hero h1 .hero-line { display: block; }
 .hl { position: relative; padding: 0 .06em; color: var(--hl-ink); z-index: 0; }
 .hl::after {
   content: "";
@@ -139,6 +152,21 @@ section { padding: var(--space-section) 0; position: relative; }
 h2 { font-size: var(--fs-section); margin: 0 0 var(--space-heading); font-weight: 700; color: var(--ink-strong); text-align: center; text-wrap: balance; }
 p.lede { max-width: 36em; margin: 0 auto 16px; text-wrap: pretty; }
 .center { text-align: center; }
+
+/* 短い見出し・ラベルは、行末に1〜2文字だけ取り残される(「… — レディオ / 湘南」)
+   のが目立つ。balance で行長を揃えて浮いた行を出さない。長い本文は
+   バランスを取ると逆に不自然なので pretty のまま。 */
+.beyond h3,
+.beyond .meta,
+.beyond-lead,
+.project h3,
+.about-project-title,
+.about-info .v,
+.timeline .what {
+  /* text-wrap はブロックに対して働くので、インラインの b/span ではなく
+     行を組む側の要素に指定する */
+  text-wrap: balance;
+}
 
 /* ---------- About: 縦長ポートレート+プロフィール ---------- */
 .about-profile { max-width: 720px; margin: 0 auto; text-align: left; }
@@ -257,8 +285,12 @@ p.lede { max-width: 36em; margin: 0 auto 16px; text-wrap: pretty; }
 .motto blockquote::before { content: "「"; color: var(--sun); }
 .motto blockquote::after  { content: "」"; color: var(--sun); }
 .motto cite { display: block; font-style: normal; font-size: var(--fs-meta); letter-spacing: .22em; color: var(--muted); margin-bottom: 26px; }
-.motto .vow { font-size: var(--fs-body); color: var(--ink); }
-.motto .vow b { color: var(--sun-deep); font-weight: 700; }
+/* pretty は iOS(〜18)で未対応のため、狭い幅で「つく / る。」が残っていた。
+   3行以内の短い文なので balance の方が全ブラウザで安定し、読点で区切られる。 */
+.motto .vow { font-size: var(--fs-body); color: var(--ink); text-wrap: balance; }
+/* 強調句が「「楽しむ / 者」」と割れると意味の塊が崩れる。keep-all で語中改行を
+   禁じつつ、body の overflow-wrap があるので入りきらない時だけは折り返す */
+.motto .vow b { color: var(--sun-deep); font-weight: 700; word-break: keep-all; }
 
 /* ---------- Skills: カテゴリ行+技術ピル ---------- */
 .stack { max-width: 680px; margin: 0 auto; }
@@ -424,7 +456,14 @@ p.lede { max-width: 36em; margin: 0 auto 16px; text-wrap: pretty; }
 .beyond--featured .body { padding: 28px 32px 30px; }
 .beyond--featured h3 { font-size: var(--fs-title-lg); }
 .beyond--featured .beyond-lead { color: var(--ink); font-size: var(--fs-body); }
-.life-details { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; margin-top: 20px; }
+/* 2カラム固定だと、featured カードの本文カラム内でさらに half になり
+   1カラム約90px(1行7文字)まで潰れていた。ビューポート幅ではなく実際に
+   使える幅で決まるよう .beyond-grid と同じ auto-fit + minmax にする。 */
+.life-details {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(210px, 100%), 1fr));
+  gap: 14px; margin-top: 20px;
+}
 .life-detail { padding-top: 13px; border-top: 1px solid var(--line); }
 .life-detail > span { color: var(--sun-deep); font-size: var(--fs-label); font-weight: 700; letter-spacing: .12em; }
 .life-detail p { margin-top: 7px; color: var(--muted); font-size: var(--fs-note); line-height: 1.75; }
@@ -433,7 +472,6 @@ p.lede { max-width: 36em; margin: 0 auto 16px; text-wrap: pretty; }
   .beyond--featured { grid-template-columns: 1fr; }
   .beyond--featured .ph { min-height: 0; aspect-ratio: 16/9; }
   .beyond--featured .body { padding: 22px 20px 24px; }
-  .life-details { grid-template-columns: 1fr; }
 }
 
 /* ---------- ボタン ---------- */
@@ -498,8 +536,10 @@ footer::before {
   @keyframes rise { from { opacity: 0; transform: translateY(18px); } to { opacity: 1; transform: none; } }
 
   .hl::after { animation: sweep .6s cubic-bezier(.6,.05,.2,1) both; }
-  .hero .hl:nth-of-type(1)::after { animation-delay: 1.25s; }
-  .hero .hl:nth-of-type(2)::after { animation-delay: 1.5s; }
+  /* .hl は行ごとの .hero-line に分かれたため、各親の中では常に1番目になる。
+     ずらしの基準を行ブロック側に移す。 */
+  .hero .hero-line:nth-of-type(1) .hl::after { animation-delay: 1.25s; }
+  .hero .hero-line:nth-of-type(2) .hl::after { animation-delay: 1.5s; }
   @keyframes sweep { from { transform: scaleX(0); } to { transform: scaleX(1); } }
 
   .glow-a { animation: drift-a 14s ease-in-out infinite alternate; }
