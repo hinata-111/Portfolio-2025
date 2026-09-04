@@ -10,7 +10,7 @@ export default function Beyond() {
         <SectionHead num="05" label="Projects Beyond My Work" />
       </Reveal>
       <Reveal as="h2">コードの外側</Reveal>
-      <div className="beyond-grid">
+      <div className="beyond-essays">
         {beyond.map((b, i) => {
           const headingId = `beyond-title-${i}`;
 
@@ -18,18 +18,18 @@ export default function Beyond() {
             <Reveal
               as="article"
               key={b.title}
-              className={`beyond${b.featured ? " beyond--featured" : ""}`}
+              className={`essay${b.featured ? " essay-feature" : ""}${i === 1 ? " essay--radio" : ""}${i === 2 ? " essay--comedy" : ""}`}
               delay={(i % 4) as 0 | 1 | 2 | 3}
               aria-labelledby={headingId}
             >
-              <div className="ph">
+              <div className="essay-image">
                 {b.imageSrc ? (
                   <img src={b.imageSrc} alt={`${b.title}の写真`} loading={b.featured ? "eager" : "lazy"} />
                 ) : (
                   <span className="mono">{b.phLabel}</span>
                 )}
               </div>
-              <div className="body">
+              <div className="essay-copy">
                 <h3 id={headingId}>{b.title}</h3>
                 {b.meta && <div className="meta mono">{b.meta}</div>}
                 <p className="beyond-lead">

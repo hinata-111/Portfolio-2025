@@ -155,6 +155,7 @@
 }
 
 .socials a:focus-visible,
+.mailLink:focus-visible,
 .portfolioLink:focus-visible {
   outline: 3px solid rgba(255, 197, 61, 0.72);
   outline-offset: 3px;
@@ -264,6 +265,50 @@
   letter-spacing: 0.04em;
 }
 
+.mailLink {
+  min-height: 3.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  margin-top: 0.65rem;
+  padding: 0.7rem 1.05rem;
+  border: 1px solid rgba(29, 29, 31, 0.08);
+  border-radius: 1.1rem;
+  color: inherit;
+  background: rgba(255, 255, 255, 0.62);
+  box-shadow: 0 0.3rem 1rem rgba(43, 53, 72, 0.045);
+  font-size: 0.82rem;
+  font-weight: 620;
+  line-height: 1.35;
+  text-decoration: none;
+  word-break: break-all;
+  transition: background-color 180ms ease, transform 100ms ease-out;
+}
+
+.mailLink:hover {
+  background: rgba(255, 255, 255, 0.96);
+}
+
+.mailLink:active {
+  transform: scale(0.985);
+}
+
+.mailLink small {
+  display: block;
+  margin-bottom: 0.12rem;
+  color: var(--connect-muted);
+  font-size: 0.58rem;
+  font-weight: 780;
+  letter-spacing: 0.13em;
+}
+
+.mailIcon {
+  flex: 0 0 auto;
+  width: 1.35rem;
+  height: 1.35rem;
+  color: #1d1d1f;
+}
+
 .portfolioLink {
   min-height: 4.25rem;
   display: flex;
@@ -347,6 +392,7 @@
   .detailsButton,
   .detailsReveal,
   .socials a,
+  .mailLink,
   .portfolioLink {
     transition-duration: 0.01ms;
   }
@@ -362,7 +408,8 @@
 
 @media (prefers-contrast: more) {
   .card,
-  .socials li {
+  .socials li,
+  .mailLink {
     border-color: rgba(29, 29, 31, 0.52);
   }
 

@@ -48,10 +48,18 @@ describe("Connect page", () => {
       "href",
       "https://www.instagram.com/suzuki_1732/",
     );
-    expect(within(socialNav).getByText("X").closest("li")).toHaveAttribute(
-      "aria-disabled",
-      "true",
+    expect(within(socialNav).getByRole("link", { name: "Xを開く" })).toHaveAttribute(
+      "href",
+      "https://x.com/Strange_sfc23_5",
     );
+  });
+
+  it("offers a direct mail contact", () => {
+    render(<ConnectPage />);
+
+    const mail = screen.getByRole("link", { name: "メールを送る" });
+    expect(mail).toHaveAttribute("href", "mailto:" + connectProfile.email);
+    expect(mail).toHaveTextContent(connectProfile.email);
   });
 
   it("offers a clear way back to the full portfolio", () => {

@@ -59,7 +59,9 @@ describe("content", () => {
       expect.objectContaining({ label: "旅で得られたこと" }),
     ]);
     expect(trip.details?.map((detail) => detail.value).join(" ")).toContain("クリエイターとして視野と表現の幅を広げる");
-    expect(trip.details?.map((detail) => detail.value).join(" ")).toContain("不確実な状況でも自ら考えて行動する力");
+    expect(trip.details?.map((detail) => detail.value).join(" ")).toContain(
+      "自分で目的を定め、そこへ向かう道を切り開いていく面白さを知った",
+    );
     expect(trip.details?.map((detail) => detail.value).join(" ")).toContain("1万いいね");
     expect(trip.tags).toEqual(["Solo Travel", "Content Creation"]);
     expect(trip.href).toBe("https://tabime.pages.dev");
@@ -125,6 +127,7 @@ describe("content", () => {
     expect(radio?.meta).toBe("福利厚生団体 音像工房 / 2023.09 – 現在");
     expect(radio?.desc).toContain("台本、ナビゲーター、ミキサー");
     expect(radio?.desc).toContain("後輩育成と番組制作の仕組みづくり");
+    expect(radio?.desc).not.toContain("2年間");
     expect(radio?.details).toBeUndefined();
   });
   it("has the Confucius motto", () => {

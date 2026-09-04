@@ -35,13 +35,28 @@ describe("section spacing", () => {
   });
 
   it("routes section and heading spacing through the tokens", () => {
-    expect(css).toMatch(/section\s*\{[^}]*padding:\s*var\(--space-section\)\s+0/s);
-    expect(css).toMatch(/\bh2\s*\{[^}]*margin:\s*0 0 var\(--space-heading\)/s);
+    expect(css).toMatch(/section\s*\{[^}]*padding:\s*var\(--space-section\)\s+0/);
+    expect(css).toMatch(/\bh2\s*\{[^}]*margin:\s*0 0 var\(--space-heading\)/);
   });
 
   it("lets every section use the shared rule instead of its own padding", () => {
     // About だけインライン style で独自 padding を持っていて、間隔が揃わなかった
     expect(read("app/components/About.tsx")).not.toMatch(/padding:\s*["']/);
-    expect(css).not.toMatch(/@media[^{]*\{[^}]*\bsection\s*\{\s*padding:\s*\d/s);
+    expect(css).not.toMatch(/@media[^{]*\{[^}]*\bsection\s*\{\s*padding:\s*\d/);
+  });
+});
+
+describe("About story reading flow", () => {
+  it("keeps the profile story in one readable column", () => {
+    const storyRule = css.match(/\.about-story\s*\{([^}]*)\}/)?.[1] ?? "";
+
+    expect(storyRule).not.toMatch(/\bcolumns?\s*:/);
+    expect(storyRule).toMatch(/max-width:\s*760px/);
+  });
+
+  it("marks the journey-to-product paragraph as the turning point", () => {
+    expect(css).toMatch(
+      /\.about-story p \+ p\s*\{[^}]*border-left:\s*2px solid var\(--sun\)/,
+    );
   });
 });

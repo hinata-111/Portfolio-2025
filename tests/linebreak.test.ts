@@ -52,7 +52,7 @@ describe("日本語の折返し", () => {
   it("最小幅帯では見出しを1段落として語中改行を避ける", () => {
     // 320px では 42px/19px のままだと1行の文字数が足りず、
     // 「にし、」や「株式会社スパイクスタジ / オ」のように割れる
-    const narrow = css.match(/@media \(max-width: 360px\) \{\s*:root \{([^}]*)\}/s);
+    const narrow = css.match(/@media \(max-width: 380px\) \{\s*:root \{([^}]*)\}/s);
     expect(narrow).not.toBeNull();
     expect(narrow![1]).toMatch(/--fs-hero:/);
     expect(narrow![1]).toMatch(/--fs-title:/);
@@ -82,7 +82,8 @@ describe("日本語の折返し", () => {
 
   it("引用と本文に行送りの調整を入れている", () => {
     expect(rule("\\.motto blockquote")).toMatch(/text-wrap:\s*balance/);
-    expect(rule("p\\.lede")).toMatch(/text-wrap:\s*pretty/);
+    expect(rule("\\.hero-intro")).toMatch(/text-wrap:\s*pretty/);
+    expect(rule("\\.about-story p")).toMatch(/text-wrap:\s*pretty/);
     expect(read("app/connect/connect.module.css")).toMatch(
       /\.introduction\s*\{[^}]*text-wrap:\s*pretty/s,
     );

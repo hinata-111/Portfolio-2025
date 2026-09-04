@@ -63,3 +63,23 @@ export function SocialIcon({ label, className }: { label: string; className?: st
   const Icon = socialIcons[label];
   return Icon ? <Icon className={className} /> : null;
 }
+
+export function MailIcon({ className }: IconProps) {
+  return (
+    <svg
+      className={className}
+      viewBox="0 0 24 24"
+      width="24"
+      height="24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.8"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true"
+    >
+      <rect x="2.5" y="4.5" width="19" height="15" rx="3" />
+      <path d="m3.5 7.5 7.4 5.3a2 2 0 0 0 2.2 0l7.4-5.3" />
+    </svg>
+  );
+}

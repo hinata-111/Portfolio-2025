@@ -2,41 +2,30 @@ import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
 import { describe, expect, it } from "vitest";
 const css = readFileSync(resolve(process.cwd(), "app/globals.css"), "utf8");
-describe("cosmic depth-gate visual contract", () => {
-  it("defines three depth layers, nebula, boundary, phases, and motion variables", () => {
-    // 深度ごとの速度は data-speed で JS が持つので、CSS 側に深度別の規則はもう要らない
-    for (const selector of [".cosmic-background", ".star-layer", ".star-tile", ".star-dot", ".nebula-layer", ".cosmic-boundary"]) expect(css).toContain(selector);
-    expect(css).toMatch(/--scroll-progress/); expect(css).toMatch(/--gate-approach/); expect(css).toMatch(/--gate-pass/); expect(css).toMatch(/--post-gate/);
-    expect(css).toMatch(/\.cosmic-boundary[^}]*transform/s); expect(css).toMatch(/prefers-reduced-motion:\s*reduce/);
-  });
-  it("drives the starfield from a wrapping shift over two stacked tiles", () => {
-    // JS が --star-shift に「スクロール量 × 倍率」を 1タイル分でラップした値を入れる。
-    // タイルを2枚重ねてあるので、1枚ぶん流れきった時点で継ぎ目なく元へ戻る。
-    expect(css).toMatch(/\.star-layer\s*\{[^}]*transform:\s*translate3d\(0,\s*var\(--star-shift[^}]*\}/s);
-    expect(css).toMatch(/\.star-layer\s*\{[^}]*height:\s*200vh/s);
-    expect(css).toMatch(/\.star-tile\s*\{[^}]*height:\s*50%/s);
-    expect(css).not.toContain("--travel");
-  });
-  it("contains responsive and retired-selector contracts", () => {
-    expect(css).toMatch(/@media\s*\(max-width:\s*720px\)[\s\S]*\.cosmic-boundary/); expect(css).toMatch(/@media\s*\(prefers-reduced-motion:\s*reduce\)[\s\S]*\.cosmic-boundary/);
-    for (const selector of [".cosmic-scenes", ".cosmic-scene", ".cosmic-shape", ".cosmic-motif", ".orbit-ring", ".shooting-star", ".cosmic-grid", ".checkerboard", ".cosmic-lens", ".cosmic-ribbon", ".cosmic-arc"]) expect(css).not.toContain(selector);
-    expect(css).not.toContain("shooting-fall");
-    for (const token of ["--shape-pink", "--shape-teal", "--shape-yellow", "--shape-navy", "--cosmic-cyan", "--cosmic-pink"]) expect(css).not.toContain(token);
-  });
-  it("paints a visible top-to-bottom brightness gradient that deepens with scroll", () => {
+describe("cosmic editorial background contract", () => {
+  it("uses the selected sample's two restrained glows and dark page gradient", () => {
     const start = css.indexOf(".cosmic-background {");
     const block = css.slice(start, css.indexOf("\n}", start) + 2);
-    // 上端(暗)→中間(素)→下端(明) の縦グラデ。スクロール0でも平坦にならない。
-    expect(block).toMatch(/background:\s*linear-gradient\(\s*180deg[\s\S]*var\(--sky-top\)[\s\S]*var\(--sky-bottom\)/);
-    expect(block).toMatch(/--sky-top:\s*color-mix\([\s\S]*--scroll-progress/);
-    expect(block).toMatch(/--sky-bottom:\s*color-mix\([\s\S]*--scroll-progress/);
-    expect(block).toContain(
-      "--sky-top: color-mix(in srgb, var(--sky-deep) calc(34% + var(--scroll-progress) * 28%), var(--ground));",
-    );
-    expect(block).toContain(
-      "--sky-bottom: color-mix(in srgb, var(--sky-lift) calc(28% + var(--scroll-progress) * 26%), var(--ground));",
-    );
+
+    expect(block).toContain("radial-gradient(circle at 82% 5%, rgba(94,112,255,.27), transparent 18%)");
+    expect(block).toContain("radial-gradient(circle at 12% 45%, rgba(67,91,180,.18), transparent 16%)");
+    expect(block).toContain("linear-gradient(180deg, var(--night-2), var(--night) 32%, #0b1026 70%, #11182f)");
   });
+
+  it("uses a sparse static star texture like the selected sample", () => {
+    expect(css).toMatch(/\.cosmic-background::before\s*\{[^}]*opacity:\s*\.34/);
+    expect(css).toMatch(/\.cosmic-background::before\s*\{[^}]*background-size:\s*100px 100px,\s*137px 137px,\s*169px 169px,\s*121px 121px/);
+  });
+
+  it("does not retain the previous moving depth gate background", () => {
+    for (const selector of [".star-layer", ".star-tile", ".star-dot", ".nebula-layer", ".cosmic-boundary"]) {
+      expect(css).not.toContain(selector);
+    }
+    for (const token of ["--scroll-progress", "--gate-approach", "--gate-pass", "--post-gate", "--scroll-velocity"]) {
+      expect(css).not.toContain(token);
+    }
+  });
+
   it("keeps the dark palette regardless of the device color scheme", () => {
     const rootStart = css.indexOf(":root {");
     const rootBlock = css.slice(rootStart, css.indexOf("\n}", rootStart) + 2);
@@ -44,38 +33,44 @@ describe("cosmic depth-gate visual contract", () => {
     expect(rootBlock).toMatch(/color-scheme:\s*dark/);
     expect(css).not.toMatch(/prefers-color-scheme:\s*light/);
     expect(css).not.toContain(':root[data-theme="light"]');
-    expect(css).not.toContain("--sky-deep: #8FA2C8");
-  });
-  it("re-saturates the background with scroll velocity", () => {
-    expect(css).toMatch(/--scroll-velocity/);
-    expect(css).toMatch(/\.cosmic-background[^}]*filter:\s*saturate\([^)]*--scroll-velocity[^}]*\}/s);
   });
 });
 
-describe("side nav layout contract", () => {
-  it("reserves the nav's footprint so the content column can never sit under it", () => {
-    // 本文の列幅は「画面幅 - ガター2つ分」を上限にする。左右対称に引くので中央寄せは崩れない。
-    expect(css).toMatch(/--side-nav-gutter/);
-    expect(css).toMatch(/\.wrap[^}]*max-width:\s*min\(\s*1024px\s*,\s*calc\(\s*100vw\s*-\s*var\(--side-nav-gutter\)\s*\*\s*2\s*\)\s*\)/s);
+describe("bottom chapter navigation contract", () => {
+  it("uses four fixed, accessible chapter buttons without a progress rail", () => {
+    expect(css).toMatch(/\.chapter-nav\s*\{[^}]*position:\s*fixed/);
+    expect(css).toMatch(/\.chapter-nav a\s*\{[^}]*min-height:\s*44px/);
+    expect(css).not.toContain("chapter-nav-progress");
   });
 
-  it("switches between full rail, compact rail, and drawer by width and hover capability", () => {
-    expect(css).toMatch(/@media\s*\(min-width:\s*1240px\)/);
-    expect(css).toMatch(/@media[^{]*max-width:\s*1239px[^{]*hover:\s*hover/);
-    expect(css).toMatch(/@media[^{]*max-width:\s*1239px[^{]*hover:\s*none/);
+  it("does not retain the previous side rail or fixed Contact control", () => {
+    expect(css).not.toContain(".side-nav");
+    expect(css).not.toContain(".contact-fab");
   });
 
-  it("disables the added nav motion under reduced motion", () => {
-    expect(css).toMatch(/@media\s*\(prefers-reduced-motion:\s*reduce\)[\s\S]*\.side-nav/);
+  it("marks the current chapter with the yellow accent", () => {
+    expect(css).toMatch(/\.chapter-nav a\.current\s*\{[^}]*color:\s*var\(--sun\)/);
+    expect(css).toMatch(/:has\(#projects:target\)[^{]*\.chapter-nav a\[href="#projects"\][^{]*\{[^}]*color:\s*var\(--sun\)/);
+  });
+});
+
+describe("cosmic editorial section contracts", () => {
+  it("keeps each highlighted Hero phrase on one marker box at narrow widths", () => {
+    expect(css).toMatch(/\.hl\s*\{[^}]*display:\s*inline-block/);
   });
 
-  it("slides the drawer with transform alone", () => {
-    // transform と translate プロパティを混ぜると、ビルド時の CSS 最適化が
-    // 閉状態だけを transform に畳み、開状態の translate が打ち消せなくなる。
-    // 実際にドロワーが画面外に貼りついたので、混在を禁止する。
-    const drawer = css.slice(css.indexOf("max-width: 1239px) and (hover: none)"));
-    expect(drawer).toMatch(/\.side-nav\s*\{[^}]*transform:\s*translateX\(-100%\)/s);
-    expect(drawer).toMatch(/\.side-nav\[data-open="true"\]\s*\{[^}]*transform:\s*none/s);
-    expect(drawer).not.toMatch(/^\s*translate:/m);
+  it("uses thin-rule editorial containers rather than project cards or constellation history", () => {
+    expect(css).toContain(".project-ledger");
+    expect(css).toContain(".project-ledger-entry");
+    expect(css).toContain(".essay-feature");
+    expect(css).not.toContain(".constellation-map");
+    expect(css).not.toContain(".const-star");
+    expect(css).not.toContain(".project--featured");
+  });
+
+  it("retains focus-visible and reduced-motion support for the editorial interactions", () => {
+    expect(css).toMatch(/\.project-ledger a:focus-visible/);
+    expect(css).toMatch(/\.essay a:focus-visible/);
+    expect(css).toMatch(/@media\s*\(prefers-reduced-motion:\s*reduce\)/);
   });
 });

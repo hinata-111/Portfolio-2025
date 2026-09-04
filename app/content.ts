@@ -40,9 +40,10 @@ export const connectProfile = {
   tagline: "モノづくりが好きです",
   introduction:
     "趣味について：ラジオをよく聞きます（10番組くらい）、HxHと涼宮ハルヒシリーズ、三島由紀夫が好きです",
+  email: "yos570038@gmail.com",
   socials: [
     { label: "Instagram", href: "https://www.instagram.com/suzuki_1732/" },
-    { label: "X", href: "" },
+    { label: "X", href: "https://x.com/Strange_sfc23_5" },
     { label: "GitHub", href: "https://github.com/hinata-111" },
   ] satisfies ConnectSocial[],
 };
@@ -129,7 +130,7 @@ export const beyond: BeyondItem[] = [
       },
       {
         label: "旅で得られたこと",
-        value: "言葉や習慣が異なる環境で、移動手段や宿、次の目的地を自分で決め続けた経験から、不確実な状況でも自ら考えて行動する力を得た。また、旅先での出会いや発見を発信した動画はInstagramで1万いいねを超えた。この経験は、悩みから旅先を提案するAI旅行サービス「Tabime」の開発にもつながっている。",
+        value: "言葉や習慣が異なる環境で、移動手段や宿、次の目的地を決め続けた経験から、自分で目的を定め、そこへ向かう道を切り開いていく面白さを知った。また、旅先での出会いや発見を発信した動画はInstagramで1万いいねを超えた。この経験は、悩みから旅先を提案するAI旅行サービス「Tabime」の開発にもつながっている。",
       },
     ],
     tags: ["Solo Travel", "Content Creation"],
@@ -141,7 +142,7 @@ export const beyond: BeyondItem[] = [
     imageSrc: "/images/beyond-radio.jpg",
     title: "ラジオ番組運営 — レディオ湘南",
     meta: "福利厚生団体 音像工房 / 2023.09 – 現在",
-    desc: "レディオ湘南の学生番組で、台本、ナビゲーター、ミキサーを経験。2年間マネージャーを務め、後輩育成と番組制作の仕組みづくりに携わった。",
+    desc: "レディオ湘南の学生番組で、台本、ナビゲーター、ミキサーを経験。マネージャーを務め、後輩育成と番組制作の仕組みづくりに携わった。",
     tags: ["ラジオ", "番組制作", "マネジメント", "育成", "仕組みづくり"],
   },
   {

@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
-import { SocialIcon } from "@/app/components/icons";
+import { MailIcon, SocialIcon } from "@/app/components/icons";
 import { connectProfile, profile } from "@/app/content";
 import Phrased from "@/app/components/Phrased";
 import ProfileDetails from "./ProfileDetails";
@@ -67,6 +67,18 @@ export default function ConnectPage() {
             ))}
           </ul>
         </nav>
+
+        <a
+          className={styles.mailLink}
+          href={`mailto:${connectProfile.email}`}
+          aria-label="メールを送る"
+        >
+          <MailIcon className={styles.mailIcon} />
+          <span>
+            <small>EMAIL</small>
+            {connectProfile.email}
+          </span>
+        </a>
 
         <Link className={styles.portfolioLink} href="/" aria-label="Portfolioを見る">
           <span>

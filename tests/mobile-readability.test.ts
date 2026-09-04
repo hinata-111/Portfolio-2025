@@ -7,21 +7,25 @@ const globalCss = read("app/globals.css");
 const connectCss = read("app/connect/connect.module.css");
 
 describe("mobile readability", () => {
-  it("removes the duplicate fixed Contact control from narrow screens", () => {
+  it("keeps section headings and profile copy left aligned on small screens", () => {
+    const mobile = globalCss.slice(globalCss.indexOf("@media (max-width: 720px)"));
+
+    expect(mobile).toMatch(/\.sec-head,\s*h2\s*\{[^}]*text-align:\s*left[^}]*justify-content:\s*flex-start/);
+    expect(mobile).toMatch(/\.about-identity,\s*\.about-socials\s*\{[^}]*text-align:\s*left[^}]*justify-content:\s*flex-start/);
+  });
+
+  it("keeps the mobile timeline in three readable columns without horizontal overflow", () => {
     expect(globalCss).toMatch(
-      /@media\s*\(max-width:\s*480px\)[\s\S]*?\.contact-fab\s*\{[^}]*display:\s*none/,
+      /@media\s*\(max-width:\s*620px\)[\s\S]*?\.timeline li\s*\{[^}]*grid-template-columns:\s*minmax\(0,\s*72px\)\s+20px\s+minmax\(0,\s*1fr\)/,
     );
   });
 
-  it("gives mobile timeline entries balanced inner spacing", () => {
+  it("stacks the Project Ledger index above its entries on small screens", () => {
     expect(globalCss).toMatch(
-      /@media\s*\(max-width:\s*620px\)[\s\S]*?\.timeline li\s*\{[^}]*padding:\s*18px;/,
+      /@media\s*\(max-width:\s*720px\)[\s\S]*?\.project-ledger\s*\{[^}]*grid-template-columns:\s*1fr/,
     );
-  });
-
-  it("removes the card-within-card squeeze from project details", () => {
     expect(globalCss).toMatch(
-      /@media\s*\(max-width:\s*560px\)[\s\S]*?\.project-detail\s*\{[^}]*padding:\s*16px 0[^}]*border-radius:\s*0/,
+      /@media\s*\(max-width:\s*720px\)[\s\S]*?\.project-ledger-index\s*\{[^}]*grid-template-columns:\s*1fr/,
     );
   });
 

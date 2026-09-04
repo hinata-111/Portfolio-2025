@@ -13,13 +13,28 @@ describe("Hero", () => {
     expect(h1).toBeInTheDocument();
   });
 
-  it("renders a decorative fade between the hero and the first section", () => {
+  it("adds the introduction and presents identity as an editorial signature", () => {
     const { container } = render(<Hero />);
-    expect(container.querySelector(".hero-fade")).toHaveAttribute("aria-hidden", "true");
+
+    expect(
+      screen.getByText("企画から実装まで一貫して、AI・Web技術でアイデアを形にする。"),
+    ).toBeInTheDocument();
+    expect(container.querySelector(".hero-signature")).toBeInTheDocument();
+    expect(container.querySelector(".hero-sub")).not.toBeInTheDocument();
+    expect(screen.queryByText(profile.eyebrow)).not.toBeInTheDocument();
   });
 
-  it("does not render the retired orbit ring decoration", () => {
+  it("keeps the requested scroll marker", () => {
     const { container } = render(<Hero />);
-    expect(container.querySelector(".orbit-ring")).toBeNull();
+
+    expect(container.querySelector(".scroll-cue")).toHaveAttribute("aria-hidden", "true");
+  });
+
+  it("uses the selected sample's quiet orbit without the previous glow layers", () => {
+    const { container } = render(<Hero />);
+    expect(container.querySelector(".hero-orbit")).toHaveAttribute("aria-hidden", "true");
+    expect(container.querySelector(".glow")).not.toBeInTheDocument();
+    expect(container.querySelector(".nebula")).not.toBeInTheDocument();
+    expect(container.querySelector(".hero-fade")).not.toBeInTheDocument();
   });
 });
