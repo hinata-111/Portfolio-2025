@@ -6,7 +6,7 @@ export default function Skills() {
   return (
     <section id="skills">
       <Reveal>
-        <SectionHead num="02" label="Skills" />
+        <SectionHead num="03" label="Skills" />
       </Reveal>
       <Reveal as="h2">技術スタック</Reveal>
       <div className="stack">

@@ -25,7 +25,7 @@ Object.defineProperty(window, "matchMedia", {
 });
 
 /**
- * jsdom does not implement IntersectionObserver. Reveal/SideNav
+ * jsdom does not implement IntersectionObserver. Reveal/BottomChapterNav
  * feature-detect it and no-op when it's undefined, which previously meant the actual
  * observer-driven reveal logic was never exercised by any test. This mock records
  * observed elements and exposes `trigger()` so tests can simulate a real intersection.

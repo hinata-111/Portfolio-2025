@@ -2,7 +2,7 @@ import { render, screen } from "@testing-library/react";
 import { describe, it, expect } from "vitest";
 import About from "@/app/components/About";
 import Skills from "@/app/components/Skills";
-import { aboutParagraphs, projects, socials, stack } from "@/app/content";
+import { aboutParagraphs, socials, stack } from "@/app/content";
 
 describe("About", () => {
   it("presents the profile with a vertical portrait, identity, story and motto", () => {
@@ -45,18 +45,11 @@ describe("About", () => {
     expect(screen.getByText("X 要確認")).toBeInTheDocument();
   });
 
-  it("indexes every project and links down to its card", () => {
+  it("does not repeat the Projects index inside About", () => {
     render(<About />);
 
-    const index = screen.getByRole("navigation", { name: "プロジェクト索引" });
-    const links = Array.from(index.querySelectorAll("a"));
-
-    expect(links).toHaveLength(projects.length);
-    expect(links.map((link) => link.getAttribute("href"))).toEqual(
-      projects.map((_, i) => `#project-${i}`),
-    );
-    expect(links[0]).toHaveTextContent(projects[0].title);
-    expect(links[0]).toHaveTextContent(projects[0].summary);
+    expect(screen.queryByRole("navigation", { name: "プロジェクト索引" })).not.toBeInTheDocument();
+    expect(document.querySelector(".about-projects")).not.toBeInTheDocument();
   });
 });
 
