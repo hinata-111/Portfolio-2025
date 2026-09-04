@@ -40,9 +40,10 @@ export const connectProfile = {
   tagline: "モノづくりが好きです",
   introduction:
     "趣味について：ラジオをよく聞きます（10番組くらい）、HxHと涼宮ハルヒシリーズ、三島由紀夫が好きです",
+  email: "yos570038@gmail.com",
   socials: [
     { label: "Instagram", href: "https://www.instagram.com/suzuki_1732/" },
-    { label: "X", href: "" },
+    { label: "X", href: "https://x.com/Strange_sfc23_5" },
     { label: "GitHub", href: "https://github.com/hinata-111" },
   ] satisfies ConnectSocial[],
 };
