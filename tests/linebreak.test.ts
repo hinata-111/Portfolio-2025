@@ -64,6 +64,22 @@ describe("日本語の折返し", () => {
     expect(rule("\\.motto \\.vow")).toMatch(/text-wrap:\s*balance/);
   });
 
+  it("<wbr> の位置でだけ折り返す指定を持つ", () => {
+    // Phrased が埋めた <wbr> は、keep-all が無いと意味を持たない(日本語は
+    // どの文字間でも折り返せるため)。anywhere は1文節が入りきらない時の保険。
+    const phrased = rule("\\.phrased");
+    expect(phrased).toMatch(/word-break:\s*keep-all/);
+    expect(phrased).toMatch(/overflow-wrap:\s*anywhere/);
+  });
+
+  it("budoux をクライアントに送らない", () => {
+    // Phrased はサーバーコンポーネントなので "use client" を持たない。
+    // クライアントコンポーネントから import すると budoux がバンドルされる。
+    const phrased = read("app/components/Phrased.tsx");
+    expect(phrased).not.toMatch(/["']use client["']/);
+    expect(read("app/connect/ProfileDetails.tsx")).not.toMatch(/^import .*(Phrased|budoux)/m);
+  });
+
   it("引用と本文に行送りの調整を入れている", () => {
     expect(rule("\\.motto blockquote")).toMatch(/text-wrap:\s*balance/);
     expect(rule("p\\.lede")).toMatch(/text-wrap:\s*pretty/);

@@ -1,6 +1,7 @@
 import { projects } from "@/app/content";
 import SectionHead from "@/app/components/SectionHead";
 import Reveal from "@/app/components/Reveal";
+import Phrased from "@/app/components/Phrased";
 
 export default function Projects() {
   return (
@@ -22,13 +23,17 @@ export default function Projects() {
             PROJECT {String(index + 1).padStart(2, "0")}
           </span>
           <h3 id={`project-title-${index}`}>{p.title}</h3>
-          <p className="project-summary">{p.summary}</p>
+          <p className="project-summary">
+            <Phrased text={p.summary} />
+          </p>
           {p.details && (
             <div className="project-details">
               {p.details.map((detail) => (
                 <div key={detail.title} className="project-detail">
                   <h4>{detail.title}</h4>
-                  <p>{detail.value}</p>
+                  <p>
+                    <Phrased text={detail.value} />
+                  </p>
                 </div>
               ))}
             </div>

@@ -3,6 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { SocialIcon } from "@/app/components/icons";
 import { connectProfile, profile } from "@/app/content";
+import Phrased from "@/app/components/Phrased";
 import ProfileDetails from "./ProfileDetails";
 import styles from "./connect.module.css";
 
@@ -35,7 +36,7 @@ export default function ConnectPage() {
           <p className={styles.roleLine}>{profile.roleLine}</p>
         </header>
 
-        <ProfileDetails introduction={connectProfile.introduction} />
+        <ProfileDetails introduction={<Phrased text={connectProfile.introduction} />} />
 
         <nav className={styles.socials} aria-label="SNS">
           <ul>

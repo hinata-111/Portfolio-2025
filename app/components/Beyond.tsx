@@ -1,6 +1,7 @@
 import { beyond } from "@/app/content";
 import SectionHead from "@/app/components/SectionHead";
 import Reveal from "@/app/components/Reveal";
+import Phrased from "@/app/components/Phrased";
 
 export default function Beyond() {
   return (
@@ -31,13 +32,17 @@ export default function Beyond() {
               <div className="body">
                 <h3 id={headingId}>{b.title}</h3>
                 {b.meta && <div className="meta mono">{b.meta}</div>}
-                <p className="beyond-lead">{b.desc}</p>
+                <p className="beyond-lead">
+                  <Phrased text={b.desc} />
+                </p>
                 {b.details && (
                   <div className="life-details">
                     {b.details.map((detail) => (
                       <div key={detail.label} className="life-detail">
                         <span className="mono">{detail.label}</span>
-                        <p>{detail.value}</p>
+                        <p>
+                          <Phrased text={detail.value} />
+                        </p>
                       </div>
                     ))}
                   </div>

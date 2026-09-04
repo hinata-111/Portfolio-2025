@@ -1,9 +1,11 @@
 "use client";
 
-import { useState } from "react";
+import { type ReactNode, useState } from "react";
 import styles from "./connect.module.css";
 
-export default function ProfileDetails({ introduction }: { introduction: string }) {
+// 自己紹介文は文節解析済みの内容をサーバー側から children で受け取る。
+// ここで <Phrased> を import すると budoux がクライアントバンドルに載ってしまう。
+export default function ProfileDetails({ introduction }: { introduction: ReactNode }) {
   const [isOpen, setIsOpen] = useState(false);
 
   return (

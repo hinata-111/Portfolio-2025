@@ -3,6 +3,7 @@ import { aboutInfo, aboutParagraphs, motto, profile, projects, socials } from "@
 import SectionHead from "@/app/components/SectionHead";
 import Reveal from "@/app/components/Reveal";
 import { SocialIcon } from "@/app/components/icons";
+import Phrased from "@/app/components/Phrased";
 
 export default function About() {
   const profileDetails = aboutInfo.filter((item) => item.k !== "名前");
@@ -80,7 +81,9 @@ export default function About() {
                 </span>
                 <span className="about-project-body">
                   <span className="about-project-title">{p.title}</span>
-                  <span className="about-project-summary">{p.summary}</span>
+                  <span className="about-project-summary">
+                    <Phrased text={p.summary} />
+                  </span>
                 </span>
                 <span className="about-project-arrow" aria-hidden="true">
                   ↓
@@ -91,7 +94,9 @@ export default function About() {
         </ul>
       </Reveal>
       <Reveal className="motto">
-        <blockquote className="serif">{motto.quote}</blockquote>
+        <blockquote className="serif">
+          <Phrased text={motto.quote} />
+        </blockquote>
         <cite className="mono">{motto.cite}</cite>
         <p className="vow">
           {motto.vowBefore}

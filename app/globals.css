@@ -153,6 +153,11 @@ h2 { font-size: var(--fs-section); margin: 0 0 var(--space-heading); font-weight
 p.lede { max-width: 36em; margin: 0 auto 16px; text-wrap: pretty; }
 .center { text-align: center; }
 
+/* Phrased が埋めた <wbr> の位置だけで折り返させる。keep-all が無いと日本語は
+   どの文字間でも折り返せるため <wbr> を入れても意味を持たない。
+   overflow-wrap: anywhere は、1文節が幅に収まらない時だけの緊急避難。 */
+.phrased { word-break: keep-all; overflow-wrap: anywhere; }
+
 /* 短い見出し・ラベルは、行末に1〜2文字だけ取り残される(「… — レディオ / 湘南」)
    のが目立つ。balance で行長を揃えて浮いた行を出さない。長い本文は
    バランスを取ると逆に不自然なので pretty のまま。 */
