@@ -185,6 +185,9 @@
   font-size: 0.78rem;
   line-height: 1.8;
   text-align: left;
+  /* 折返しの基本設定は globals.css の body から継承する。ここは段落なので
+     最終行が極端に短くなるのを避ける pretty のみ上書きする */
+  text-wrap: pretty;
 }
 
 .socials {

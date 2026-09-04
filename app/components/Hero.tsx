@@ -6,9 +6,12 @@ export default function Hero() {
       <div className="hero-orbit" aria-hidden="true" />
       <div className="hero-inner">
         <h1 className="serif">
-          人を<span className="hl">{profile.catchTop}</span>にし、
-          <br />
-          <span className="hl">{profile.catchBottom}</span>ものを生み出す。
+          <span className="hero-line">
+            人を<span className="hl">{profile.catchTop}</span>にし、
+          </span>
+          <span className="hero-line">
+            <span className="hl">{profile.catchBottom}</span>ものを生み出す。
+          </span>
         </h1>
         <p className="hero-intro">
           企画から実装まで一貫して、AI・Web技術でアイデアを形にする。

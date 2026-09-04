@@ -3,6 +3,7 @@ import { aboutInfo, aboutParagraphs, motto, profile, socials } from "@/app/conte
 import SectionHead from "@/app/components/SectionHead";
 import Reveal from "@/app/components/Reveal";
 import { SocialIcon } from "@/app/components/icons";
+import Phrased from "@/app/components/Phrased";
 
 export default function About() {
   const profileDetails = aboutInfo.filter((item) => item.k !== "名前");
@@ -65,14 +66,15 @@ export default function About() {
         </div>
         <div className="about-story">
           {aboutParagraphs.map((p) => (
-            <p key={p}>{p}</p>
+            <p key={p}>
+              <Phrased text={p} />
+            </p>
           ))}
         </div>
       </Reveal>
       <Reveal className="motto">
         <blockquote className="serif">
-          {motto.quote.split("、")[0]}、<br />
-          {motto.quote.split("、")[1]}
+          <Phrased text={motto.quote} />
         </blockquote>
         <cite className="mono">{motto.cite}</cite>
         <p className="vow">

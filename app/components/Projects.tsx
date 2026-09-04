@@ -1,6 +1,7 @@
 import { projects } from "@/app/content";
 import SectionHead from "@/app/components/SectionHead";
 import Reveal from "@/app/components/Reveal";
+import Phrased from "@/app/components/Phrased";
 
 export default function Projects() {
   return (
@@ -14,7 +15,9 @@ export default function Projects() {
           {projects.map((project, index) => (
             <a key={project.title} href={`#project-${index}`}>
               <b>{String(index + 1).padStart(2, "0")}</b>
-              <span>{project.title}</span>
+              <span>
+                <Phrased text={project.title} />
+              </span>
             </a>
           ))}
         </nav>
@@ -32,12 +35,20 @@ export default function Projects() {
                 {String(index + 1).padStart(2, "0")}
               </span>
               <div className="project-ledger-copy">
-                <h3 id={`project-title-${index}`}>{p.title}</h3>
-                <p className="project-summary">{p.summary}</p>
+                <h3 id={`project-title-${index}`}>
+                  <Phrased text={p.title} />
+                </h3>
+                <p className="project-summary">
+                  <Phrased text={p.summary} />
+                </p>
                 {p.details?.map((detail) => (
                   <div key={detail.title} className="project-ledger-row">
-                    <h4>{detail.title}</h4>
-                    <p>{detail.value}</p>
+                    <h4>
+                      <Phrased text={detail.title} />
+                    </h4>
+                    <p>
+                      <Phrased text={detail.value} />
+                    </p>
                   </div>
                 ))}
                 {p.href && p.linkLabel && (

@@ -1,6 +1,7 @@
 import { timeline } from "@/app/content";
 import SectionHead from "@/app/components/SectionHead";
 import Reveal from "@/app/components/Reveal";
+import Phrased from "@/app/components/Phrased";
 
 export default function Experience() {
   return (
@@ -19,7 +20,9 @@ export default function Experience() {
             <div className="dot" />
             <div className="what">
               <b>{t.title}</b>
-              <span>{t.desc}</span>
+              <span>
+                <Phrased text={t.desc} />
+              </span>
             </div>
           </Reveal>
         ))}

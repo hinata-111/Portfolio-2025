@@ -1,13 +1,12 @@
 "use client";
 
-import { useState } from "react";
+import { type ReactNode, useState } from "react";
 import styles from "./connect.module.css";
 
-export default function ProfileDetails({ introduction }: { introduction: string }) {
+// 自己紹介文は文節解析済みの内容をサーバー側から children で受け取る。
+// ここで <Phrased> を import すると budoux がクライアントバンドルに載ってしまう。
+export default function ProfileDetails({ introduction }: { introduction: ReactNode }) {
   const [isOpen, setIsOpen] = useState(false);
-  const breakIndex = introduction.indexOf("、");
-  const firstLine = breakIndex >= 0 ? introduction.slice(0, breakIndex + 1) : introduction;
-  const secondLine = breakIndex >= 0 ? introduction.slice(breakIndex + 1) : "";
 
   return (
     <section className={styles.details} aria-label="自己紹介">
@@ -23,9 +22,7 @@ export default function ProfileDetails({ introduction }: { introduction: string 
       <div className={styles.detailsReveal} data-open={isOpen} aria-hidden={!isOpen}>
         <div>
           <p id="connect-introduction" className={styles.introduction}>
-            {firstLine}
-            {secondLine ? <br aria-hidden="true" /> : null}
-            {secondLine}
+            {introduction}
           </p>
         </div>
       </div>
