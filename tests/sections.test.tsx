@@ -71,8 +71,18 @@ describe("Projects", () => {
       "src",
       "/images/project-tabime.png",
     );
-    // 写真待ちはインターンだけ
-    expect(document.querySelectorAll(".project-thumb span")).toHaveLength(1);
+    // 写真の無いインターンは文字サムネで埋め、「素材待ち」を公開しない
+    expect(document.querySelectorAll(".project-thumb .thumb-text")).toHaveLength(1);
+    expect(document.querySelector(".project-ledger")).not.toHaveTextContent("素材待ち");
+  });
+
+  it("draws the internship thumbnail from its own responsibility headings", () => {
+    render(<Projects />);
+    const thumb = document.querySelector("#internship .project-thumb .thumb-text");
+    expect(thumb).toHaveAttribute("aria-hidden", "true");
+    expect(thumb).toHaveTextContent("INTERN");
+    expect(thumb).toHaveTextContent("AIエージェントのR&D");
+    expect(thumb).toHaveTextContent("Webサービス開発");
   });
 
   it("shows the Fukushima Innovation Coast logo whole on a light plate", () => {

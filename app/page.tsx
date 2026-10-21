@@ -8,11 +8,13 @@ import SiteFooter from "@/app/components/SiteFooter";
 import CursorLight from "@/app/components/CursorLight";
 import ConsoleEgg from "@/app/components/ConsoleEgg";
 import CosmicBackground from "@/app/components/CosmicBackground";
+import Constellation from "@/app/components/Constellation";
 
 export default function Home() {
   return (
     <main>
       <CosmicBackground />
+      <Constellation />
       <SiteNav />
       <Hero />
       <div className="wrap wrap--narrow">

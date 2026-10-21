@@ -1,6 +1,7 @@
 import { projects } from "@/app/content";
 import SectionHead from "@/app/components/SectionHead";
 import Reveal from "@/app/components/Reveal";
+import TextThumb from "@/app/components/TextThumb";
 
 export default function Projects() {
   return (
@@ -36,6 +37,8 @@ export default function Projects() {
                   <div className={`project-thumb${p.imageFit === "contain" ? " thumb--contain" : ""}`}>
                     {p.imageSrc ? (
                       <img src={p.imageSrc} alt={`${p.title}の画面`} loading="lazy" />
+                    ) : p.textThumb ? (
+                      <TextThumb label={p.textThumb.label} lines={p.textThumb.lines} />
                     ) : (
                       <span className="mono">{p.phLabel}</span>
                     )}

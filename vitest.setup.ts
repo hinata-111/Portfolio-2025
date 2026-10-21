@@ -19,10 +19,15 @@ function defaultMatchMediaImpl(query: string) {
 
 const matchMediaMock = vi.fn().mockImplementation(defaultMatchMediaImpl);
 
-Object.defineProperty(window, "matchMedia", {
-  writable: true,
-  value: matchMediaMock,
-});
+// OGP 画像のテストは Node 環境(window なし)で動くので、ブラウザ用モックはその時だけ入れない
+const hasWindow = typeof window !== "undefined";
+
+if (hasWindow) {
+  Object.defineProperty(window, "matchMedia", {
+    writable: true,
+    value: matchMediaMock,
+  });
+}
 
 /**
  * jsdom does not implement IntersectionObserver. Reveal/BottomChapterNav
@@ -83,10 +88,12 @@ export class MockIntersectionObserver implements IntersectionObserver {
   }
 }
 
-Object.defineProperty(window, "IntersectionObserver", {
-  writable: true,
-  value: MockIntersectionObserver,
-});
+if (hasWindow) {
+  Object.defineProperty(window, "IntersectionObserver", {
+    writable: true,
+    value: MockIntersectionObserver,
+  });
+}
 Object.defineProperty(globalThis, "IntersectionObserver", {
   writable: true,
   value: MockIntersectionObserver,

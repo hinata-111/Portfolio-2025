@@ -14,9 +14,9 @@
 - Next.js 16.2.10(App Router, TypeScript)+ **素の CSS**(Tailwind 不使用 — 確定済み決定、変更禁止)
 - テスト: Vitest + React Testing Library(`npm test`)。デプロイ先: Vercel
 - 全コンテンツは `app/content.ts` に集約。セクション追加=データ 1 要素の追加で完結させる
-- クライアント処理は `Reveal` / `CursorLight` / `ConsoleEgg` / `SideNav` / `CosmicBackground` の 5 コンポーネントに隔離。他はサーバーコンポーネント
-- 背景演出は全ページ共通の `CosmicBackground`(マルチカラー図形+星+視差スクロール)。配置データは `app/shapes.ts` に決定論的擬似乱数で固定生成し実行時乱数は使わない
-- 視差スクロールのみ scroll イベント(rAFスロットリング)を使用 — 他の演出([Reveal]/[SideNav]等)は IntersectionObserver のみで実装する方針の例外
+- クライアント処理は `Reveal` / `CursorLight` / `ConsoleEgg` / `Constellation` に隔離。他はサーバーコンポーネント(`CosmicBackground` は静的な CSS 背景、`SiteNav` は `<details>` で JS なし)
+- 背景は全ページ共通の `CosmicBackground`(静的な宇宙グラデーション+星の CSS テクスチャ)。動く星座はトップだけ。配置データは `app/shapes.ts` に決定論的擬似乱数で固定生成し実行時乱数は使わない
+- トップ背景の星座(`Constellation`、canvas)は rAF ループ内で `scrollY` を読んで視差を付ける(scroll イベントは登録しない)。星は文字より遅く、大きい星ほど速く流れる。`prefers-reduced-motion` では静止 1 枚、タブ非表示中は停止。初期配置は `app/shapes.ts` の `driftingStars`(シード固定)
 - 品質要件: `:focus-visible` 必須 / scroll・mousemove は rAF スロットリング / resize は debounce / `prefers-reduced-motion: reduce` で全アニメ無効化
 - 外部ライブラリ追加は実装計画記載分のみ(YAGNI)
 - 未確定情報はプレースホルダーのまま(`【氏名】`、`要確認` バッジ等)。勝手に埋めない

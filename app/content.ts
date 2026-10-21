@@ -8,6 +8,8 @@ export type Project = {
   imageSrc?: string;
   // ロゴなど切り抜きたくない画像は "contain"(明るい下地に全体を収める)
   imageFit?: "contain";
+  // 写真を出せないときの文字サムネ(lines は本文の見出しから取る)
+  textThumb?: { label: string; lines: string[] };
   title: string;
   summary: string;
   details?: ProjectDetail[];
@@ -127,6 +129,7 @@ export const projects: Project[] = [
   {
     slug: "internship",
     phLabel: "素材待ち:インターン写真",
+    textThumb: { label: "INTERN", lines: ["AIエージェントのR&D", "Webサービス開発"] },
     title: "長期インターン — 株式会社スパイクスタジオ",
     summary: "2025年7月から現在まで、AIエージェントのR&Dと、実際に運用されているWebサービスの開発に従事。",
     details: [

@@ -1,6 +1,14 @@
 import Link from "next/link";
+import TextThumb from "@/app/components/TextThumb";
 
-type Work = { slug: string; title: string; imageSrc?: string; imageFit?: "contain"; phLabel: string };
+type Work = {
+  slug: string;
+  title: string;
+  imageSrc?: string;
+  imageFit?: "contain";
+  textThumb?: { label: string; lines: string[] };
+  phLabel: string;
+};
 
 export default function WorkCard({ work }: { work: Work }) {
   return (
@@ -9,6 +17,8 @@ export default function WorkCard({ work }: { work: Work }) {
         <span className={`work-thumb${work.imageFit === "contain" ? " thumb--contain" : ""}`}>
           {work.imageSrc ? (
             <img src={work.imageSrc} alt="" loading="lazy" />
+          ) : work.textThumb ? (
+            <TextThumb label={work.textThumb.label} lines={work.textThumb.lines} />
           ) : (
             <span className="mono">{work.phLabel}</span>
           )}

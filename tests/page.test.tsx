@@ -15,6 +15,8 @@ describe("Home page", () => {
     ]);
     expect(screen.getByRole("heading", { level: 1 })).toHaveTextContent("笑顔");
     expect(container.querySelector(".chapter-nav")).not.toBeInTheDocument();
+    // 星座の背景はトップだけ
+    expect(container.querySelector("canvas.constellation")).toBeInTheDocument();
     expect(screen.getByRole("contentinfo")).toBeInTheDocument();
   });
 
@@ -41,7 +43,8 @@ describe("Home page", () => {
     const { container } = render(<Home />);
     const nav = screen.getByRole("navigation", { name: "サイトナビゲーション" });
     expect(nav).toHaveClass("site-nav--bar");
-    expect(container.querySelector("main")!.firstElementChild?.nextElementSibling).toBe(nav);
+    const children = Array.from(container.querySelector("main")!.children);
+    expect(children.indexOf(nav)).toBeLessThan(children.indexOf(container.querySelector(".hero")!));
 
     const desktop = Array.from(nav.querySelectorAll(":scope > a, .site-nav-links a"));
     expect(desktop.map((link) => link.getAttribute("href"))).toEqual([
@@ -82,6 +85,10 @@ describe("Home page", () => {
     const hrefs = Array.from(document.querySelectorAll(".work-grid a")).map((a) => a.getAttribute("href"));
     expect(hrefs).toEqual([...projects, ...beyond].map((work) => `/works#${work.slug}`));
     expect(screen.getByRole("link", { name: /すべての活動を見る/ })).toHaveAttribute("href", "/works");
+    expect(document.querySelector('.work-grid a[href="/works#internship"] .thumb-text')).toHaveTextContent(
+      "INTERN",
+    );
+    expect(document.querySelector("#projects .work-grid")).not.toHaveTextContent("素材待ち");
     const fukushimaCard = document.querySelector('.work-grid a[href="/works#fukushima"] .work-thumb');
     expect(fukushimaCard).toHaveClass("thumb--contain");
     expect(fukushimaCard?.querySelector("img")).toHaveAttribute("src", "/images/project-fukushima-logo.svg");

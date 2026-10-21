@@ -37,6 +37,22 @@ export const starLayers = {
   near: { speed: 2.3, stars: buildStars(84, 72, 1.4, 2.5, 0.52) },
 } satisfies Record<"far" | "mid" | "near", StarLayer>;
 
+// トップ背景の星座(Constellation)。位置は画面比 0〜1、速度は 1 秒あたりの画面比
+export type DriftingStar = { x: number; y: number; vx: number; vy: number; r: number };
+
+function buildDriftingStars(seed: number, count: number): readonly DriftingStar[] {
+  const random = createRng(seed);
+  return Array.from({ length: count }, () => ({
+    x: random(),
+    y: random(),
+    vx: (random() - 0.5) * 0.012,
+    vy: (random() - 0.5) * 0.012,
+    r: 0.6 + random() * 1.1,
+  }));
+}
+
+export const driftingStars = buildDriftingStars(7, 64);
+
 export type ConstellationPoint = { x: number; y: number };
 export const constellationLayout: ConstellationPoint[] = [
   { x: 3, y: 42 },

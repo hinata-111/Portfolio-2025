@@ -8,12 +8,12 @@ const siteUrl = process.env.NEXT_PUBLIC_SITE_URL
 export const metadata: Metadata = {
   title: `${profile.name} | Portfolio`,
   description:
-    "人を笑顔にし、心を動かすものを生み出す。PdM × Engineer × Creator のポートフォリオ。",
+    `人を笑顔にし、心を動かすものを生み出す。${profile.roleLine} のポートフォリオ。`,
   metadataBase: new URL(siteUrl),
   openGraph: {
     title: `${profile.name} | Portfolio`,
     description:
-      "人を笑顔にし、心を動かすものを生み出す。PdM × Engineer × Creator のポートフォリオ。",
+      `人を笑顔にし、心を動かすものを生み出す。${profile.roleLine} のポートフォリオ。`,
     type: "website",
     locale: "ja_JP",
   },
@@ -21,7 +21,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: `${profile.name} | Portfolio`,
     description:
-      "人を笑顔にし、心を動かすものを生み出す。PdM × Engineer × Creator のポートフォリオ。",
+      `人を笑顔にし、心を動かすものを生み出す。${profile.roleLine} のポートフォリオ。`,
   },
 };
 

@@ -22,6 +22,7 @@ describe("Works page", () => {
     const { container } = render(<WorksPage />);
     expect(container.querySelector(".site-nav--bar")).toBeInTheDocument();
     expect(container.querySelector(".social-rail")).toBeInTheDocument();
+    expect(container.querySelector("canvas.constellation")).not.toBeInTheDocument();
     expect(metadata.title).toBe(`Works | ${profile.name}`);
   });
 });
