@@ -1,18 +1,14 @@
 import { contact } from "@/app/content";
-import SectionHead from "@/app/components/SectionHead";
-import Reveal from "@/app/components/Reveal";
 
 export default function Contact() {
   return (
     <section id="contact">
-      <Reveal>
-        <SectionHead num="06" label="Contact" />
-      </Reveal>
-      <Reveal className="contact-row">
+      <h2>Contact</h2>
+      <div className="contact-row">
         <a className="btn btn-primary" href={`mailto:${contact.email}`}>
           Email <span className="arr">→</span>
         </a>
-      </Reveal>
+      </div>
     </section>
   );
 }

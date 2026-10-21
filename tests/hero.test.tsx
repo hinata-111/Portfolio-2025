@@ -9,24 +9,24 @@ describe("Hero", () => {
     const h1 = screen.getByRole("heading", { level: 1 });
     expect(within(h1).getByText("笑顔")).toHaveClass("hl");
     expect(within(h1).getByText("心を動かす")).toHaveClass("hl");
-    expect(screen.getByText(profile.name)).toBeInTheDocument();
-    expect(h1).toBeInTheDocument();
   });
 
-  it("adds the introduction and presents identity as an editorial signature", () => {
+  it("adds the introduction but leaves name and affiliation to the profile section below", () => {
     const { container } = render(<Hero />);
 
-    expect(
-      screen.getByText("企画から実装まで一貫して、AI・Web技術でアイデアを形にする。"),
-    ).toBeInTheDocument();
-    expect(container.querySelector(".hero-signature")).toBeInTheDocument();
+    expect(screen.getByText(profile.intro)).toBeInTheDocument();
+    expect(screen.getByText(profile.roleLine)).toBeInTheDocument();
+    expect(container.querySelector(".hero-signature")).not.toBeInTheDocument();
+    expect(screen.queryByText(profile.name)).not.toBeInTheDocument();
+    profile.affiliations.forEach((a) => expect(screen.queryByText(a)).not.toBeInTheDocument());
     expect(container.querySelector(".hero-sub")).not.toBeInTheDocument();
     expect(screen.queryByText(profile.eyebrow)).not.toBeInTheDocument();
   });
 
-  it("keeps the requested scroll marker", () => {
+  it("keeps the full-screen opening without a framed panel", () => {
     const { container } = render(<Hero />);
-
+    expect(container.querySelector(".hero-panel")).not.toBeInTheDocument();
+    expect(container.querySelector(".social-rail")).not.toBeInTheDocument();
     expect(container.querySelector(".scroll-cue")).toHaveAttribute("aria-hidden", "true");
   });
 

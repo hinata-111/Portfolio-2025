@@ -4,10 +4,10 @@
 
 ## プロジェクト概要
 
-個人ポートフォリオサイト(1ページ構成)。軸は「人を笑顔にし、心を動かすものを生み出す」。
+個人ポートフォリオサイト(トップ `/` + `/about` + `/works` の 3 ページ構成。トップは要約、詳細は下層ページ)。軸は「人を笑顔にし、心を動かすものを生み出す」。
 新卒就活に限らず、フリーランス・業務委託等での提示にもそのまま使える汎用的な内容・表記を維持する(特定の時期・立場に紐づく表記は避ける)。
 サイト自体が技術力・UI/UX 力の証明。現在フェーズ: 実装計画 9 タスク完了。残作業はデプロイ(ユーザー作業)と素材差し替え。
-デザインの正は `docs/design/portfolio-mockup-v7.html` — 文言・色・数値はそこから忠実転記し、創作・補完しない。
+レイアウトの正は `docs/superpowers/specs/2026-10-22-riochin-layout-design.md`(riochin.dev 型の骨組み・サイズ)と現行実装。配色・宇宙背景は現行実装が正。`docs/design/portfolio-mockup-v7.html` は旧デザインの参考資料。文言は創作・補完しない。
 
 ## 技術スタックと制約
 
@@ -24,7 +24,8 @@
 ## 実装の進め方(計画・仕様)
 
 - 実装計画: `docs/superpowers/plans/2026-07-07-portfolio-site.md`(タスク単位・チェックボックス管理)
-- 設計書: `docs/superpowers/specs/2026-07-07-portfolio-design.md`
+- 設計書: `docs/superpowers/specs/2026-07-07-portfolio-design.md`(初版)/ `docs/superpowers/specs/2026-10-22-riochin-layout-design.md`(現行レイアウト)
+- サイトナビ(`SiteNav`)はサーバーコンポーネント。スマホのメニュー開閉は `<details>` で行い JS を足さない
 
 ## このプロジェクトで使う Skills
 
@@ -35,12 +36,12 @@
 | `superpowers:subagent-driven-development` | 実装計画のタスク実行(計画書が使用必須と明記。代替: `executing-plans`) |
 | `superpowers:test-driven-development` | 各タスクの実装(全タスクがテスト先行構成) |
 | `/code-review` | タスク完了毎(計画の品質要件が「コードレビュー対策」を明示) |
-| `/verify` + Playwright MCP | モックアップとの見た目照合(実ブラウザでスクショ比較) |
+| `/verify` + Playwright MCP | 設計書との見た目照合(実ブラウザでスクショ比較) |
 
 典型ワークフロー:
 1. **タスク実装**: subagent-driven-development → TDD でタスク実装 → `/code-review` → チェックボックス更新
-2. **見た目検証**: 実装後 `/verify` → `npm run dev` → Playwright で v7 モックアップと目視比較
-3. **デザイン変更疑義**: モックアップと差異を見つけたら実装を直す(モックアップ側は触らない)
+2. **見た目検証**: 実装後 `/verify` → `npm run dev` → Playwright で 1265px / 390px のスクショを撮り、レイアウト設計書の実測サイズと照合
+3. **デザイン変更疑義**: 設計書と差異を見つけたら実装を直す(確定済みの設計書は書き換えず、新しい設計書を追加する)
 
 ## Skills との役割分担
 

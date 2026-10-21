@@ -6,13 +6,13 @@ export default function Projects() {
   return (
     <section id="projects">
       <Reveal>
-        <SectionHead num="04" label="Projects" />
+        <SectionHead num="01" label="Works" />
       </Reveal>
-      <Reveal as="h2">創作物</Reveal>
+      <Reveal as="h2">活動</Reveal>
       <div className="project-ledger">
         <nav className="project-ledger-index mono" aria-label="作品台帳の索引">
           {projects.map((project, index) => (
-            <a key={project.title} href={`#project-${index}`}>
+            <a key={project.slug} href={`#${project.slug}`}>
               <b>{String(index + 1).padStart(2, "0")}</b>
               <span>{project.title}</span>
             </a>
@@ -23,7 +23,7 @@ export default function Projects() {
             <Reveal
               as="article"
               key={p.title}
-              id={`project-${index}`}
+              id={p.slug}
               className="project-ledger-entry"
               data-project-index={String(index + 1).padStart(2, "0")}
               aria-labelledby={`project-title-${index}`}
@@ -32,12 +32,27 @@ export default function Projects() {
                 {String(index + 1).padStart(2, "0")}
               </span>
               <div className="project-ledger-copy">
-                <h3 id={`project-title-${index}`}>{p.title}</h3>
-                <p className="project-summary">{p.summary}</p>
+                <div className="project-ledger-head">
+                  <div className={`project-thumb${p.imageFit === "contain" ? " thumb--contain" : ""}`}>
+                    {p.imageSrc ? (
+                      <img src={p.imageSrc} alt={`${p.title}の画面`} loading="lazy" />
+                    ) : (
+                      <span className="mono">{p.phLabel}</span>
+                    )}
+                  </div>
+                  <div>
+                    <h3 id={`project-title-${index}`}>{p.title}</h3>
+                    <p className="project-summary">{p.summary}</p>
+                  </div>
+                </div>
                 {p.details?.map((detail) => (
                   <div key={detail.title} className="project-ledger-row">
                     <h4>{detail.title}</h4>
-                    <p>{detail.value}</p>
+                    <ul>
+                      {detail.points.map((point) => (
+                        <li key={point}>{point}</li>
+                      ))}
+                    </ul>
                   </div>
                 ))}
                 {p.href && p.linkLabel && (

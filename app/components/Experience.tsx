@@ -6,7 +6,7 @@ export default function Experience() {
   return (
     <section id="experience">
       <Reveal>
-        <SectionHead num="02" label="Experience" />
+        <SectionHead num="03" label="Experience" />
       </Reveal>
       <Reveal as="h2">経歴</Reveal>
       <ul className="timeline">
@@ -19,7 +19,7 @@ export default function Experience() {
             <div className="dot" />
             <div className="what">
               <b>{t.title}</b>
-              <span>{t.desc}</span>
+              {t.desc && <span>{t.desc}</span>}
             </div>
           </Reveal>
         ))}

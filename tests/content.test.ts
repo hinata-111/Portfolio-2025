@@ -1,6 +1,6 @@
 import { describe, it, expect } from "vitest";
 import {
-  profile, aboutInfo, aboutParagraphs, motto, stack, timeline, projects, beyond, socials,
+  profile, aboutInfo, aboutParagraphs, motto, stack, timeline, projects, beyond, socials, favoriteRadio,
 } from "@/app/content";
 
 describe("content", () => {
@@ -13,7 +13,7 @@ describe("content", () => {
     expect(aboutParagraphs).toHaveLength(2);
     expect(stack).toHaveLength(4);
     expect(timeline).toHaveLength(7);
-    expect(projects).toHaveLength(3);
+    expect(projects).toHaveLength(4);
     expect(beyond).toHaveLength(3);
   });
   it("keeps the About profile compact and complete", () => {
@@ -81,22 +81,72 @@ describe("content", () => {
   });
   it("combines the internship work and states the factual responsibility boundary", () => {
     const internship = projects.find((project) => project.title === "長期インターン — 株式会社スパイクスタジオ");
-    const copy = internship?.details?.map((detail) => detail.value).join(" ") ?? "";
+    const copy = internship?.details?.flatMap((detail) => detail.points).join(" ") ?? "";
 
     expect(projects.filter((project) => project.title.includes("長期インターン"))).toHaveLength(1);
     expect(internship?.details).toHaveLength(2);
-    expect(internship?.summary).toContain("2025年7月から現在まで");
+    expect(internship?.summary).toBe(
+      "2025年7月から現在まで、AIエージェントのR&Dと、実際に運用されているWebサービスの開発に従事。",
+    );
     expect(copy).not.toMatch(/記載予定|会社確認後/);
     expect(internship?.details).toEqual([
       {
         title: "AIエージェントのR&D",
-        value: "複数のAIエージェント開発に携わり、業務課題の整理から仕様検討・提案、設計・実装、技術検証まで担当。評価データの作成や精度評価、エラー分析、個人情報のマスキングを通じて、実用化に向けた改善にも取り組みました。",
+        points: [
+          "複数のAIエージェント開発で、業務課題の整理から仕様検討・提案、設計・実装、技術検証まで担当",
+          "評価データ作成・精度評価・エラー分析・個人情報のマスキングで、実用化に向けて改善",
+        ],
       },
       {
         title: "Webサービス開発",
-        value: "メンバーシップやライブ配信、電子チケットを扱う会員制ファンプラットフォームの開発に携わり、担当機能の要件整理から設計・実装、テストまで担当。React、Node.js、PostgreSQLを用いて、画面・サーバー・データベースを横断した開発に取り組みました。",
+        points: [
+          "メンバーシップ・ライブ配信・電子チケットを扱う会員制ファンプラットフォームを開発",
+          "担当機能の要件整理から設計・実装・テストまで担当",
+          "React・Node.js・PostgreSQLで画面・サーバー・DBを横断",
+        ],
       },
     ]);
+  });
+  it("writes ongoing timeline periods as 'YYYY.MM – 現在' and orders radio by its 2023.09 start", () => {
+    const when = (title: string) => timeline.find((item) => item.title === title)?.when;
+
+    expect(when("レディオ湘南 ラジオ番組運営")).toBe("2023.09 – 現在");
+    expect(when("長期インターン | エンジニア・ITコンサルタント")).toBe("2025.07 – 現在");
+    expect(when("福島復興知事業")).toBe("2025.08 – 現在");
+    expect(timeline.map((item) => item.desc).join(" ")).not.toContain("現在も継続中");
+    expect(timeline.find((item) => item.title === "レディオ湘南 ラジオ番組運営")?.desc).not.toMatch(/^—/);
+    expect(timeline.map((item) => item.title).slice(0, 3)).toEqual([
+      "慶應義塾ニューヨーク学院 卒業",
+      "慶應義塾大学 環境情報学部 入学",
+      "レディオ湘南 ラジオ番組運営",
+    ]);
+  });
+  it("lists the Ogiri Dice game with its public URL and screenshot", () => {
+    const game = projects.find((project) => project.slug === "ogiri-dice");
+
+    expect(game?.title).toBe("大喜利ダイス — 東京の劇場をめぐる大喜利すごろく");
+    expect(game?.summary).toContain("大喜利の回答をAIが1〜6点で採点");
+    expect(game?.summary).not.toContain("Gemini");
+    expect(game?.details).toBeUndefined();
+    expect(game?.href).toBe("https://ogiri-dice.pages.dev/");
+    expect(game?.imageSrc).toBe("/images/project-ogiri-dice.png");
+  });
+  it("lists the favourite radio shows by their on-air titles", () => {
+    expect(favoriteRadio.map((show) => show.title)).toEqual([
+      "霜降り明星のオールナイトニッポン",
+      "空気階段の踊り場",
+      "真空ジェシカのラジオ父ちゃん",
+      "ママタルトのラジオ母ちゃん",
+      "カナメストーンのカナメちゃん村",
+      "金属バットの社会の窓",
+      "金魚番長のデメキング",
+      "有吉弘行のSUNDAY NIGHT DREAMER",
+    ]);
+    favoriteRadio.forEach((show) => expect(show.imageSrc).toMatch(/^\/images\/radio\/[a-z0-9-]+\.(jpg|webp)$/));
+  });
+  it("gives every work a unique slug for /works anchors", () => {
+    expect(projects.map((project) => project.slug)).toEqual(["tabime", "fukushima", "ogiri-dice", "internship"]);
+    expect(beyond.map((item) => item.slug)).toEqual(["travel", "radio", "comedy"]);
   });
   it("includes graduation from Keio Academy of New York", () => {
     expect(timeline[0]).toEqual({
@@ -120,6 +170,8 @@ describe("content", () => {
 
     expect(fukushima?.href).toBe("https://www.fipo.or.jp/education/43276");
     expect(fukushima?.linkLabel).toBe("福島復興知事業の詳細を見る");
+    expect(fukushima?.imageSrc).toBe("/images/project-fukushima-logo.svg");
+    expect(fukushima?.imageFit).toBe("contain");
   });
   it("keeps the student radio activity to a short factual introduction", () => {
     const radio = beyond.find((item) => item.title === "ラジオ番組運営 — レディオ湘南");

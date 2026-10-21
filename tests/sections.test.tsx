@@ -8,9 +8,18 @@ import Contact from "@/app/components/Contact";
 import { contact } from "@/app/content";
 
 describe("Experience", () => {
-  it("is chapter 02 after moving ahead of Projects", () => {
+  it("is chapter 03 on the About page", () => {
     const { container } = render(<Experience />);
-    expect(container.querySelector(".sec-num")).toHaveTextContent("02");
+    expect(container.querySelector(".sec-num")).toHaveTextContent("03");
+  });
+
+  it("omits the description line when an item has no desc", () => {
+    render(<Experience />);
+    const items = Array.from(document.querySelectorAll(".timeline li"));
+    expect(items[0].querySelector(".what span")).toBeNull();
+    expect(document.querySelectorAll(".timeline .what span")).toHaveLength(
+      timeline.filter((t) => t.desc).length,
+    );
   });
 
   it("renders 7 timeline items including high school graduation", () => {
@@ -28,15 +37,15 @@ describe("Experience", () => {
 });
 
 describe("Projects", () => {
-  it("is chapter 04 after moving behind Skills", () => {
+  it("is chapter 01 on the Works page", () => {
     const { container } = render(<Projects />);
-    expect(container.querySelector(".sec-num")).toHaveTextContent("04");
+    expect(container.querySelector(".sec-num")).toHaveTextContent("01");
   });
 
-  it("renders three equal entries in a Project Ledger", () => {
+  it("renders four equal entries in a Project Ledger", () => {
     render(<Projects />);
     expect(document.querySelector(".project-ledger")).toBeInTheDocument();
-    expect(document.querySelectorAll(".project-ledger-entry")).toHaveLength(3);
+    expect(document.querySelectorAll(".project-ledger-entry")).toHaveLength(4);
     expect(document.querySelectorAll(".project")).toHaveLength(0);
     expect(document.querySelectorAll(".project-ledger-entry .todo")).toHaveLength(0);
     expect(screen.getAllByText("Tabime — 悩みから旅先を見つけるAI")).toHaveLength(2);
@@ -49,6 +58,30 @@ describe("Projects", () => {
     expect(screen.queryByText("現在地")).not.toBeInTheDocument();
   });
 
+  it("shows a thumbnail on every entry, falling back to a placeholder label", () => {
+    render(<Projects />);
+
+    const projectArticles = Array.from(document.querySelectorAll(".project-ledger-entry"));
+    projectArticles.forEach((project) => {
+      const head = project.querySelector(".project-ledger-head");
+      expect(head?.querySelector(".project-thumb")).toBeInTheDocument();
+      expect(head?.querySelector("h3")).toBeInTheDocument();
+    });
+    expect(screen.getByRole("img", { name: "Tabime — 悩みから旅先を見つけるAIの画面" })).toHaveAttribute(
+      "src",
+      "/images/project-tabime.png",
+    );
+    // 写真待ちはインターンだけ
+    expect(document.querySelectorAll(".project-thumb span")).toHaveLength(1);
+  });
+
+  it("shows the Fukushima Innovation Coast logo whole on a light plate", () => {
+    render(<Projects />);
+    const logo = screen.getByRole("img", { name: "福島復興知プロジェクトの画面" });
+    expect(logo).toHaveAttribute("src", "/images/project-fukushima-logo.svg");
+    expect(logo.closest(".project-thumb")).toHaveClass("thumb--contain");
+  });
+
   it("keeps every project equal while retaining its link and numbered anchors", () => {
     render(<Projects />);
 
@@ -58,6 +91,7 @@ describe("Projects", () => {
       "01",
       "02",
       "03",
+      "04",
     ]);
     expect(screen.getByRole("link", { name: "Tabimeを体験する" })).toHaveAttribute(
       "href",
@@ -75,6 +109,7 @@ describe("Projects", () => {
       name: "長期インターン — 株式会社スパイクスタジオ",
     });
     expect(internship.querySelectorAll(".project-ledger-row")).toHaveLength(2);
+    expect(internship.querySelectorAll(".project-ledger-row li")).toHaveLength(5);
     expect(internship).toHaveTextContent("2025年7月から現在まで");
     expect(internship).toHaveTextContent("AIエージェントのR&D");
     expect(internship).toHaveTextContent("Webサービス開発");
@@ -92,22 +127,31 @@ describe("Projects", () => {
     );
   });
 
-  it("gives every project an anchor the About index can link to", () => {
+  it("gives every project a slug anchor that its index links to", () => {
     render(<Projects />);
 
     const projectArticles = Array.from(document.querySelectorAll(".project-ledger-entry"));
-    expect(projectArticles.map((project) => project.id)).toEqual([
-      "project-0",
-      "project-1",
-      "project-2",
-    ]);
+    expect(projectArticles.map((project) => project.id)).toEqual(["tabime", "fukushima", "ogiri-dice", "internship"]);
+    expect(
+      Array.from(document.querySelectorAll(".project-ledger-index a")).map((a) => a.getAttribute("href")),
+    ).toEqual(["#tabime", "#fukushima", "#ogiri-dice", "#internship"]);
   });
 });
 
 describe("Beyond", () => {
-  it("presents Projects Beyond My Work as three concise entries", () => {
+  it("is chapter 02 on the Works page and anchors each essay by slug", () => {
+    const { container } = render(<Beyond />);
+    expect(container.querySelector(".sec-num")).toHaveTextContent("02");
+    expect(Array.from(document.querySelectorAll(".essay")).map((essay) => essay.id)).toEqual([
+      "travel",
+      "radio",
+      "comedy",
+    ]);
+  });
+
+  it("presents the Works sub-section as three concise entries", () => {
     render(<Beyond />);
-    expect(screen.getByText("Projects Beyond My Work")).toBeInTheDocument();
+    expect(screen.getByText("Works")).toBeInTheDocument();
     expect(screen.getByRole("heading", { name: "コードの外側" })).toBeInTheDocument();
     expect(document.querySelectorAll(".essay")).toHaveLength(3);
     expect(document.querySelectorAll(".beyond")).toHaveLength(0);
@@ -161,6 +205,11 @@ describe("Beyond", () => {
 });
 
 describe("Contact", () => {
+  it("uses a plain Contact heading like the other top-page sections", () => {
+    render(<Contact />);
+    expect(screen.getByRole("heading", { level: 2, name: "Contact" })).toBeInTheDocument();
+  });
+
   it("offers email as the only action", () => {
     render(<Contact />);
 

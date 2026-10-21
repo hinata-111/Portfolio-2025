@@ -1,31 +1,27 @@
 import Hero from "@/app/components/Hero";
-import About from "@/app/components/About";
-import Skills from "@/app/components/Skills";
-import Experience from "@/app/components/Experience";
-import Projects from "@/app/components/Projects";
-import Beyond from "@/app/components/Beyond";
+import SiteNav from "@/app/components/SiteNav";
+import TopProfile from "@/app/components/TopProfile";
+import TopTimeline from "@/app/components/TopTimeline";
+import TopWorks from "@/app/components/TopWorks";
 import Contact from "@/app/components/Contact";
+import SiteFooter from "@/app/components/SiteFooter";
 import CursorLight from "@/app/components/CursorLight";
 import ConsoleEgg from "@/app/components/ConsoleEgg";
-import BottomChapterNav from "@/app/components/BottomChapterNav";
 import CosmicBackground from "@/app/components/CosmicBackground";
-import { profile } from "@/app/content";
 
 export default function Home() {
   return (
     <main>
       <CosmicBackground />
+      <SiteNav />
       <Hero />
-      <div className="wrap">
-        <About />
-        <Experience />
-        <Skills />
-        <Projects />
-        <Beyond />
+      <div className="wrap wrap--narrow">
+        <TopProfile />
+        <TopTimeline />
+        <TopWorks />
         <Contact />
-        <footer className="mono">© 2026 {profile.name} — built with Next.js</footer>
+        <SiteFooter />
       </div>
-      <BottomChapterNav />
       <CursorLight />
       <ConsoleEgg />
     </main>

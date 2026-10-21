@@ -36,11 +36,23 @@ describe("cosmic editorial background contract", () => {
   });
 });
 
-describe("bottom chapter navigation contract", () => {
-  it("uses four fixed, accessible chapter buttons without a progress rail", () => {
-    expect(css).toMatch(/\.chapter-nav\s*\{[^}]*position:\s*fixed/);
-    expect(css).toMatch(/\.chapter-nav a\s*\{[^}]*min-height:\s*44px/);
-    expect(css).not.toContain("chapter-nav-progress");
+describe("site navigation contract", () => {
+  it("drops the fixed bottom chapter bar in favour of the site nav", () => {
+    expect(css).not.toContain(".chapter-nav");
+    expect(css).toMatch(/\.site-nav a\s*\{[^}]*min-height:\s*44px/);
+  });
+
+  it("moves the site nav into a left sidebar on wide screens like the reference", () => {
+    const wide = css.slice(css.indexOf("@media (min-width: 1100px)"));
+    expect(wide).toMatch(/\.site-nav--bar\s*\{[^}]*position:\s*fixed/);
+    // サイドバーはトップでもスクロールに追従して固定。右には SNS の縦レールを固定
+    expect(css).not.toContain(".site-nav--hero");
+    expect(wide).toMatch(/\.site-nav \.social-rail\s*\{[^}]*position:\s*fixed/);
+    expect(wide).toMatch(/main:has\(> \.site-nav\)\s*\{[^}]*padding-right:/);
+    // /connect は独自レイアウトなので、サイトナビを持つページだけずらす
+    expect(wide).toMatch(/main:has\(> \.site-nav\)\s*\{[^}]*padding-left:/);
+    expect(css).not.toMatch(/(^|[\s}])main\s*\{[^}]*padding-(top|left):/);
+    expect(wide).toMatch(/\.site-nav-links\s*\{[^}]*display:\s*grid/);
   });
 
   it("does not retain the previous side rail or fixed Contact control", () => {
@@ -48,9 +60,10 @@ describe("bottom chapter navigation contract", () => {
     expect(css).not.toContain(".contact-fab");
   });
 
-  it("marks the current chapter with the yellow accent", () => {
-    expect(css).toMatch(/\.chapter-nav a\.current\s*\{[^}]*color:\s*var\(--sun\)/);
-    expect(css).toMatch(/:has\(#projects:target\)[^{]*\.chapter-nav a\[href="#projects"\][^{]*\{[^}]*color:\s*var\(--sun\)/);
+  it("collapses the site nav into a 44px menu button on small screens", () => {
+    const mobile = css.slice(css.indexOf("@media (max-width: 720px)"));
+    expect(mobile).toMatch(/\.site-nav summary\s*\{[^}]*min-height:\s*44px/);
+    expect(mobile).toMatch(/\.work-grid\s*\{[^}]*grid-template-columns:\s*repeat\(2,/);
   });
 });
 
@@ -66,6 +79,13 @@ describe("cosmic editorial section contracts", () => {
     expect(css).not.toContain(".constellation-map");
     expect(css).not.toContain(".const-star");
     expect(css).not.toContain(".project--featured");
+  });
+
+  it("caps the featured travel photo height instead of letting it grow with its width", () => {
+    const rule = css.match(/\.essay-feature \.essay-image\s*\{([^}]*)\}/)?.[1] ?? "";
+    const max = rule.match(/height:\s*clamp\([^,]+,[^,]+,\s*([\d.]+)px\)/)?.[1];
+    expect(Number(max)).toBeLessThanOrEqual(360);
+    expect(css).toMatch(/\.essay-feature \.essay-image img\s*\{[^}]*object-position:/);
   });
 
   it("retains focus-visible and reduced-motion support for the editorial interactions", () => {

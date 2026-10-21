@@ -6,7 +6,7 @@ export default function Beyond() {
   return (
     <section id="beyond">
       <Reveal>
-        <SectionHead num="05" label="Projects Beyond My Work" />
+        <SectionHead num="02" label="Works" />
       </Reveal>
       <Reveal as="h2">コードの外側</Reveal>
       <div className="beyond-essays">
@@ -17,6 +17,7 @@ export default function Beyond() {
             <Reveal
               as="article"
               key={b.title}
+              id={b.slug}
               className={`essay${b.featured ? " essay-feature" : ""}${i === 1 ? " essay--radio" : ""}${i === 2 ? " essay--comedy" : ""}`}
               delay={(i % 4) as 0 | 1 | 2 | 3}
               aria-labelledby={headingId}
