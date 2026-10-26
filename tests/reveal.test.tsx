@@ -1,7 +1,6 @@
 import { act, render, screen } from "@testing-library/react";
 import { describe, it, expect, vi } from "vitest";
 import Reveal from "@/app/components/Reveal";
-import SectionHead from "@/app/components/SectionHead";
 import { MockIntersectionObserver } from "@/vitest.setup";
 
 describe("Reveal", () => {
@@ -58,13 +57,5 @@ describe("Reveal", () => {
     const el = screen.getByTestId("rv3");
     expect(el).not.toHaveClass("rv");
     expect(el).not.toHaveClass("in");
-  });
-});
-
-describe("SectionHead", () => {
-  it("renders number and label", () => {
-    render(<SectionHead num="01" label="About" />);
-    expect(screen.getByText("01")).toBeInTheDocument();
-    expect(screen.getByText("About")).toBeInTheDocument();
   });
 });

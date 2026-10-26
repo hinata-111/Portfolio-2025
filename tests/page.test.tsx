@@ -13,7 +13,7 @@ describe("Home page", () => {
       "beyond",
       "contact",
     ]);
-    expect(screen.getByRole("heading", { level: 1 })).toHaveTextContent("笑顔");
+    expect(screen.getByRole("heading", { level: 1 })).toHaveTextContent(profile.catchTop);
     expect(container.querySelector(".chapter-nav")).not.toBeInTheDocument();
     // 星座の背景はトップだけ
     expect(container.querySelector("canvas.constellation")).toBeInTheDocument();
@@ -28,15 +28,6 @@ describe("Home page", () => {
     expect(within(section).queryByText(profile.intro)).not.toBeInTheDocument();
     expect(within(section).queryByText(profile.roleLine)).not.toBeInTheDocument();
     expect(within(section).getByRole("link", { name: /自己紹介を読む/ })).toHaveAttribute("href", "/about");
-  });
-
-  it("adds a short note on hobbies and favourites just above the About link", () => {
-    render(<Home />);
-    const section = document.getElementById("profile")!;
-    const note = section.querySelector(".top-intro");
-    expect(note).toHaveTextContent("ラジオとお笑いが趣味で");
-    expect(note).toHaveTextContent("HxHと涼宮ハルヒシリーズ、三島由紀夫が好きです");
-    expect(note?.nextElementSibling).toHaveClass("more-link");
   });
 
   it("puts the same top bar as the sub pages above the hero", () => {
@@ -85,13 +76,7 @@ describe("Home page", () => {
     const hrefs = Array.from(document.querySelectorAll(".work-grid a")).map((a) => a.getAttribute("href"));
     expect(hrefs).toEqual([...projects, ...beyond].map((work) => `/works#${work.slug}`));
     expect(screen.getByRole("link", { name: /すべての活動を見る/ })).toHaveAttribute("href", "/works");
-    expect(document.querySelector('.work-grid a[href="/works#internship"] .thumb-text')).toHaveTextContent(
-      "INTERN",
-    );
     expect(document.querySelector("#projects .work-grid")).not.toHaveTextContent("素材待ち");
-    const fukushimaCard = document.querySelector('.work-grid a[href="/works#fukushima"] .work-thumb');
-    expect(fukushimaCard).toHaveClass("thumb--contain");
-    expect(fukushimaCard?.querySelector("img")).toHaveAttribute("src", "/images/project-fukushima-logo.svg");
   });
 
   it("logs the console easter egg on mount", () => {

@@ -9,7 +9,7 @@ describe("Connect page", () => {
 
     expect(screen.getByRole("heading", { level: 1, name: profile.name })).toBeInTheDocument();
     expect(screen.getByText(connectProfile.nameLatin)).toBeInTheDocument();
-    const tagline = screen.getByText("モノづくりが好きです");
+    const tagline = screen.getByText(connectProfile.tagline);
     const affiliation = screen.getByText(profile.affiliations[0]);
     const roleLine = screen.getByText(profile.roleLine);
     expect(tagline).toBeInTheDocument();
@@ -35,22 +35,13 @@ describe("Connect page", () => {
     );
   });
 
-  it("shows the requested social services without creating broken links", () => {
+  it("links every social service it lists", () => {
     render(<ConnectPage />);
 
     const socialNav = screen.getByRole("navigation", { name: "SNS" });
-    expect(within(socialNav).getAllByRole("listitem")).toHaveLength(3);
-    expect(within(socialNav).getByRole("link", { name: "GitHubを開く" })).toHaveAttribute(
-      "href",
-      "https://github.com/hinata-111",
-    );
-    expect(within(socialNav).getByRole("link", { name: "Instagramを開く" })).toHaveAttribute(
-      "href",
-      "https://www.instagram.com/suzuki_1732/",
-    );
-    expect(within(socialNav).getByRole("link", { name: "Xを開く" })).toHaveAttribute(
-      "href",
-      "https://x.com/Strange_sfc23_5",
+    expect(within(socialNav).getAllByRole("listitem")).toHaveLength(connectProfile.socials.length);
+    connectProfile.socials.forEach((social) =>
+      expect(within(socialNav).getByRole("link", { name: `${social.label}を開く` })).toHaveAttribute("href", social.href),
     );
   });
 

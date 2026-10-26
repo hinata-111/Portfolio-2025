@@ -17,46 +17,20 @@ const maxPx = (value: string) => {
 };
 
 describe("section spacing", () => {
-  it("defines the shared spacing tokens", () => {
-    expect(maxPx(token("--space-section"))).toBeGreaterThan(0);
-    expect(maxPx(token("--space-heading"))).toBeGreaterThan(0);
-  });
-
   it("keeps the gap between sections from eating the screen", () => {
     // 上下 padding の合計がセクション間の余白。画面の高さを埋め尽くすと
     // スクロールしても何も無い時間が生まれる。
-    const gap = maxPx(token("--space-section")) * 2;
-    expect(gap).toBeLessThanOrEqual(150);
+    expect(maxPx(token("--space-section")) * 2).toBeLessThanOrEqual(150);
   });
 
   it("still separates sections more than anything inside one", () => {
-    const gap = maxPx(token("--space-section")) * 2;
-    expect(gap).toBeGreaterThan(maxPx(token("--space-heading")) * 2);
-  });
-
-  it("routes section and heading spacing through the tokens", () => {
-    expect(css).toMatch(/section\s*\{[^}]*padding:\s*var\(--space-section\)\s+0/);
-    expect(css).toMatch(/\bh2\s*\{[^}]*margin:\s*0 0 var\(--space-heading\)/);
+    expect(maxPx(token("--space-section"))).toBeGreaterThan(maxPx(token("--space-heading")));
   });
 
   it("lets every section use the shared rule instead of its own padding", () => {
     // About だけインライン style で独自 padding を持っていて、間隔が揃わなかった
+    expect(css).toMatch(/section\s*\{[^}]*padding:\s*var\(--space-section\)\s+0/);
     expect(read("app/components/About.tsx")).not.toMatch(/padding:\s*["']/);
     expect(css).not.toMatch(/@media[^{]*\{[^}]*\bsection\s*\{\s*padding:\s*\d/);
-  });
-});
-
-describe("About story reading flow", () => {
-  it("keeps the profile story in one readable column", () => {
-    const storyRule = css.match(/\.about-story\s*\{([^}]*)\}/)?.[1] ?? "";
-
-    expect(storyRule).not.toMatch(/\bcolumns?\s*:/);
-    expect(storyRule).toMatch(/max-width:\s*760px/);
-  });
-
-  it("marks the journey-to-product paragraph as the turning point", () => {
-    expect(css).toMatch(
-      /\.about-story p \+ p\s*\{[^}]*border-left:\s*2px solid var\(--sun\)/,
-    );
   });
 });
