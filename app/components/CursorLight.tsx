@@ -17,7 +17,7 @@ export default function CursorLight() {
       queued = true;
       requestAnimationFrame(() => {
         el.classList.add("on");
-        el.style.background = `radial-gradient(circle 260px at ${e.clientX}px ${e.clientY}px, rgba(255,197,61,.07), transparent 70%)`;
+        el.style.background = `radial-gradient(circle 130px at ${e.clientX}px ${e.clientY}px, rgba(255,197,61,.07), transparent 70%)`;
         queued = false;
       });
     };

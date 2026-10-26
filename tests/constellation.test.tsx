@@ -1,6 +1,6 @@
 import { act, render } from "@testing-library/react";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import Constellation from "@/app/components/Constellation";
+import Constellation, { GLOW_LIFETIME_MS, GLOW_RADIUS, cursorGlow } from "@/app/components/Constellation";
 import { driftingStars } from "@/app/shapes";
 
 function fakeContext() {
@@ -19,9 +19,10 @@ function fakeContext() {
   };
 }
 
-function setReducedMotion(reduced: boolean) {
+// finePointer: マウスなど、ホバーできる精密なポインターがある環境
+function setReducedMotion(reduced: boolean, finePointer = false) {
   vi.mocked(window.matchMedia).mockImplementation((query: string) => ({
-    matches: reduced && query.includes("prefers-reduced-motion"),
+    matches: (reduced && query.includes("prefers-reduced-motion")) || (finePointer && query.includes("pointer: fine")),
     media: query,
     onchange: null,
     addListener: vi.fn(),
@@ -45,6 +46,34 @@ describe("drifting star data", () => {
       expect(Math.abs(star.vx)).toBeLessThan(0.01);
       expect(Math.abs(star.vy)).toBeLessThan(0.01);
     }
+  });
+});
+
+describe("cursor glow", () => {
+  const star = { x: 100, y: 100 };
+
+  it("is brightest right where the cursor just passed", () => {
+    expect(cursorGlow(star, [{ x: 100, y: 100, t: 0 }], 0)).toBe(1);
+  });
+
+  it("does not reach stars outside the glow radius", () => {
+    expect(cursorGlow(star, [{ x: 100 + GLOW_RADIUS, y: 100, t: 0 }], 0)).toBe(0);
+  });
+
+  it("fades as the trail point ages and is gone after its lifetime", () => {
+    const trail = [{ x: 100, y: 100, t: 0 }];
+    const early = cursorGlow(star, trail, GLOW_LIFETIME_MS * 0.25);
+    const late = cursorGlow(star, trail, GLOW_LIFETIME_MS * 0.75);
+    expect(early).toBeLessThan(1);
+    expect(late).toBeLessThan(early);
+    expect(late).toBeGreaterThan(0);
+    expect(cursorGlow(star, trail, GLOW_LIFETIME_MS)).toBe(0);
+  });
+
+  it("takes the strongest trail point when several are near", () => {
+    const near = { x: 100, y: 100, t: 0 };
+    const far = { x: 100 + GLOW_RADIUS / 2, y: 100, t: 0 };
+    expect(cursorGlow(star, [far, near], 0)).toBe(1);
   });
 });
 
@@ -134,6 +163,65 @@ describe("Constellation", () => {
 
     unmount();
     expect(cancelAnimationFrame).toHaveBeenCalledTimes(2);
+  });
+
+  it("lights up the stars the cursor passes and lets them fade back", () => {
+    setReducedMotion(false, true);
+    const now = vi.spyOn(performance, "now").mockReturnValue(0);
+    render(<Constellation />);
+    const tick = raf.mock.calls[0][0] as FrameRequestCallback;
+    const radiiAt = (x: number, y: number) =>
+      ctx.arc.mock.calls
+        .filter((call) => Math.abs((call[0] as number) - x) < 0.5 && Math.abs((call[1] as number) - y) < 0.5)
+        .map((call) => call[2] as number);
+
+    // 先頭の星の位置(時刻 0・スクロール 0)にカーソルを置く
+    const width = document.documentElement.clientWidth || window.innerWidth;
+    const height = document.documentElement.clientHeight || window.innerHeight;
+    const x = driftingStars[0].x * width;
+    const y = driftingStars[0].y * height;
+    act(() => {
+      document.dispatchEvent(new MouseEvent("mousemove", { clientX: x, clientY: y }));
+    });
+    ctx.arc.mockClear();
+    tick(0);
+    expect(Math.max(...radiiAt(x, y))).toBeGreaterThan(driftingStars[0].r);
+
+    // 寿命が過ぎたら元の大きさに戻る。星はほぼ動かないよう、寿命ぶんだけ進める
+    now.mockReturnValue(GLOW_LIFETIME_MS);
+    ctx.arc.mockClear();
+    tick(GLOW_LIFETIME_MS);
+    const later = driftingStars[0];
+    const laterX = (((later.x + later.vx * (GLOW_LIFETIME_MS / 1000)) % 1) + 1) % 1 * width;
+    const laterY = (((later.y + later.vy * (GLOW_LIFETIME_MS / 1000)) % 1) + 1) % 1 * height;
+    expect(radiiAt(laterX, laterY)).toEqual([later.r]);
+  });
+
+  it("only listens to the mouse when there is a fine pointer and motion is allowed", () => {
+    const add = vi.spyOn(document, "addEventListener");
+    const listensToMouse = () => add.mock.calls.some(([type]) => type === "mousemove");
+
+    setReducedMotion(false, false);
+    const touch = render(<Constellation />);
+    expect(listensToMouse()).toBe(false);
+    touch.unmount();
+
+    setReducedMotion(true, true);
+    const reduced = render(<Constellation />);
+    expect(listensToMouse()).toBe(false);
+    reduced.unmount();
+
+    setReducedMotion(false, true);
+    render(<Constellation />);
+    expect(listensToMouse()).toBe(true);
+  });
+
+  it("stops listening to the mouse on unmount", () => {
+    setReducedMotion(false, true);
+    const remove = vi.spyOn(document, "removeEventListener");
+    const { unmount } = render(<Constellation />);
+    unmount();
+    expect(remove.mock.calls.some(([type]) => type === "mousemove")).toBe(true);
   });
 
   it("debounces resize instead of redrawing on every event", () => {

@@ -20,4 +20,4 @@ function buildDriftingStars(seed: number, count: number): readonly DriftingStar[
   }));
 }
 
-export const driftingStars = buildDriftingStars(7, 64);
+export const driftingStars = buildDriftingStars(7, 100);
