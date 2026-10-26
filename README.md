@@ -2,6 +2,8 @@
 
 個人ポートフォリオサイト。「人を笑顔にし、心を動かすものを生み出す」。
 
+**サイト: https://portfolio-2025-coral-beta.vercel.app**
+
 ## Tech Stack
 - Next.js (App Router) + TypeScript
 - 素の CSS(デザイントークン、ダーク/ライト対応)— 外部 UI ライブラリなし
